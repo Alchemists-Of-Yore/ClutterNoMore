@@ -65,8 +65,8 @@ public class AssetGenerator {
             /*"64";
             */
             //?} else if >1.21 {
-            /*"34";*/
-            //?} else {
+            /*"34";
+            *///?} else {
             /*"15";
             *///?}
             write(pack, "pack.mcmeta", "{   \"pack\": {     \"description\": \"Dynamic data for Clutter No More\",     \"pack_format\": "+packVersion+"   } }");
