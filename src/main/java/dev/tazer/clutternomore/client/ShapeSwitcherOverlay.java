@@ -117,8 +117,12 @@ public class ShapeSwitcherOverlay {
     }
 
     public void onMouseScrolled(int direction) {
+        changeSlot(selectedIndex-direction);
+    }
+
+    public void changeSlot(int newIndex) {
         int maxIndex = shapes.size() - 1;
-        selectedIndex = selectedIndex - direction;
+        selectedIndex = newIndex;
         if (selectedIndex < 0) selectedIndex = maxIndex;
         if (selectedIndex > maxIndex) selectedIndex = 0;
 
