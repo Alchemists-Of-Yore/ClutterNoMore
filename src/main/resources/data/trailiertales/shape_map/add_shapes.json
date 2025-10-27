@@ -1,0 +1,22 @@
+{
+  "minecraft:calcite": [
+    "trailiertales:calcite_stairs",
+    "trailiertales:calcite_slab",
+    "trailiertales:calcite_wall"
+  ],
+  "minecraft:end_stone": [
+    "trailiertales:end_stone_stairs",
+    "trailiertales:end_stone_slab",
+    "trailiertales:end_stone_wall"
+  ],
+  "minecraft:cut_sandstone": [
+    "trailiertales:cut_sandstone_stairs",
+    "trailiertales:cut_sandstone_slab",
+    "trailiertales:cut_sandstone_wall"
+  ],
+  "minecraft:cut_red_sandstone": [
+    "trailiertales:cut_red_sandstone_stairs",
+    "trailiertales:cut_red_sandstone_slab",
+    "trailiertales:cut_red_sandstone_wall"
+  ]
+}
