@@ -16,11 +16,14 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(Minecraft.class)
 public class HotbarMixin {
     @WrapOperation(method = "handleKeybinds", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Inventory;setSelectedSlot(I)V"))
-    private void pickBlock(Inventory instance, int i, Operation<Void> original) {
+    private void pickBlock(Inventory instance, int selectedIndex, Operation<Void> original) {
         if (ClutterNoMoreClient.OVERLAY != null) {
-            ClutterNoMoreClient.OVERLAY.selectedIndex = i;
+            int maxIndex = ClutterNoMoreClient.OVERLAY.shapes.size() - 1;
+            if (selectedIndex < 0) selectedIndex = 0;
+            if (selectedIndex > maxIndex) selectedIndex = maxIndex;
+            ClutterNoMoreClient.OVERLAY.changeSlot(selectedIndex);
         } else {
-            original.call(instance, i);
+            original.call(instance, selectedIndex);
         }
     }
 }

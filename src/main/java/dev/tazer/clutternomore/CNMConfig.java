@@ -19,6 +19,9 @@ public class CNMConfig {
     }
 
     public static class ClientConfig extends ReflectiveConfig {
+        @Comment("Whether to wrap around to the beginning after scrolling past the end of the list")
+        @SerializedName("wrap_scrolling")
+        public final TrackedValue<Boolean> WRAP_SCROLLING = this.value(true);
         @Comment("If the shape switcher menu should be scrolling or static")
         @SerializedName("scrolling")
         public final TrackedValue<Boolean> SCROLLING = this.value(true);
