@@ -1,9 +1,12 @@
 package dev.tazer.clutternomore.common.shape_map;
 
+//? if >1.21.4 {
 import dev.tazer.clutternomore.Platform;
-//? if >1.21.4
 import dev.tazer.clutternomore.common.compat.EIVCompat;
+//?}
+//? if fabric || neoforge {
 import dev.tazer.clutternomore.common.networking.ShapeMapPayload;
+//?}
 import dev.tazer.clutternomore.common.registry.BlockSetRegistry;
 //? if fabric
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -146,11 +149,10 @@ public class ShapeMap {
             inverseShapes.put(item.getDefaultInstance(), items.getDefaultInstance());
         }));
         //? if fabric
-        ServerPlayNetworking.send
+        ServerPlayNetworking.send(serverPlayer, new ShapeMapPayload(shapes, inverseShapes));
         //? if neoforge
-        /*PacketDistributor.sendToPlayer*/
+        /*PacketDistributor.sendToPlayer(serverPlayer, new ShapeMapPayload(shapes, inverseShapes));*/
         //? if forge
-        /*ForgeNetworking.sendToPlayer*/
-                (serverPlayer, new ShapeMapPayload(shapes, inverseShapes));
+        /*ForgeNetworking.sendToPlayer(serverPlayer);*/
     }
 }

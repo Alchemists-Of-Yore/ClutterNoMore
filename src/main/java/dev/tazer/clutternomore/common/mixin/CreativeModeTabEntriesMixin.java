@@ -9,12 +9,12 @@ import dev.tazer.clutternomore.common.shape_map.ShapeMap;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
 //?} else {
 /*import dev.tazer.clutternomore.common.shape_map.ShapeMap;
-import org.spongepowered.asm.mixin.Shadow;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 *///?}
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;

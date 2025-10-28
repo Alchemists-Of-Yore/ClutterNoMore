@@ -148,9 +148,9 @@ public class ClutterNoMoreClient {
         /*ChangeStackPacket p = new ChangeStackPacket(containerId, slotId, next);
         //}
         //? if fabric
-        ClientPlayNetworking.send(p);
+        /^ClientPlayNetworking.send(p);^/
         //? if neoforge
-        /^PacketDistributor.sendToServer(p);^/
+        PacketDistributor.sendToServer(p);
         //? if forge && <1.21.1
         /^ForgeNetworking.sendToServer(p);^/
         *///?}

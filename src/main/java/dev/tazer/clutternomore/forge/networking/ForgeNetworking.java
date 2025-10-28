@@ -2,6 +2,7 @@ package dev.tazer.clutternomore.forge.networking;
 //? if forge {
 /*import dev.tazer.clutternomore.ClutterNoMore;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
 
@@ -24,6 +25,11 @@ public class ForgeNetworking {
 
     public static void sendToServer(ChangeStackPacket packet) {
         INSTANCE.sendToServer(packet);
+    }
+
+    //FIXME
+    public static void sendToPlayer(ServerPlayer serverPlayer) {
+
     }
 }
 *///?}

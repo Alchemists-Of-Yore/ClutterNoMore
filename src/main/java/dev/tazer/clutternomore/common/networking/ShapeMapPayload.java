@@ -1,5 +1,7 @@
 package dev.tazer.clutternomore.common.networking;
 
+//? if neoforge || fabric {
+
 import dev.tazer.clutternomore.ClutterNoMore;
 import dev.tazer.clutternomore.common.shape_map.ShapeMap;
 //? if fabric
@@ -66,3 +68,5 @@ public record ShapeMapPayload(Map<ItemStack, List<ItemStack>> shapes, Map<ItemSt
         ShapeMap.setShapeMaps(SHAPES_DATAMAP, INVERSE_SHAPES_DATAMAP);
     }
 }
+
+//?}
