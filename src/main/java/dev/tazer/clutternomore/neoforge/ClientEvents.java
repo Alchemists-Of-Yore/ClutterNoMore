@@ -7,6 +7,7 @@ import dev.tazer.clutternomore.common.shape_map.ShapeMap;
 import dev.tazer.clutternomore.common.networking.ShapeTooltip;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -123,7 +124,7 @@ public class ClientEvents {
 
     @SubscribeEvent
     public static void onPlayerTick(PlayerTickEvent.Pre event) {
-        if (OVERLAY != null) {
+        if (event.getEntity() instanceof LocalPlayer && OVERLAY != null) {
             if (!OVERLAY.shouldStayOpenThisTick()) OVERLAY = null;
         }
     }
