@@ -5,15 +5,20 @@ package dev.tazer.clutternomore.fabric;
 import dev.tazer.clutternomore.ClutterNoMore;
 import dev.tazer.clutternomore.ClutterNoMoreClient;
 import dev.tazer.clutternomore.client.assets.AssetGenerator;
+import dev.tazer.clutternomore.common.networking.ChangeStackPayload;
+import dev.tazer.clutternomore.common.networking.ShapeMapPayload;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.TooltipComponentCallback;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenKeyboardEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenMouseEvents;
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
 import net.fabricmc.loader.api.FabricLoader;
@@ -38,6 +43,7 @@ public class FabricClientEntrypoint implements ClientModInitializer {
         ClientLifecycleEvents.CLIENT_STARTED.register((minecraft -> {
             AssetGenerator.generate();
         }));
+        ClientPlayNetworking.registerGlobalReceiver(ShapeMapPayload.TYPE, ShapeMapPayload::handleDataOnClient);
     }
 
     private void afterInitScreen(Minecraft minecraft, Screen screen, int i, int i1) {

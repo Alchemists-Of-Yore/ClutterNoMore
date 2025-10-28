@@ -74,7 +74,6 @@ dependencies {
     modImplementation("net.fabricmc.fabric-api:fabric-api:${property("deps.fabric-api")}")
 
 //    modImplementation("maven.modrinth:moonlight:${property("deps.moonlight")}")
-    modImplementation("fuzs.forgeconfigapiport:forgeconfigapiport-fabric:${property("deps.forge_config_api_port")}")
     modCompileOnly("com.terraformersmc:modmenu:${property("deps.modmenu")}")
     if (hasProperty("deps.emi")) {
         modCompileOnly("dev.emi:emi-fabric:${property("deps.emi")}:api")

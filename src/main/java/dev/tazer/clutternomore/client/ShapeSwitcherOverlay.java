@@ -123,10 +123,19 @@ public class ShapeSwitcherOverlay {
     }
 
     public void onMouseScrolled(int direction) {
+        changeSlot(selectedIndex-direction);
+    }
+
+    public void changeSlot(int newIndex) {
         int maxIndex = shapes.size() - 1;
-        selectedIndex = selectedIndex - direction;
-        if (selectedIndex < 0) selectedIndex = maxIndex;
-        if (selectedIndex > maxIndex) selectedIndex = 0;
+        selectedIndex = newIndex;
+        if (ClutterNoMoreClient.CLIENT_CONFIG.WRAP_SCROLLING.value()) {
+            if (selectedIndex < 0) selectedIndex = maxIndex;
+            if (selectedIndex > maxIndex) selectedIndex = 0;
+        } else {
+            if (selectedIndex < 0) selectedIndex = 0;
+            if (selectedIndex > maxIndex) selectedIndex = maxIndex;
+        }
 
         Item nextItem = shapes.get(selectedIndex);
         ItemStack next = nextItem.getDefaultInstance();

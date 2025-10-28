@@ -122,5 +122,8 @@
     "pyrite:path_stairs",
     "clutternomore:path_step",
     "clutternomore:vertical_path_slab"
+  ],
+  "minecraft:smooth_stone": [
+    "pyrite:smooth_stone_stairs"
   ]
 }

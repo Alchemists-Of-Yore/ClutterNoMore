@@ -4,6 +4,7 @@
 import dev.tazer.clutternomore.ClutterNoMore;
 import dev.tazer.clutternomore.ClutterNoMoreClient;
 import dev.tazer.clutternomore.client.assets.AssetGenerator;
+import dev.tazer.clutternomore.common.networking.ShapeMapPayload;
 import dev.tazer.clutternomore.common.shape_map.ShapeMapHandler;
 import dev.tazer.clutternomore.common.networking.ChangeStackPayload;
 import net.minecraft.server.MinecraftServer;
@@ -45,6 +46,11 @@ public class NeoForgeEntrypoint {
                 ChangeStackPayload.TYPE,
                 ChangeStackPayload.STREAM_CODEC,
                 ChangeStackPayload::handleDataOnServer
+        );
+        registrar.playToClient(
+                ShapeMapPayload.TYPE,
+                ShapeMapPayload.STREAM_CODEC,
+                ShapeMapPayload::handleDataOnClient
         );
     }
 

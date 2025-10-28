@@ -1,10 +1,10 @@
 package dev.tazer.clutternomore.common.mixin;
 
 import dev.tazer.clutternomore.common.CHooks;
-//? if neoforge {
-/*import dev.tazer.clutternomore.common.shape_map.ShapeMap;
-import org.spongepowered.asm.mixin.Shadow;
-import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
+import dev.tazer.clutternomore.common.shape_map.ShapeMap;
+//? neoforge {
+
+/*import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
  *///?} else if fabric {
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
 //?} else {

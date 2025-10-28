@@ -3,18 +3,34 @@ package dev.tazer.clutternomore.common.shape_map;
 import dev.tazer.clutternomore.Platform;
 //? if >1.21.4
 import dev.tazer.clutternomore.common.compat.EIVCompat;
+import dev.tazer.clutternomore.common.networking.ShapeMapPayload;
 import dev.tazer.clutternomore.common.registry.BlockSetRegistry;
+//? if fabric
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.level.block.SlabBlock;
+import net.minecraft.world.item.ItemStack;
+//? if neoforge
+/*import net.neoforged.neoforge.network.PacketDistributor;*/
+//? if forge {
+/*import dev.tazer.clutternomore.forge.networking.ForgeNetworking;
+*///?}
 
 import java.util.*;
 
 public class ShapeMap {
     private static final Map<Item, List<Item>> SHAPES_DATAMAP = new HashMap<>();
     private static final Map<Item, Item> INVERSE_SHAPES_DATAMAP = new HashMap<>();
+
+    public static void setShapeMaps(Map<Item, List<Item>> newShapeMap, Map<Item, Item> newInverseShapeMap) {
+        SHAPES_DATAMAP.clear();
+        SHAPES_DATAMAP.putAll(newShapeMap);
+        INVERSE_SHAPES_DATAMAP.clear();
+        INVERSE_SHAPES_DATAMAP.putAll(newInverseShapeMap);
+    }
 
     public static boolean hasShapes(Item item) {
         return SHAPES_DATAMAP.containsKey(item);
@@ -116,5 +132,25 @@ public class ShapeMap {
                 INVERSE_SHAPES_DATAMAP.remove(entry.getKey());
             }
         }
+    }
+
+    public static void sendShapeMap(ServerPlayer serverPlayer) {
+        final Map<ItemStack, List<ItemStack>> shapes = new HashMap<>();
+        SHAPES_DATAMAP.forEach(((item, items) -> {
+            ArrayList<ItemStack> objects = new ArrayList<>();
+            items.forEach((stack -> objects.add(stack.getDefaultInstance())));
+            shapes.put(item.getDefaultInstance(), objects);
+        }));
+        final Map<ItemStack, ItemStack> inverseShapes = new HashMap<>();
+        INVERSE_SHAPES_DATAMAP.forEach(((item, items) -> {
+            inverseShapes.put(item.getDefaultInstance(), items.getDefaultInstance());
+        }));
+        //? if fabric
+        ServerPlayNetworking.send
+        //? if neoforge
+        /*PacketDistributor.sendToPlayer*/
+        //? if forge
+        /*ForgeNetworking.sendToPlayer*/
+                (serverPlayer, new ShapeMapPayload(shapes, inverseShapes));
     }
 }
