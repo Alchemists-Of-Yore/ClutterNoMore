@@ -18,13 +18,13 @@ import com.google.gson.JsonObject;
 
 public interface Platform {
 
-    //? fabric {
+    //? if fabric {
     Platform INSTANCE = new FabricPlatformImpl();
     //?}
-    //? neoforge {
+    //? if neoforge {
     /*Platform INSTANCE = new NeoForgePlatformImpl();
     *///?}
-    //? forge {
+    //? if forge {
     /*Platform INSTANCE = new ForgePlatformImpl();
      *///?}
 

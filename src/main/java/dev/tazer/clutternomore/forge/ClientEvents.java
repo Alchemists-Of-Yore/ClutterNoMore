@@ -1,7 +1,6 @@
 package dev.tazer.clutternomore.forge;
 //? if forge {
-/*import cpw.mods.util.Lazy;
-import dev.tazer.clutternomore.ClutterNoMore;
+/*import dev.tazer.clutternomore.ClutterNoMore;
 import dev.tazer.clutternomore.ClutterNoMoreClient;
 import dev.tazer.clutternomore.client.ClientShapeTooltip;
 import dev.tazer.clutternomore.common.shape_map.ShapeMap;
@@ -13,6 +12,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.*;
+import net.minecraftforge.common.util.Lazy;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -21,24 +21,28 @@ import org.lwjgl.glfw.GLFW;
 
 import static dev.tazer.clutternomore.ClutterNoMoreClient.*;
 
-@Mod.EventBusSubscriber(modid = ClutterNoMore.MODID, value = Dist.CLIENT)
+@Mod.EventBusSubscriber(modid = ClutterNoMore.MODID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ClientEvents {
+    @Mod.EventBusSubscriber(modid = ClutterNoMore.MODID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
+    public static class ModEventBus {
+        @SubscribeEvent
+        public static void registerKeyMappings(RegisterKeyMappingsEvent event) {
+            event.register(SHAPE_KEY.get());
+        }
 
-    public static final Lazy<KeyMapping> SHAPE_KEY = Lazy.of(() -> new KeyMapping(
+        @SubscribeEvent
+        public static void registerTooltipComponent(RegisterClientTooltipComponentFactoriesEvent event) {
+            ClutterNoMore.LOGGER.info("Registering tooltip component factory");
+            event.register(ShapeTooltip.class, ClientShapeTooltip::new);
+        }
+    }
+
+    public static final Lazy<KeyMapping> SHAPE_KEY = Lazy.of(() ->
+            new KeyMapping(
             "key.clutternomore.change_block_shape",
             GLFW.GLFW_KEY_LEFT_ALT,
             "key.categories.inventory"
     ));
-
-    @SubscribeEvent
-    public static void registerKeyMappings(RegisterKeyMappingsEvent event) {
-        event.register(SHAPE_KEY.get());
-    }
-
-    @SubscribeEvent
-    public static void registerTooltipComponent(RegisterClientTooltipComponentFactoriesEvent event) {
-        event.register(ShapeTooltip.class, ClientShapeTooltip::new);
-    }
 
     @SubscribeEvent
     public static void onItemTooltips(ItemTooltipEvent event) {
@@ -54,7 +58,7 @@ public class ClientEvents {
     }
 
     @SubscribeEvent
-    public static void onKeyInput(InputEvent.MouseButton.Post event) {
+    public static void onKeyInputPost(InputEvent.MouseButton.Post event) {
         int action = event.getAction();
         if (event.getButton() == SHAPE_KEY.get().getKey().getValue()) {
             ClutterNoMoreClient.onKeyInput(action);
@@ -87,28 +91,28 @@ public class ClientEvents {
     }
 
     @SubscribeEvent
-    public static void onScreenInput(ScreenEvent.KeyPressed.Post event) {
+    public static void onScreenKeyPressedPost(ScreenEvent.KeyPressed.Post event) {
         if (event.getKeyCode() == SHAPE_KEY.get().getKey().getValue()) {
             ClutterNoMoreClient.onKeyPress(event.getScreen());
         }
     }
 
     @SubscribeEvent
-    public static void onScreenInput(ScreenEvent.MouseButtonPressed.Post event) {
+    public static void onScreenMouseButtonPressedPost(ScreenEvent.MouseButtonPressed.Post event) {
         if (event.getButton() == SHAPE_KEY.get().getKey().getValue()) {
             ClutterNoMoreClient.onKeyPress(event.getScreen());
         }
     }
 
     @SubscribeEvent
-    public static void onScreenInput(ScreenEvent.KeyReleased.Post event) {
+    public static void onScreenKeyReleasedPost(ScreenEvent.KeyReleased.Post event) {
         if (event.getKeyCode() == SHAPE_KEY.get().getKey().getValue()) {
             ClutterNoMoreClient.onKeyRelease();
         }
     }
 
     @SubscribeEvent
-    public static void onScreenInput(ScreenEvent.MouseButtonReleased.Post event) {
+    public static void onScreenMouseButtonReleasedPost(ScreenEvent.MouseButtonReleased.Post event) {
         if (event.getButton() == SHAPE_KEY.get().getKey().getValue()) {
             ClutterNoMoreClient.onKeyRelease();
         }

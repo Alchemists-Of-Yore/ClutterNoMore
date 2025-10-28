@@ -1,6 +1,9 @@
 package dev.tazer.clutternomore.common.blocks;
 
 import com.mojang.serialization.MapCodec;
+//? if 1.20.1 {
+/*import com.mojang.serialization.codecs.RecordCodecBuilder;
+*///?}
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
@@ -26,7 +29,9 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class StepBlock extends HorizontalDirectionalBlock implements SimpleWaterloggedBlock {
+    //? if >1.20.1 {
     public static final MapCodec<? extends StepBlock> CODEC = simpleCodec(StepBlock::new);
+    //?}
 
     public static final
     //? if >1.21.2 {
@@ -43,10 +48,12 @@ public class StepBlock extends HorizontalDirectionalBlock implements SimpleWater
         registerDefaultState(stateDefinition.any().setValue(SLAB_TYPE, SlabType.BOTTOM).setValue(FACING, Direction.NORTH).setValue(WATERLOGGED, false));
     }
 
+    //? if >1.20.1 {
     @Override
     protected MapCodec<? extends StepBlock> codec() {
         return CODEC;
     }
+    //?}
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
@@ -94,7 +101,12 @@ public class StepBlock extends HorizontalDirectionalBlock implements SimpleWater
     }
 
     @Override
-    protected boolean canBeReplaced(BlockState state, BlockPlaceContext context) {
+    //? if >1.20.1 {
+    protected
+    //?} else {
+    /*public
+    *///?}
+    boolean canBeReplaced(BlockState state, BlockPlaceContext context) {
         ItemStack itemStack = context.getItemInHand();
         if (state.getValue(SLAB_TYPE) == SlabType.DOUBLE || !(itemStack.is(asItem())) ) {
             return false;
@@ -122,10 +134,10 @@ public class StepBlock extends HorizontalDirectionalBlock implements SimpleWater
 
     public static VoxelShape createShape(Direction direction, double y) {
         return switch (direction) {
-            case Direction.NORTH -> Shapes.create(0, y, 0, 1, y + 0.5, 0.5);
-            case Direction.EAST -> Shapes.create(0.5, y, 0, 1, y + 0.5, 1);
-            case Direction.SOUTH -> Shapes.create(0, y, 0.5, 1, y + 0.5, 1);
-            case Direction.WEST -> Shapes.create(0, y, 0, 0.5, y + 0.5, 1);
+            case NORTH -> Shapes.create(0, y, 0, 1, y + 0.5, 0.5);
+            case EAST -> Shapes.create(0.5, y, 0, 1, y + 0.5, 1);
+            case SOUTH -> Shapes.create(0, y, 0.5, 1, y + 0.5, 1);
+            case WEST -> Shapes.create(0, y, 0, 0.5, y + 0.5, 1);
             default -> Shapes.block();
         };
     }
@@ -140,7 +152,12 @@ public class StepBlock extends HorizontalDirectionalBlock implements SimpleWater
         return super.updateShape(state, level, scheduledTickAccess, pos, direction, blockPos2, blockState2, randomSource);
     }
     //?} else {
-    /*protected BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos pos, BlockPos neighborPos) {
+    /*//? if >1.20.1 {
+    protected
+    //?} else {
+    /^public
+    ^///?}
+    BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos pos, BlockPos neighborPos) {
     if (state.getValue(WATERLOGGED)) {
             level.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
         }
@@ -150,7 +167,12 @@ public class StepBlock extends HorizontalDirectionalBlock implements SimpleWater
     *///?}
 
     @Override
-    protected boolean useShapeForLightOcclusion(BlockState state) {
+    //? if >1.20.1 {
+    protected
+    //?} else {
+    /*public
+    *///?}
+    boolean useShapeForLightOcclusion(BlockState state) {
         return true;
     }
 

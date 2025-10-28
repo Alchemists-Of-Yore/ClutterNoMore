@@ -21,21 +21,15 @@ config="${mod_id}.mixins.json"
 #[[accessTransformers]]
 #file="META-INF/accesstransformer.cfg"
 [[dependencies.${mod_id}]]
-    modId="neoforge"
-    type="required"
+    modId="forge"
+    mandatory=true
     versionRange="${forge_version_range}"
     ordering="AFTER"
     side="BOTH"
 
 [[dependencies.${mod_id}]]
     modId="minecraft"
-    type="required"
+    mandatory=true
     versionRange="${minecraft_version_range}"
-    ordering="AFTER"
-    side="BOTH"
-
-[[dependencies.${mod_id}]]
-    modId="moonlight"
-    type="required"
     ordering="AFTER"
     side="BOTH"

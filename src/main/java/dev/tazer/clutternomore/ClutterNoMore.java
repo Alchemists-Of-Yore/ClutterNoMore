@@ -4,7 +4,6 @@ package dev.tazer.clutternomore;
 import dev.tazer.clutternomore.client.assets.AssetGenerator;
 import dev.tazer.clutternomore.client.assets.StepGenerator;
 import dev.tazer.clutternomore.client.assets.VerticalSlabGenerator;
-import dev.tazer.clutternomore.common.access.RegistryAccess;
 import dev.tazer.clutternomore.common.blocks.StepBlock;
 import dev.tazer.clutternomore.common.blocks.VerticalSlabBlock;
 import dev.tazer.clutternomore.common.registry.CBlocks;
@@ -12,6 +11,7 @@ import dev.tazer.clutternomore.common.registry.BlockSetRegistry;
 import dev.tazer.clutternomore.common.shape_map.ShapeMap;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -27,6 +27,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+//? if forge
+/*import net.minecraftforge.registries.RegistryManager;*/
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -56,6 +58,7 @@ public class ClutterNoMore {
         /*return new ResourceLocation(namespace, path);*/
     }
 
+
     public static ResourceLocation parse(String id) {
         //? if >1.21
         return ResourceLocation.parse(id);
@@ -67,7 +70,7 @@ public class ClutterNoMore {
             //? if >1.21 {
             HolderLookup.Provider
             //?} else {
-            /*net.minecraft.core.RegistryAccess
+            /*RegistryAccess
             *///?}
                     registries, RecipeManager recipeManager) {
         //FIXME 1.21.8
@@ -136,8 +139,11 @@ public class ClutterNoMore {
     public static void registerVariants() {
         if (STARTUP_CONFIG.VERTICAL_SLABS.value() || STARTUP_CONFIG.STEPS.value()) {
             //? if neoforge {
-            /*((RegistryAccess) BuiltInRegistries.BLOCK).clutternomore$unfreeze();
-            ((RegistryAccess) BuiltInRegistries.ITEM).clutternomore$unfreeze();
+            /*((dev.tazer.clutternomore.common.access.RegistryAccess) BuiltInRegistries.BLOCK).clutternomore$unfreeze();
+            ((dev.tazer.clutternomore.common.access.RegistryAccess) BuiltInRegistries.ITEM).clutternomore$unfreeze();
+            *///?} else if forge {
+            /*RegistryManager.ACTIVE.getRegistry(BuiltInRegistries.BLOCK.key()).unfreeze();
+            RegistryManager.ACTIVE.getRegistry(BuiltInRegistries.ITEM.key()).unfreeze();
             *///?}
             LinkedHashMap<String, Supplier<? extends Block>> toRegister = new LinkedHashMap<>();
             ArrayList<ResourceLocation> slabs = new ArrayList<>();
@@ -169,6 +175,9 @@ public class ClutterNoMore {
             //? if neoforge {
             /*BuiltInRegistries.BLOCK.freeze();
             BuiltInRegistries.ITEM.freeze();
+            *///?} else if forge {
+            /*RegistryManager.ACTIVE.getRegistry(BuiltInRegistries.BLOCK.key()).freeze();
+            RegistryManager.ACTIVE.getRegistry(BuiltInRegistries.ITEM.key()).freeze();
             *///?}
         }
     }

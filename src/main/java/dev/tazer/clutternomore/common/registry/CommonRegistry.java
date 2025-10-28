@@ -9,13 +9,20 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+//? if forge {
+/*import net.minecraftforge.registries.RegistryManager;
+*///?}
 
 import java.util.function.Supplier;
 
 public class CommonRegistry {
     public static <R, T extends R> Supplier<T> register(String name, Supplier<T> supplier, Registry<R> reg) {
         T object = supplier.get();
+        //? if neoforge || fabric {
         Registry.register(reg, ClutterNoMore.location(name), object);
+        //?} else if forge {
+        /*RegistryManager.ACTIVE.getRegistry(reg.key()).register(ClutterNoMore.location(name), object);
+        *///?}
         return () -> object;
     }
 

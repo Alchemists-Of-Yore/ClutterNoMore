@@ -17,6 +17,7 @@ tasks.named<ProcessResources>("processResources") {
         this["mod_name"] = prop("mod.name")
         this["mod_authors"] = prop("mod.authors")
         this["neo_version_range"] = prop("deps.neo_version_range")
+        this["forge_version_range"] = prop("deps.forge_version_range")
         this["minecraft_version_range"] = prop("deps.minecraft_version_range")
 
     }
@@ -79,21 +80,26 @@ repositories {
 }
 
 dependencies {
-    compileOnly("mezz.jei:jei-${property("deps.minecraft")}-forge-api:${property("deps.jei")}")
-    runtimeOnly("mezz.jei:jei-${property("deps.minecraft")}-forge:${property("deps.jei")}")
+    modImplementation("mezz.jei:jei-${property("deps.minecraft")}-forge-api:${property("deps.jei")}")
+    modImplementation("mezz.jei:jei-${property("deps.minecraft")}-forge:${property("deps.jei")}")
 
     implementation("folk.sisby:kaleido-config:${property("deps.kaleido")}")
     jarJar("folk.sisby:kaleido-config:${property("deps.kaleido")}")
     "additionalRuntimeClasspath"("folk.sisby:kaleido-config:${property("deps.kaleido")}")
 
     modCompileOnly("io.github.llamalad7:mixinextras-common:0.5.0")
-    implementation("io.github.llamalad7:mixinextras-forge:0.5.0")
+    modImplementation("io.github.llamalad7:mixinextras-forge:0.5.0")
     jarJar("io.github.llamalad7:mixinextras-forge:0.5.0")
+}
+
+mixin {
+    add(sourceSets["main"], "clutternomore.mixin-refmap.json")
+    config("clutternomoreforge.mixins.json")
 }
 
 tasks {
     processResources {
-        exclude("**/fabric.mod.json", "**/*.accesswidener", "**/mods.toml")
+        exclude("**/fabric.mod.json", "**/*.accesswidener")
     }
 
     named("createMinecraftArtifacts") {

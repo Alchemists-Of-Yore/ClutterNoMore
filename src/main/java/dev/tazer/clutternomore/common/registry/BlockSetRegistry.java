@@ -128,7 +128,7 @@ public class BlockSetRegistry {
             return STONE;
         }
 
-        public static final ShapeSet STONE = new ShapeSet(ResourceLocation.withDefaultNamespace("stone"), Blocks.STONE);
+        public static final ShapeSet STONE = new ShapeSet(ClutterNoMore.location("minecraft", "stone"), Blocks.STONE);
     }
 
     public static class ShapeSet {

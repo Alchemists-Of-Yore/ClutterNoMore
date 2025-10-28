@@ -8,25 +8,30 @@ import dev.tazer.clutternomore.common.shape_map.ShapeMap;
  *///?} else if fabric {
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
 //?} else {
-/*import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
+/*import dev.tazer.clutternomore.common.shape_map.ShapeMap;
+import org.spongepowered.asm.mixin.Shadow;
+import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 *///?}
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-//? neoforge || forge {
+//? if neoforge || forge {
 /*@Mixin(BuildCreativeModeTabContentsEvent.class)
 *///?} else {
 @Mixin(FabricItemGroupEntries.class)
 //?}
 public abstract class CreativeModeTabEntriesMixin {
-
-    //? neoforge || forge {
+    //? if forge {
+    /*@Inject(method = "accept", at = @At("HEAD"), cancellable = true)
+    private void accept(ItemStack newEntry, CreativeModeTab.TabVisibility visibility, CallbackInfo ci) {
+        if (CHooks.denyItem(newEntry.getItem())) ci.cancel();
+    }
+    *///?} else if neoforge {
     /*@Shadow
     public abstract void insertBefore(ItemStack existingEntry, ItemStack newEntry, CreativeModeTab.TabVisibility visibility);
 
@@ -56,6 +61,7 @@ public abstract class CreativeModeTabEntriesMixin {
         }
     }
     *///?} else {
+    
     @Inject(method = "accept", at = @At("HEAD"), cancellable = true)
     private void accept(ItemStack newEntry, CreativeModeTab.TabVisibility visibility, CallbackInfo ci) {
         if (CHooks.denyItem(newEntry.getItem())) ci.cancel();

@@ -1,4 +1,4 @@
-//? neoforge {
+//? if neoforge {
 /*package dev.tazer.clutternomore.neoforge;
 
 import dev.tazer.clutternomore.ClutterNoMore;

@@ -5,8 +5,10 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.protocol.game.ClientboundSetPlayerInventoryPacket;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 //?} else {
-
-/*import net.minecraft.client.Minecraft;
+/*//? if forge {
+/^import dev.tazer.clutternomore.forge.networking.ForgeNetworking;
+^///?}
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Shadow;
@@ -16,7 +18,12 @@ import java.util.Objects;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import dev.tazer.clutternomore.common.shape_map.ShapeMap;
+//? if >1.20.1 {
 import dev.tazer.clutternomore.common.networking.ChangeStackPayload;
+//?} else {
+/*import dev.tazer.clutternomore.forge.networking.ChangeStackPacket;
+*///?}
+
 //? if fabric
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.world.entity.player.Inventory;
@@ -56,12 +63,17 @@ public abstract class MinecraftMixin {
 
             if (ShapeMap.inSameShapeSet(targetStack.getItem(), slotStack.getItem())) {
                 ItemStack replaced = targetStack.copyWithCount(slotStack.getCount());
+                //? if fabric || neoforge {
+                
                 //? if neoforge {
                 /^Objects.requireNonNull(getConnection())
                 ^///?} else {
                 ClientPlayNetworking
                 //?}
                         .send(new ChangeStackPayload(-1, exactIndex, replaced));
+                //?} else if forge {
+                /^ForgeNetworking.INSTANCE.sendToServer(new ChangeStackPacket(-1, exactIndex, replaced));
+                ^///?}
             }
         }
 

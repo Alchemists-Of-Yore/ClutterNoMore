@@ -84,6 +84,7 @@ dependencies {
         modLocalRuntime("maven.modrinth:pyrite:0.16.1+1.21.9-rc1")
     }
 
+
     implementation("folk.sisby:kaleido-config:${property("deps.kaleido")}")
     include("folk.sisby:kaleido-config:${property("deps.kaleido")}")
 

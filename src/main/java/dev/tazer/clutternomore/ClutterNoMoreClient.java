@@ -4,8 +4,13 @@ import dev.tazer.clutternomore.client.ShapeSwitcherOverlay;
 import dev.tazer.clutternomore.common.shape_map.ShapeMap;
 import dev.tazer.clutternomore.common.mixin.SlotAccessor;
 import dev.tazer.clutternomore.common.mixin.screen.ScreenAccessor;
-import dev.tazer.clutternomore.common.networking.ChangeStackPayload;
-//? fabric
+//? if !forge {
+ import dev.tazer.clutternomore.common.networking.ChangeStackPayload;
+//?} else if forge && <1.21.1 {
+/*import dev.tazer.clutternomore.forge.networking.ChangeStackPacket;
+import dev.tazer.clutternomore.forge.networking.ForgeNetworking;
+*///?}
+//? if fabric
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -19,7 +24,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-//? neoforge
+//? if neoforge
 /*import net.neoforged.neoforge.network.PacketDistributor;*/
 
 import java.util.ArrayList;
@@ -89,10 +94,12 @@ public class ClutterNoMoreClient {
             Slot slot = ((ScreenAccessor) screen).getSlotUnderMouse();
             if (slot != null) {
                 ItemStack heldStack = slot.getItem();
-                //? neoforge
+                //? if neoforge
                 /*Player player = screen.getMinecraft().player;*/
-                //? fabric
+                //? if fabric
                 Player player = Minecraft.getInstance().player;
+                //? if forge
+                /*Player player = Minecraft.getInstance().player;*/
 
                 if (slot.allowModification(player) && (ShapeMap.contains(heldStack.getItem()))) {
                     switch (CLIENT_CONFIG.HOLD.value()) {
@@ -135,10 +142,17 @@ public class ClutterNoMoreClient {
         next.setCount(count);
         player.playSound(SoundEvents.UI_BUTTON_CLICK.value(), 0.3F, 1.5F);
         if (slotId < 9) slotId += 36;
+        //? if !forge {
         var p = new ChangeStackPayload(containerId, slotId, next);
-        //? fabric
+        //?} else {
+        /*ChangeStackPacket p = new ChangeStackPacket(containerId, slotId, next);
+        //}
+        //? if fabric
         ClientPlayNetworking.send(p);
-        //? neoforge
-        /*PacketDistributor.sendToServer(p);*/
+        //? if neoforge
+        /^PacketDistributor.sendToServer(p);^/
+        //? if forge && <1.21.1
+        /^ForgeNetworking.sendToServer(p);^/
+        *///?}
     }
 }

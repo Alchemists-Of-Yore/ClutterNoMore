@@ -5,7 +5,11 @@ import dev.tazer.clutternomore.CNMConfig;
 import dev.tazer.clutternomore.ClutterNoMore;
 import dev.tazer.clutternomore.ClutterNoMoreClient;
 import dev.tazer.clutternomore.common.shape_map.ShapeMap;
+//? if fabric || neoforge {
 import dev.tazer.clutternomore.common.networking.ChangeStackPayload;
+//?} else if forge && <1.21.1 {
+/*import dev.tazer.clutternomore.forge.networking.ChangeStackPacket;
+*///?}
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 //? if >1.21.6
@@ -19,9 +23,11 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 //? if neoforge {
 /*import net.neoforged.neoforge.network.PacketDistributor;
- *///?} else {
+ *///?} else if fabric {
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-//?}
+//?} else if forge && <1.21.1 {
+/*import dev.tazer.clutternomore.forge.networking.ForgeNetworking;
+*///?}
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +57,7 @@ public class ShapeSwitcherOverlay {
         count = heldStack.getCount();
 
         shapes = new ArrayList<>(ShapeMap.getShapes(item));
-        shapes.addFirst(item);
+        shapes.add(0, item);
 
         selectedIndex = shapes.indexOf(heldStack.getItem());
         currentIndex = selectedIndex;
@@ -138,12 +144,13 @@ public class ShapeSwitcherOverlay {
         player.playSound(SoundEvents.UI_BUTTON_CLICK.value(), 0.3F, 1.5F);
         player.setItemInHand(InteractionHand.MAIN_HAND, next);
 
-        //? if neoforge {
-        /*PacketDistributor.sendToServer
-        *///?} else {
-        ClientPlayNetworking.send
-        //?}
-        (new ChangeStackPayload(-1, -1, next));
+        //? if fabric {
+        ClientPlayNetworking.send(new ChangeStackPayload(-1, -1, next));
+        //?} else if neoforge {
+        /*PacketDistributor.sendToServer(new ChangeStackPayload(-1, -1, next));
+        *///?} else if forge && <1.21.1 {
+        /*ForgeNetworking.sendToServer(new ChangeStackPacket(-1, -1, next));
+        *///?}
     }
 
     public boolean shouldStayOpenThisTick() {

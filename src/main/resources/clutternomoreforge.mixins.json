@@ -1,0 +1,30 @@
+{
+  "required": true,
+  "package": "dev.tazer.clutternomore.common.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "BlockItemMixin",
+    "BuiltInRegistriesMixin",
+    "CreativeModeTabEntriesMixin",
+    "ItemDisplayBuilderMixin",
+    "ItemMixin",
+    "ItemStackMixin",
+    "SimpleRegistryMixin",
+    "SlotAccessor",
+    "recipe.ShapelessRecipeMixin",
+    "recipe.SingleItemRecipeMixin"
+  ],
+  "client": [
+    "KeyboardHandlerMixin",
+    "MinecraftMixin",
+    "MouseHandlerMixin",
+    "screen.AccessibilityScreenMixin",
+    "screen.OptionsSubScreenMixin",
+    "screen.ScreenAccessor",
+    "screen.ScreenMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8"
+}
