@@ -31,15 +31,15 @@ public abstract class SimpleRegistryMixin<T> implements RegistryAccess, Registry
     private Map<T, Holder.Reference<T>> unregisteredIntrusiveHolders;
 
     //? if >1.21.2 {
-    /*@Shadow
+    @Shadow
     MappedRegistry.TagSet<T> allTags;
-    *///?}
+    //?}
 
     @Override
     public void clutternomore$unfreeze() {
         frozen = false;
         //? if >1.21.2
-        /*allTags = MappedRegistry.TagSet.unbound();*/
+        allTags = MappedRegistry.TagSet.unbound();
         this.unregisteredIntrusiveHolders = new IdentityHashMap<>();
     }
 }

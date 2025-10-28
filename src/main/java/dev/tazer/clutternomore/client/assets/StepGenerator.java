@@ -87,17 +87,17 @@ public final class StepGenerator {
                 if (modelString.contains("waxed"))
                     modelString = modelString.replace("waxed_", "");
                 //? if >1.21.4 {
-                /*JsonObject itemState = new JsonObject();
+                JsonObject itemState = new JsonObject();
                 JsonObject model = new JsonObject();
                 model.addProperty("type", "minecraft:model");
                 model.addProperty("model", "clutternomore:block/"+modelString);
                 itemState.add("model", model);
                 write(AssetGenerator.assets.resolve("items") , "%s.json".formatted(name), itemState.toString());
-                *///?} else {
-                JsonObject itemModel = new JsonObject();
+                //?} else {
+                /*JsonObject itemModel = new JsonObject();
                 itemModel.addProperty("parent", "clutternomore:block/"+modelString);
                 write(AssetGenerator.assets.resolve("models/item") , "%s.json".formatted(name), itemModel.toString());
-                //?}
+                *///?}
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

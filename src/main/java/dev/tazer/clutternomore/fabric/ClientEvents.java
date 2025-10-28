@@ -2,7 +2,7 @@ package dev.tazer.clutternomore.fabric;
 
 //? if fabric {
 
-/*import dev.tazer.clutternomore.ClutterNoMoreClient;
+import dev.tazer.clutternomore.ClutterNoMoreClient;
 import dev.tazer.clutternomore.client.ClientShapeTooltip;
 import dev.tazer.clutternomore.common.shape_map.ShapeMap;
 import dev.tazer.clutternomore.common.mixin.SlotAccessor;
@@ -16,9 +16,9 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 //? if >1.21.8 {
-/^import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
-^///?}
+//?}
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
@@ -34,10 +34,10 @@ public class ClientEvents {
             "key.clutternomore.change_block_shape",
             GLFW.GLFW_KEY_LEFT_ALT,
             //? if >1.21.8 {
-            /^KeyMapping.Category.INVENTORY
-            ^///?} else {
-            "key.categories.inventory"
-            //?}
+            KeyMapping.Category.INVENTORY
+            //?} else {
+            /*"key.categories.inventory"
+            *///?}
     );
 
     public static void registerKeyMappings() {
@@ -86,13 +86,13 @@ public class ClientEvents {
 
     public static void onScreenInputKeyPressedPost(Screen screen,
            //? if >1.21.8 {
-           /^KeyEvent event
-           ^///?} else {
-           int keyCode, int scanCode, int modifiers
-            //?}
+           KeyEvent event
+           //?} else {
+           /*int keyCode, int scanCode, int modifiers
+            *///?}
         ) {
         //? if >1.21.8
-        /^var keyCode = event.input();^/
+        var keyCode = event.input();
         if (keyCode == KeyBindingHelper.getBoundKeyOf(SHAPE_KEY).getValue()) {
             ClutterNoMoreClient.onKeyPress(screen);
         }
@@ -100,35 +100,35 @@ public class ClientEvents {
 
     public static
     //? if >1.21.8 {
-    /^boolean
-    ^///?} else {
-    void
-    //?}
+    boolean
+    //?} else {
+    /*void
+    *///?}
     onScreenInputMouseButtonPressedPost(Screen screen,
            //? if >1.21.8 {
-           /^MouseButtonEvent event, boolean doubleClick
-           ^///?} else {
-            double mouseX, double mouseY, int button
-             //?}
+           MouseButtonEvent event, boolean doubleClick
+           //?} else {
+            /*double mouseX, double mouseY, int button
+             *///?}
     ) {
         //? if >1.21.8
-        /^var button = event.button();^/
+        var button = event.button();
         if (button == KeyBindingHelper.getBoundKeyOf(SHAPE_KEY).getValue()) {
             ClutterNoMoreClient.onKeyPress(screen);
         }
         //? if >1.21.8
-        /^return false;^/
+        return false;
     }
 
     public static void onScreenInputKeyReleasedPost(Screen screen,
             //? if >1.21.8 {
-            /^KeyEvent event
-            ^///?} else {
-            int keyCode, int scanCode, int modifiers
-             //?}
+            KeyEvent event
+            //?} else {
+            /*int keyCode, int scanCode, int modifiers
+             *///?}
         ) {
         //? if >1.21.8
-        /^var keyCode = event.input();^/
+        var keyCode = event.input();
         if (keyCode == KeyBindingHelper.getBoundKeyOf(SHAPE_KEY).getValue()) {
             ClutterNoMoreClient.onKeyRelease();
         }
@@ -136,24 +136,24 @@ public class ClientEvents {
 
     public static
     //? if >1.21.8 {
-    /^boolean
-    ^///?} else {
-    void
-    //?}
+    boolean
+    //?} else {
+    /*void
+    *///?}
     onScreenInputMouseButtonReleasedPost(Screen screen,
             //? if >1.21.8 {
-            /^MouseButtonEvent event, boolean b
-            ^///?} else {
-            double mouseX, double mouseY, int button
-             //?}
+            MouseButtonEvent event, boolean b
+            //?} else {
+            /*double mouseX, double mouseY, int button
+             *///?}
     ) {
         //? if >1.21.8
-        /^var button = event.button();^/
+        var button = event.button();
         if (button == KeyBindingHelper.getBoundKeyOf(SHAPE_KEY).getValue()) {
             ClutterNoMoreClient.onKeyRelease();
         }
         //? if >1.21.8
-        /^return false;^/
+        return false;
     }
 
     public static void onRenderGui(GuiGraphics guiGraphics, DeltaTracker tracker) {
@@ -168,4 +168,4 @@ public class ClientEvents {
         }
     }
 }
-*///?}
+//?}

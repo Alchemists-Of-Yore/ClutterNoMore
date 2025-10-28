@@ -1,7 +1,7 @@
 package dev.tazer.clutternomore.forge;
 
 //? forge {
-import com.google.gson.JsonObject;
+/*import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import dev.tazer.clutternomore.Platform;
 import net.minecraftforge.fml.ModList;
@@ -44,4 +44,4 @@ public class ForgePlatformImpl implements Platform {
     }
 
 }
-//?}
+*///?}

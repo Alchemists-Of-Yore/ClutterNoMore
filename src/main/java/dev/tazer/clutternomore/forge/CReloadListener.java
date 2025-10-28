@@ -2,7 +2,7 @@ package dev.tazer.clutternomore.forge;
 
 //? if forge {
 
-import dev.tazer.clutternomore.ClutterNoMore;
+/*import dev.tazer.clutternomore.ClutterNoMore;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.server.ReloadableServerResources;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -17,4 +17,4 @@ public record CReloadListener(ReloadableServerResources resources, RegistryAcces
         ClutterNoMore.load(registries, recipeManager);
     }
 }
-//?}
+*///?}

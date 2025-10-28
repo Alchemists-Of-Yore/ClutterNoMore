@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(SingleItemRecipe.class)
 public class SingleItemRecipeMixin {
     //? if >1.21.1 {
-    /*@Shadow
+    @Shadow
     @Final
     private ItemStack result;
 
@@ -31,6 +31,6 @@ public class SingleItemRecipeMixin {
             cir.setReturnValue(ItemStack.EMPTY);
         }
     }
-    *///?}
+    //?}
 
 }

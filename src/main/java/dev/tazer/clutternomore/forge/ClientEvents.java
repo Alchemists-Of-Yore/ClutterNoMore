@@ -1,6 +1,6 @@
 package dev.tazer.clutternomore.forge;
 //? if forge {
-import dev.tazer.clutternomore.ClutterNoMore;
+/*import dev.tazer.clutternomore.ClutterNoMore;
 import dev.tazer.clutternomore.ClutterNoMoreClient;
 import dev.tazer.clutternomore.client.ClientShapeTooltip;
 import dev.tazer.clutternomore.common.shape_map.ShapeMap;
@@ -132,4 +132,4 @@ public class ClientEvents {
         }
     }
 }
-//?}
+*///?}

@@ -3,9 +3,9 @@ package dev.tazer.clutternomore.common.mixin.recipe;
 import dev.tazer.clutternomore.common.shape_map.ShapeMap;
 import net.minecraft.world.item.ItemStack;
 //? if >1.21 {
-/*import net.minecraft.world.item.crafting.CraftingInput;
+import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.RecipeInput;
-*///?}
+//?}
 import net.minecraft.world.item.crafting.ShapelessRecipe;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Final;
@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(ShapelessRecipe.class)
 public class ShapelessRecipeMixin {
     //? if >1.21.1 {
-    /*@Shadow
+    @Shadow
     @Final
     ItemStack result;
 
@@ -36,5 +36,5 @@ public class ShapelessRecipeMixin {
             cir.setReturnValue(false);
         }
     }
-    *///?}
+    //?}
 }

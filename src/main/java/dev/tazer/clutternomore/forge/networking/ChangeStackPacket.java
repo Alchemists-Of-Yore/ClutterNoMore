@@ -1,7 +1,7 @@
 package dev.tazer.clutternomore.forge.networking;
 
 //? if forge {
-import dev.tazer.clutternomore.common.shape_map.ShapeMap;
+/*import dev.tazer.clutternomore.common.shape_map.ShapeMap;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -64,4 +64,4 @@ public class ChangeStackPacket {
         context.setPacketHandled(true);
     }
 }
-//?}
+*///?}

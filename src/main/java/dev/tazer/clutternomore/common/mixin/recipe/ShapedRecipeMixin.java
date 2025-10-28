@@ -1,6 +1,6 @@
 package dev.tazer.clutternomore.common.mixin.recipe;
 //? if >1.21.1 {
-/*
+
 import dev.tazer.clutternomore.common.shape_map.ShapeMap;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingInput;
@@ -36,4 +36,4 @@ public class ShapedRecipeMixin {
         }
     }
 }
-*///?}
+//?}

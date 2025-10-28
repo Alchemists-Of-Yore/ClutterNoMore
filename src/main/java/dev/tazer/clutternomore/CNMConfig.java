@@ -6,10 +6,10 @@ import folk.sisby.kaleido.lib.quiltconfig.api.annotations.Comment;
 import folk.sisby.kaleido.lib.quiltconfig.api.values.TrackedValue;
 import net.minecraft.util.StringRepresentable;
 //? if >1.20.1 {
-/*import net.neoforged.neoforge.common.ModConfigSpec;*/
+import net.neoforged.neoforge.common.ModConfigSpec;
 //?} else {
-import net.minecraftforge.common.ForgeConfigSpec;
-//?}
+/*import net.minecraftforge.common.ForgeConfigSpec;
+*///?}
 
 public class CNMConfig {
     public static class StartupConfig extends ReflectiveConfig {

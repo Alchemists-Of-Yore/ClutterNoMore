@@ -1,7 +1,7 @@
 package dev.tazer.clutternomore.fabric;
 
 //? fabric {
-/*import com.google.gson.JsonObject;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import dev.tazer.clutternomore.Platform;
 import net.fabricmc.loader.api.FabricLoader;
@@ -44,4 +44,4 @@ public class FabricPlatformImpl implements Platform {
     }
 
 }
-*///?}
+//?}

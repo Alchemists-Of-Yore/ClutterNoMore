@@ -6,14 +6,14 @@ import dev.tazer.clutternomore.ClutterNoMore;
 import dev.tazer.clutternomore.ClutterNoMoreClient;
 import dev.tazer.clutternomore.common.shape_map.ShapeMap;
 //? if fabric || neoforge {
-/*import dev.tazer.clutternomore.common.networking.ChangeStackPayload;*/
+import dev.tazer.clutternomore.common.networking.ChangeStackPayload;
 //?} else if forge && <1.21.1 {
-import dev.tazer.clutternomore.forge.networking.ChangeStackPacket;
-//?}
+/*import dev.tazer.clutternomore.forge.networking.ChangeStackPacket;
+*///?}
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 //? if >1.21.6
-/*import net.minecraft.client.renderer.RenderPipelines;*/
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
@@ -24,10 +24,10 @@ import net.minecraft.world.item.ItemStack;
 //? if neoforge {
 /*import net.neoforged.neoforge.network.PacketDistributor;
  *///?} else if fabric {
-/*import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-*///?} else if forge && <1.21.1 {
-import dev.tazer.clutternomore.forge.networking.ForgeNetworking;
-//?}
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+//?} else if forge && <1.21.1 {
+/*import dev.tazer.clutternomore.forge.networking.ForgeNetworking;
+*///?}
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,10 +48,10 @@ public class ShapeSwitcherOverlay {
         this.render = render;
         selected = minecraft.player.getInventory()
         //? if >1.21.2 {
-        /*.getSelectedSlot();
-        *///?} else {
-        .selected;
-        //?}
+        .getSelectedSlot();
+        //?} else {
+        /*.selected;
+        *///?}
 
         Item item = ShapeMap.getParent(heldStack.getItem());
         count = heldStack.getCount();
@@ -79,19 +79,19 @@ public class ShapeSwitcherOverlay {
             startX = Mth.floor(centreX - currentIndex * spacing);
 
             //? if <1.21.2
-            RenderSystem.enableBlend();
+            /*RenderSystem.enableBlend();*/
             guiGraphics.blit(
                     //? if >1.21.6
-                    /*RenderPipelines.GUI_TEXTURED,*/
+                    RenderPipelines.GUI_TEXTURED,
                     selected, centreX - 3, y - 3, 0, 0, 22, 22, 22, 22);
 
             for (int index = 0; index < shapes.size(); index++) {
                 int x = startX + index * spacing;
                 //? if <1.21.2
-                RenderSystem.enableBlend();
+                /*RenderSystem.enableBlend();*/
                 guiGraphics.blit(
                         //? if >1.21.6
-                        /*RenderPipelines.GUI_TEXTURED,*/
+                        RenderPipelines.GUI_TEXTURED,
                         background, x, y, 0, 0, 16, 16, 16, 16);
 
                 guiGraphics.renderItem(shapes.get(index).getDefaultInstance(), x, y);
@@ -103,23 +103,23 @@ public class ShapeSwitcherOverlay {
             for (int index = 0; index < shapes.size(); index++) {
                 int x = startX + index * spacing;
                 //? if <1.21.2
-                RenderSystem.enableBlend();
+                /*RenderSystem.enableBlend();*/
                 guiGraphics.blit(
                         //? if >1.21.6
-                        /*RenderPipelines.GUI_TEXTURED,*/
+                        RenderPipelines.GUI_TEXTURED,
                         background, x, y, 0, 0, 16, 16, 16, 16);
 
                 guiGraphics.renderItem(shapes.get(index).getDefaultInstance(), x, y);
             }
             //? if <1.21.2
-            RenderSystem.enableBlend();
+            /*RenderSystem.enableBlend();*/
             guiGraphics.blit(
                     //? if >1.21.6
-                    /*RenderPipelines.GUI_TEXTURED,*/
+                    RenderPipelines.GUI_TEXTURED,
                     selected, Mth.floor(startX + currentIndex * spacing) - 3, y - 3, 0, 0, 22, 22, 22, 22);
         }
         //? if <1.21.2
-        RenderSystem.disableBlend();
+        /*RenderSystem.disableBlend();*/
     }
 
     public void onMouseScrolled(int direction) {
@@ -140,21 +140,21 @@ public class ShapeSwitcherOverlay {
         // You'll need to register and use a custom packet handler
         // This depends on your mod's networking setup
         //?} else if fabric {
-        /*ClientPlayNetworking.send(new ChangeStackPayload(-1, -1, next));*/
+        ClientPlayNetworking.send(new ChangeStackPayload(-1, -1, next));
         //?} else if neoforge {
         /*PacketDistributor.sendToServer(new ChangeStackPayload(-1, -1, next));*/
         //?} else if forge && <1.21.1 {
-        ForgeNetworking.sendToServer(new ChangeStackPacket(-1, -1, next));
-        //?}
+        /*ForgeNetworking.sendToServer(new ChangeStackPacket(-1, -1, next));
+        *///?}
     }
 
     public boolean shouldStayOpenThisTick() {
         int selected = minecraft.player.getInventory()
         //? if >1.21.2 {
-        /*.getSelectedSlot();
-        *///?} else {
-        .selected;
-        //?}
+        .getSelectedSlot();
+        //?} else {
+        /*.selected;
+        *///?}
         ItemStack heldStack = minecraft.player.getItemInHand(InteractionHand.MAIN_HAND);
         count = heldStack.getCount();
         return shapes.contains(heldStack.getItem()) && selected == this.selected;

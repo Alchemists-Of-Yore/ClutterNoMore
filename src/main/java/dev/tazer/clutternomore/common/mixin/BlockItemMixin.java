@@ -21,15 +21,15 @@ public class BlockItemMixin {
     @Redirect(method = "place", at = @At(
             value = "INVOKE",
             //? if >1.20.1 {
-            /*target = "Lnet/minecraft/world/item/ItemStack;consume(ILnet/minecraft/world/entity/LivingEntity;)V")*/
+            target = "Lnet/minecraft/world/item/ItemStack;consume(ILnet/minecraft/world/entity/LivingEntity;)V")
             //?} else {
-            target = "Lnet/minecraft/world/item/ItemStack;shrink(I)V")
-            //?}
+            /*target = "Lnet/minecraft/world/item/ItemStack;shrink(I)V")
+            *///?}
     )
     private void place(ItemStack instance,
                        int amount,
                        //? if >1.20.1 {
-                       /*LivingEntity entity,*/
+                       LivingEntity entity,
                        //?}
                        @Local(argsOnly = true) BlockPlaceContext context,
                        @Local(ordinal = 0) BlockState blockstate
@@ -45,9 +45,9 @@ public class BlockItemMixin {
 
         if (consume)
             //? if >1.20.1 {
-            /*instance.consume(amount, entity);
-            *///?} else {
-            instance.shrink(amount);
-            //?}
+            instance.consume(amount, entity);
+            //?} else {
+            /*instance.shrink(amount);
+            *///?}
     }
 }

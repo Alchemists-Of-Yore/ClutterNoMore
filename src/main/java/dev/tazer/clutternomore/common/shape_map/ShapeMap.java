@@ -2,7 +2,7 @@ package dev.tazer.clutternomore.common.shape_map;
 
 import dev.tazer.clutternomore.Platform;
 //? if >1.21.4
-/*import dev.tazer.clutternomore.common.compat.EIVCompat;*/
+import dev.tazer.clutternomore.common.compat.EIVCompat;
 import dev.tazer.clutternomore.common.registry.BlockSetRegistry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -86,9 +86,9 @@ public class ShapeMap {
                         if (child != mainChild && child instanceof Item shape) {
                             shapes.add(shape);
                             //? if >1.21.4 {
-                            /*if (Platform.INSTANCE.isModLoaded("eiv"))
+                            if (Platform.INSTANCE.isModLoaded("eiv"))
                                 EIVCompat.hide(shape);
-                            *///?}
+                            //?}
                         }
                     });
                 }
@@ -105,9 +105,9 @@ public class ShapeMap {
             for (Item shape : shapes) {
                 INVERSE_SHAPES_DATAMAP.put(shape, item);
                 //? if >1.21.4 {
-                /*if (Platform.INSTANCE.isModLoaded("eiv"))
+                if (Platform.INSTANCE.isModLoaded("eiv"))
                     EIVCompat.hide(shape);
-                *///?}
+                //?}
             }
         }
 

@@ -7,8 +7,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import dev.tazer.clutternomore.ClutterNoMore;
 //? if fabric {
-/*import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
-*///?}
+import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
+//?}
 import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -20,32 +20,32 @@ import java.util.*;
 
 public class ShapeMapHandler extends SimpleJsonResourceReloadListener
 //? >1.21.2
-/*<JsonElement>*/
+<JsonElement>
 //? if fabric {
-    /*implements IdentifiableResourceReloadListener
-*///?}
+    implements IdentifiableResourceReloadListener
+//?}
 {
 
     //? if >1.21.2 {
 
-    /*public static final FileToIdConverter CONVERTER = FileToIdConverter.json("shape_map");
+    public static final FileToIdConverter CONVERTER = FileToIdConverter.json("shape_map");
     public ShapeMapHandler() {
         super(ExtraCodecs.JSON, CONVERTER);
     }
-    *///?} else {
-    public static final Gson GSON = new GsonBuilder().create();
+    //?} else {
+    /*public static final Gson GSON = new GsonBuilder().create();
 
     public ShapeMapHandler() {
         super(GSON, "shape_map");
     }
-    //?}
+    *///?}
     
     //? if fabric {
-    /*@Override
+    @Override
     public ResourceLocation getFabricId() {
         return ClutterNoMore.location("shape_map");
     }
-    *///?}
+    //?}
 
     @Override
     protected void apply(Map<ResourceLocation, JsonElement> file, ResourceManager resourceManager, ProfilerFiller profilerFiller) {

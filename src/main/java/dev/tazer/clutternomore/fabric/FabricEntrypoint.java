@@ -2,7 +2,7 @@ package dev.tazer.clutternomore.fabric;
 
 //? fabric {
 
-/*import dev.tazer.clutternomore.CNMConfig;
+import dev.tazer.clutternomore.CNMConfig;
 import dev.tazer.clutternomore.ClutterNoMore;
 import dev.tazer.clutternomore.common.access.RegistryAccess;
 import dev.tazer.clutternomore.common.blocks.VerticalSlabBlock;
@@ -11,10 +11,10 @@ import dev.tazer.clutternomore.common.registry.CBlocks;
 import dev.tazer.clutternomore.common.registry.CommonRegistry;
 import dev.tazer.clutternomore.common.shape_map.ShapeMapHandler;
 //? if >1.21.2 {
-/^import fuzs.forgeconfigapiport.fabric.api.v5.ConfigRegistry;
-^///?} else {
-import fuzs.forgeconfigapiport.fabric.api.neoforge.v4.NeoForgeConfigRegistry;
-//?}
+import fuzs.forgeconfigapiport.fabric.api.v5.ConfigRegistry;
+//?} else {
+/*import fuzs.forgeconfigapiport.fabric.api.neoforge.v4.NeoForgeConfigRegistry;
+*///?}
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
@@ -22,8 +22,8 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 //? if >=1.21.9 {
 import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
 //?} else {
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-//?}
+/*import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+*///?}
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -51,8 +51,8 @@ public class FabricEntrypoint implements ModInitializer {
         //? if >=1.21.9 {
         ResourceLoader.get(PackType.SERVER_DATA).registerReloader(ClutterNoMore.location("shape_map"), new ShapeMapHandler());
         //?} else {
-        /^ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(new ShapeMapHandler());
-        ^///?}
+        /*ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(new ShapeMapHandler());
+        *///?}
         ServerLifecycleEvents.START_DATA_PACK_RELOAD.register(((minecraftServer, closeableResourceManager) -> {
             ClutterNoMore.load(minecraftServer.registryAccess(), minecraftServer.getRecipeManager());
         }));
@@ -66,4 +66,4 @@ public class FabricEntrypoint implements ModInitializer {
         ServerPlayNetworking.registerGlobalReceiver(ChangeStackPayload.TYPE, ChangeStackPayload::handleDataOnServer);
     }
 }
-*///?}
+//?}

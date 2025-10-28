@@ -10,10 +10,10 @@ import net.minecraft.client.gui.components.OptionsList;
 import net.minecraft.client.gui.screens.Screen;
 
 //? if >1.20.1 {
-/*import net.minecraft.client.gui.screens.options.OptionsSubScreen;*/
+import net.minecraft.client.gui.screens.options.OptionsSubScreen;
 //?} else {
-import net.minecraft.client.gui.screens.OptionsSubScreen;
-//?}
+/*import net.minecraft.client.gui.screens.OptionsSubScreen;
+*///?}
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 
@@ -28,15 +28,15 @@ public class ShapeSwitcherOptionsScreen extends OptionsSubScreen {
             CNMConfig.InputType.CODEC
     );
     //? if <1.21 {
-    private OptionsList list;
-    //?}
+    /*private OptionsList list;
+    *///?}
 
     public ShapeSwitcherOptionsScreen(Screen lastScreen, Options options) {
         super(lastScreen, options, TITLE);
     }
 
     //? if >1.20.1 {
-    /*@Override
+    @Override
     protected void addOptions() {
         OptionInstance<?> moving = new OptionInstance<>(
                 "key.clutternomore.menu_type",
@@ -61,8 +61,8 @@ public class ShapeSwitcherOptionsScreen extends OptionsSubScreen {
                 });
 
         if (list != null) list.addSmall(moving, toggleButton);
-    }*///?} else {
-    @Override
+    }//?} else {
+    /*@Override
     protected void init() {
         this.list = new OptionsList(this.minecraft, this.width, this.height, 32, this.height - 32, 25);
 
@@ -90,5 +90,5 @@ public class ShapeSwitcherOptionsScreen extends OptionsSubScreen {
             this.minecraft.setScreen(this.lastScreen);
         }).bounds(this.width / 2 - 100, this.height - 27, 200, 20).build());
     }
-    //?}
+    *///?}
 }

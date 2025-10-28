@@ -2,7 +2,7 @@ package dev.tazer.clutternomore.fabric;
 
 //? fabric {
 
-/*import dev.tazer.clutternomore.ClutterNoMore;
+import dev.tazer.clutternomore.ClutterNoMore;
 import dev.tazer.clutternomore.ClutterNoMoreClient;
 import dev.tazer.clutternomore.client.assets.AssetGenerator;
 import net.fabricmc.api.ClientModInitializer;
@@ -50,4 +50,4 @@ public class FabricClientEntrypoint implements ClientModInitializer {
         }
     }
 }
-*///?}
+//?}

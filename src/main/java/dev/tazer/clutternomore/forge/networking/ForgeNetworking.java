@@ -1,6 +1,6 @@
 package dev.tazer.clutternomore.forge.networking;
 //? if forge {
-import dev.tazer.clutternomore.ClutterNoMore;
+/*import dev.tazer.clutternomore.ClutterNoMore;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
@@ -26,4 +26,4 @@ public class ForgeNetworking {
         INSTANCE.sendToServer(packet);
     }
 }
-//?}
+*///?}

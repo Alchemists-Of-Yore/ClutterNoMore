@@ -59,12 +59,12 @@ public class AssetGenerator {
             write(assets.resolve("lang"), "en_us.json", jsonObject.toString());
             // pack.mcmeta
             //? if >1.21.1 {
-            /*String packVersion = "64";
-            *///?} else if 1.21.1 {
+            String packVersion = "64";
+            //?} else if 1.21.1 {
             /*String packVersion = "34";
             *///?} else if 1.20.1 {
-            String packVersion = "15";
-             //?}
+            /*String packVersion = "15";
+             *///?}
             write(pack, "pack.mcmeta", "{   \"pack\": {     \"description\": \"Dynamic data for Clutter No More\",     \"pack_format\": "+packVersion+"   } }");
             VerticalSlabGenerator.generate();
             StepGenerator.generate();

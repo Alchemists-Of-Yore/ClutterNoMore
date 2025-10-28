@@ -5,13 +5,13 @@ import dev.tazer.clutternomore.common.shape_map.ShapeMap;
 import dev.tazer.clutternomore.common.mixin.SlotAccessor;
 import dev.tazer.clutternomore.common.mixin.screen.ScreenAccessor;
 //? if !forge {
- /*import dev.tazer.clutternomore.common.networking.ChangeStackPayload;*/
+ import dev.tazer.clutternomore.common.networking.ChangeStackPayload;
 //?} else if forge && <1.21.1 {
-import dev.tazer.clutternomore.forge.networking.ChangeStackPacket;
+/*import dev.tazer.clutternomore.forge.networking.ChangeStackPacket;
 import dev.tazer.clutternomore.forge.networking.ForgeNetworking;
-//?}
+*///?}
 //? if fabric
-/*import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;*/
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -42,9 +42,9 @@ public class ClutterNoMoreClient {
 
     public static void onItemTooltips(ItemStack stack,
                                       //? if >1.21 {
-                                      /*Item.TooltipContext
-                                              *///?} else
-                                              Object
+                                      Item.TooltipContext
+                                              //?} else
+                                              /*Object*/
                                               tooltipContext, TooltipFlag tooltipFlag, List<Component> tooltip) {
         if (!showTooltip) {
             if (ShapeMap.contains(stack.getItem())) {
@@ -97,9 +97,9 @@ public class ClutterNoMoreClient {
                 //? if neoforge
                 /*Player player = screen.getMinecraft().player;*/
                 //? if fabric
-                /*Player player = Minecraft.getInstance().player;*/
-                //? if forge
                 Player player = Minecraft.getInstance().player;
+                //? if forge
+                /*Player player = Minecraft.getInstance().player;*/
 
                 if (slot.allowModification(player) && (ShapeMap.contains(heldStack.getItem()))) {
                     switch (CLIENT_CONFIG.HOLD.value()) {
@@ -143,16 +143,16 @@ public class ClutterNoMoreClient {
         player.playSound(SoundEvents.UI_BUTTON_CLICK.value(), 0.3F, 1.5F);
         if (slotId < 9) slotId += 36;
         //? if !forge {
-        /*var p = new ChangeStackPayload(containerId, slotId, next);*/
+        var p = new ChangeStackPayload(containerId, slotId, next);
         //?} else {
-        ChangeStackPacket p = new ChangeStackPacket(containerId, slotId, next);
+        /*ChangeStackPacket p = new ChangeStackPacket(containerId, slotId, next);
         //}
         //? if fabric
-        /*ClientPlayNetworking.send(p);*/
+        ClientPlayNetworking.send(p);
         //? if neoforge
-        /*PacketDistributor.sendToServer(p);*/
+        /^PacketDistributor.sendToServer(p);^/
         //? if forge && <1.21.1
-        ForgeNetworking.sendToServer(p);
-        //?}
+        /^ForgeNetworking.sendToServer(p);^/
+        *///?}
     }
 }

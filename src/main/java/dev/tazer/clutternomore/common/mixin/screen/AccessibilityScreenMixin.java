@@ -5,10 +5,10 @@ import net.minecraft.client.OptionInstance;
 import net.minecraft.client.Options;
 import net.minecraft.client.gui.components.Button;
 //? if >1.21 {
-/*import net.minecraft.client.gui.screens.options.AccessibilityOptionsScreen;*/
+import net.minecraft.client.gui.screens.options.AccessibilityOptionsScreen;
 //?} else {
-import net.minecraft.client.gui.screens.AccessibilityOptionsScreen;
-//?}
+/*import net.minecraft.client.gui.screens.AccessibilityOptionsScreen;
+*///?}
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Mixin;
@@ -28,7 +28,7 @@ public abstract class AccessibilityScreenMixin extends OptionsSubScreenMixin {
     }
 
     //? if >1.20.1 {
-    /*@Inject(
+    @Inject(
             method = "addOptions",
             at = @At(value = "RETURN")
     )
@@ -40,8 +40,8 @@ public abstract class AccessibilityScreenMixin extends OptionsSubScreenMixin {
                 ).bounds(0, 0, 150, 20).build();
         list.addSmall(List.of(shapeSwitcherButton));
     }
-    *///?} else {
-    @Redirect(
+    //?} else {
+    /*@Redirect(
             method = "createFooter",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/components/Button$Builder;bounds(IIII)Lnet/minecraft/client/gui/components/Button$Builder;")
     )
@@ -61,5 +61,5 @@ public abstract class AccessibilityScreenMixin extends OptionsSubScreenMixin {
                 ).bounds(this.width / 2 + 80, this.height - 27, 150, 20).build();
         this.addRenderableWidget(shapeSwitcherButton);
     }
-    //?}
+    *///?}
 }

@@ -39,9 +39,9 @@ public class CBlocks {
     public static void registerBlockItem(String name, Supplier<? extends Block> block) {
         CItems.register(name, () -> new BlockItem(block.get(), new Item.Properties()
                 //? if >1.21.2 {
-                /*.setId(ResourceKey.create(Registries.ITEM, ClutterNoMore.location(name)
+                .setId(ResourceKey.create(Registries.ITEM, ClutterNoMore.location(name)
                 )).useBlockDescriptionPrefix()
-                *///?}
+                //?}
                 ));
     }
 

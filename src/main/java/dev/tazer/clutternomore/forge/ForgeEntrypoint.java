@@ -2,7 +2,7 @@ package dev.tazer.clutternomore.forge;
 //? forge {
 
 
-import dev.tazer.clutternomore.CNMConfig;
+/*import dev.tazer.clutternomore.CNMConfig;
 import dev.tazer.clutternomore.ClutterNoMore;
 import dev.tazer.clutternomore.ClutterNoMoreClient;
 import dev.tazer.clutternomore.client.assets.AssetGenerator;
@@ -65,4 +65,4 @@ public class ForgeEntrypoint {
     }
 
 }
-//?}
+*///?}

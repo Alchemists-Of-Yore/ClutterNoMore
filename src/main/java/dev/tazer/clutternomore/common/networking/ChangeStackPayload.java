@@ -1,13 +1,13 @@
 package dev.tazer.clutternomore.common.networking;
 
 //? if neoforge || fabric {
-/*
-/^import dev.tazer.clutternomore.ClutterNoMore;^/
+
+/*import dev.tazer.clutternomore.ClutterNoMore;*/
 //? if neoforge {
-/^import net.neoforged.neoforge.network.handling.IPayloadContext;
-^///?} else if fabric {
-/^import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-^///?}
+/*import net.neoforged.neoforge.network.handling.IPayloadContext;
+*///?} else if fabric {
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+//?}
 import dev.tazer.clutternomore.ClutterNoMore;
 import dev.tazer.clutternomore.common.shape_map.ShapeMap;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -41,8 +41,8 @@ public record ChangeStackPayload(int containerId, int slot, ItemStack stack) imp
 
     public static void handleDataOnServer(final ChangeStackPayload data,
                                           //? neoforge {
-                                          /^final IPayloadContext
-                                          ^///?} else {
+                                          /*final IPayloadContext
+                                          *///?} else {
                                           ServerPlayNetworking.Context
                                             //?}
                                                   context) {
@@ -66,4 +66,4 @@ public record ChangeStackPayload(int containerId, int slot, ItemStack stack) imp
         }
     }
 }
-*///?}
+//?}
