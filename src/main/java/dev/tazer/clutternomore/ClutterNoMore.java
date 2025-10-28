@@ -139,8 +139,8 @@ public class ClutterNoMore {
     public static void registerVariants() {
         if (STARTUP_CONFIG.VERTICAL_SLABS.value() || STARTUP_CONFIG.STEPS.value()) {
             //? if neoforge {
-            /*((RegistryAccess) BuiltInRegistries.BLOCK).clutternomore$unfreeze();
-            ((RegistryAccess) BuiltInRegistries.ITEM).clutternomore$unfreeze();
+            /*((dev.tazer.clutternomore.common.access.RegistryAccess) BuiltInRegistries.BLOCK).clutternomore$unfreeze();
+            ((dev.tazer.clutternomore.common.access.RegistryAccess) BuiltInRegistries.ITEM).clutternomore$unfreeze();
             *///?} else if forge {
             /*RegistryManager.ACTIVE.getRegistry(BuiltInRegistries.BLOCK.key()).unfreeze();
             RegistryManager.ACTIVE.getRegistry(BuiltInRegistries.ITEM.key()).unfreeze();

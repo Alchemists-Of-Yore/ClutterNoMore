@@ -2,6 +2,7 @@ package dev.tazer.clutternomore.client;
 
 import com.google.common.collect.ImmutableList;
 import dev.tazer.clutternomore.CNMConfig;
+import dev.tazer.clutternomore.ClutterNoMore;
 import dev.tazer.clutternomore.ClutterNoMoreClient;
 import net.minecraft.client.OptionInstance;
 import net.minecraft.client.Options;
@@ -43,22 +44,17 @@ public class ShapeSwitcherOptionsScreen extends OptionsSubScreen {
                 OptionInstance.noTooltip(),
                 (component, value) -> value ? Component.translatable("key.clutternomore.menu_scrolling") : Component.translatable("key.clutternomore.menu_static"),
                 OptionInstance.BOOLEAN_VALUES,
-                CNMConfig.SCROLLING.get(),
-                value -> {
-                    CNMConfig.SCROLLING.set(value);
-                    CNMConfig.SCROLLING.save();
-                });
+                ClutterNoMoreClient.CLIENT_CONFIG.SCROLLING.value(),
+                ClutterNoMoreClient.CLIENT_CONFIG.SCROLLING::setValue);
 
         OptionInstance<?> toggleButton = new OptionInstance<>(
                 "key.clutternomore.open_menu",
                 OptionInstance.noTooltip(),
                 (component, value) -> Component.translatable("key.clutternomore.menu_" + value),
                 INPUT_TYPE_VALUES,
-                CNMConfig.HOLD.get(),
-                value -> {
-                    CNMConfig.HOLD.set(value);
-                    CNMConfig.HOLD.save();
-                });
+                ClutterNoMoreClient.CLIENT_CONFIG.HOLD.value(),
+                ClutterNoMoreClient.CLIENT_CONFIG.HOLD::setValue);
+
 
         if (list != null) list.addSmall(moving, toggleButton);
     }//?} else {

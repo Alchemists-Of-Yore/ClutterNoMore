@@ -135,15 +135,11 @@ public class ShapeSwitcherOverlay {
         player.playSound(SoundEvents.UI_BUTTON_CLICK.value(), 0.3F, 1.5F);
         player.setItemInHand(InteractionHand.MAIN_HAND, next);
 
-        //? if forge {
-        // Use Forge networking for 1.20.1
-        // You'll need to register and use a custom packet handler
-        // This depends on your mod's networking setup
-        //?} else if fabric {
+        //? if fabric {
         ClientPlayNetworking.send(new ChangeStackPayload(-1, -1, next));
         //?} else if neoforge {
-        /*PacketDistributor.sendToServer(new ChangeStackPayload(-1, -1, next));*/
-        //?} else if forge && <1.21.1 {
+        /*PacketDistributor.sendToServer(new ChangeStackPayload(-1, -1, next));
+        *///?} else if forge && <1.21.1 {
         /*ForgeNetworking.sendToServer(new ChangeStackPacket(-1, -1, next));
         *///?}
     }

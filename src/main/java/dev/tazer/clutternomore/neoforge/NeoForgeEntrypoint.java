@@ -66,10 +66,5 @@ public class NeoForgeEntrypoint {
         AssetGenerator.generate();
     }
 
-    @Override
-    public Path configPath() {
-        return FMLPaths.CONFIGDIR.get();
-    }
-
 }
 *///?}
