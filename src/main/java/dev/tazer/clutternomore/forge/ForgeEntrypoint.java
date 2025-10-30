@@ -5,7 +5,7 @@ package dev.tazer.clutternomore.forge;
 /*import dev.tazer.clutternomore.CNMConfig;
 import dev.tazer.clutternomore.ClutterNoMore;
 import dev.tazer.clutternomore.ClutterNoMoreClient;
-import dev.tazer.clutternomore.client.assets.AssetGenerator;
+import dev.tazer.clutternomore.client.assets.vanilla.AssetGenerator;
 import dev.tazer.clutternomore.common.shape_map.ShapeMapHandler;
 import dev.tazer.clutternomore.forge.networking.ForgeNetworking;
 import net.minecraft.server.MinecraftServer;

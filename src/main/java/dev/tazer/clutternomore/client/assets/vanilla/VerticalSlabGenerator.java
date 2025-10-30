@@ -1,10 +1,8 @@
-package dev.tazer.clutternomore.client.assets;
+package dev.tazer.clutternomore.client.assets.vanilla;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import dev.tazer.clutternomore.ClutterNoMore;
-import dev.tazer.clutternomore.Platform;
 import dev.tazer.clutternomore.common.blocks.VerticalSlabBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Direction;
@@ -14,8 +12,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static dev.tazer.clutternomore.ClutterNoMore.MODID;
-import static dev.tazer.clutternomore.client.assets.AssetGenerator.write;
+import static dev.tazer.clutternomore.client.assets.vanilla.AssetGenerator.write;
 
 public final class VerticalSlabGenerator {
     public static ArrayList<ResourceLocation> SLABS = new ArrayList<>();

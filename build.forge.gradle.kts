@@ -87,6 +87,8 @@ dependencies {
     jarJar("folk.sisby:kaleido-config:${property("deps.kaleido")}")
     "additionalRuntimeClasspath"("folk.sisby:kaleido-config:${property("deps.kaleido")}")
 
+    modImplementation("maven.modrinth:moonlight:${property("deps.moonlight")}")
+
     modCompileOnly("io.github.llamalad7:mixinextras-common:0.5.0")
     modImplementation("io.github.llamalad7:mixinextras-forge:0.5.0")
     jarJar("io.github.llamalad7:mixinextras-forge:0.5.0")

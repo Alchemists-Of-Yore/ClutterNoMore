@@ -1,20 +1,20 @@
-package dev.tazer.clutternomore.common.data;
+package dev.tazer.clutternomore.client.assets.moonlight;
 
 //? if neoforge {
 
 /*import dev.tazer.clutternomore.ClutterNoMore;
 
+//? if neoforge {
+/^import net.mehvahdjukaar.moonlight.api.events.AfterLanguageLoadEvent;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
-import net.mehvahdjukaar.moonlight.api.resources.pack.DynamicServerResourceProvider;
+import net.mehvahdjukaar.moonlight.api.resources.pack.DynamicClientResourceProvider;
 import net.mehvahdjukaar.moonlight.api.resources.pack.PackGenerationStrategy;
 import net.mehvahdjukaar.moonlight.api.resources.pack.ResourceGenTask;
+^///?}
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.level.block.Block;
 //? if neoforge {
 /^import net.neoforged.fml.ModList;
-^///?} else if forge {
-/^import net.minecraftforge.fml.ModList;
 ^///?} else {
 import net.fabricmc.loader.api.FabricLoader;
 //?}
@@ -24,54 +24,55 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class DynamicServerResources extends DynamicServerResourceProvider {
+public class DynamicClientResources extends DynamicClientResourceProvider {
 
     public static void register() {
-        RegHelper.registerDynamicResourceProvider(new DynamicServerResources());
+        RegHelper.registerDynamicResourceProvider(new DynamicClientResources());
     }
 
-    protected DynamicServerResources() {
-        super(ClutterNoMore.location("generated_pack"), PackGenerationStrategy.REGEN_ON_EVERY_RELOAD);
+    protected DynamicClientResources() {
+        super(ClutterNoMore.location("generated_pack"), PackGenerationStrategy.runOnce());
     }
 
     @Override
     protected Collection<String> gatherSupportedNamespaces() {
         List<String> namespaces = new ArrayList<>(List.of("minecraft", ClutterNoMore.MODID));
-        //? if neoforge || forge {
+        //? if neoforge {
         /^ModList.get().getMods().forEach(info -> namespaces.add(info.getNamespace()));
-        ^///?} else {
+         ^///?} else {
         FabricLoader.getInstance().getAllMods().forEach(info -> namespaces.add(info.getMetadata().getId()));
         //?}
         return namespaces;
     }
 
-    private static final List<DataGenerator> GENERATORS = List.of(
-            new TagsGenerator(),
-            new LootGenerator()
+
+    //? if neoforge {
+    /^private static final List<AssetGenerator> GENERATORS = List.of(
+            new VerticalSlabGenerator(),
+            new StepGenerator()
     );
 
     @Override
     public void regenerateDynamicAssets(Consumer<ResourceGenTask> executor) {
         executor.accept((resourceManager, sink) -> {
-            for (DataGenerator generator : GENERATORS) {
+            for (AssetGenerator generator : GENERATORS) {
                 generator.initialize(resourceManager, sink);
-
-                generator.generate(resourceManager, sink);
 
                 List<Item> items = BuiltInRegistries.ITEM.stream().toList();
                 for (Item item : items) {
                     generator.generate(item, resourceManager, sink);
                 }
-
-                List<Block> blocks = BuiltInRegistries.BLOCK.stream().toList();
-                for (Block block : blocks) {
-                    generator.generate(block, resourceManager, sink);
-                }
-
-                generator.finish(resourceManager, sink);
             }
         });
     }
+
+    @Override
+    public void addDynamicTranslations(AfterLanguageLoadEvent languageEvent) {
+        for (AssetGenerator generator : GENERATORS) {
+            generator.translate(languageEvent);
+        }
+    }
+    ^///?}
 }
 
 *///?}

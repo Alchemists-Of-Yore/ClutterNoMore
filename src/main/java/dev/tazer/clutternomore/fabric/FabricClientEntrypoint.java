@@ -4,7 +4,7 @@ package dev.tazer.clutternomore.fabric;
 
 import dev.tazer.clutternomore.ClutterNoMore;
 import dev.tazer.clutternomore.ClutterNoMoreClient;
-import dev.tazer.clutternomore.client.assets.AssetGenerator;
+import dev.tazer.clutternomore.client.assets.vanilla.AssetGenerator;
 import dev.tazer.clutternomore.common.networking.ChangeStackPayload;
 import dev.tazer.clutternomore.common.networking.ShapeMapPayload;
 import net.fabricmc.api.ClientModInitializer;

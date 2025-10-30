@@ -2,8 +2,10 @@ package dev.tazer.clutternomore.common.mixin.recipe;
 
 import dev.tazer.clutternomore.common.shape_map.ShapeMap;
 import net.minecraft.world.item.ItemStack;
+//? if >1.21.1 {
 import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.RecipeInput;
+//?}
 import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.item.crafting.ShapelessRecipe;
 import net.minecraft.world.level.Level;

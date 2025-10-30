@@ -1,4 +1,4 @@
-package dev.tazer.clutternomore.common.registry;
+package dev.tazer.clutternomore.common.registry.vanilla;
 
 import dev.tazer.clutternomore.ClutterNoMore;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -123,7 +123,7 @@ public class BlockSetRegistry {
             return false;
         }
 
-//        @Override
+        //        @Override
         public ShapeSet getDefaultType() {
             return STONE;
         }

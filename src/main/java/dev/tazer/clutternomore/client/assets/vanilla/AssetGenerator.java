@@ -1,7 +1,6 @@
-package dev.tazer.clutternomore.client.assets;
+package dev.tazer.clutternomore.client.assets.vanilla;
 
 import com.google.gson.JsonObject;
-import dev.tazer.clutternomore.CNMConfig;
 import dev.tazer.clutternomore.ClutterNoMore;
 import dev.tazer.clutternomore.ClutterNoMoreClient;
 import dev.tazer.clutternomore.Platform;
@@ -59,16 +58,16 @@ public class AssetGenerator {
             write(assets.resolve("lang"), "en_us.json", jsonObject.toString());
             // pack.mcmeta
             String packVersion =
-            //? if >1.21.8 {
-            "69";
+                    //? if >1.21.8 {
+                    "69";
             //?} else if >1.21.6 {
             /*"64";
-            */
+             */
             //?} else if >1.21 {
             /*"34";
-            *///?} else {
+             *///?} else {
             /*"15";
-            *///?}
+             *///?}
             write(pack, "pack.mcmeta", "{   \"pack\": {     \"description\": \"Dynamic data for Clutter No More\",     \"pack_format\": "+packVersion+"   } }");
             VerticalSlabGenerator.generate();
             StepGenerator.generate();

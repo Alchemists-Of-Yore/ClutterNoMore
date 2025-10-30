@@ -10,8 +10,9 @@ import dev.tazer.clutternomore.common.mixin.screen.ScreenAccessor;
 /*import dev.tazer.clutternomore.forge.networking.ChangeStackPacket;
 import dev.tazer.clutternomore.forge.networking.ForgeNetworking;
 *///?}
-//? if fabric
+//? if fabric {
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+//?}
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -24,9 +25,10 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-//? if neoforge
-/*import net.neoforged.neoforge.network.PacketDistributor;*/
-
+//? if neoforge {
+/*import dev.tazer.clutternomore.client.assets.moonlight.DynamicClientResources;
+import net.neoforged.neoforge.network.PacketDistributor;
+*///?}
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,6 +40,9 @@ public class ClutterNoMoreClient {
     public static final CNMConfig.ClientConfig CLIENT_CONFIG = CNMConfig.ClientConfig.createToml(Platform.INSTANCE.configPath(), "", MODID +"-client", CNMConfig.ClientConfig.class);
 
     public static void init() {
+        //? if neoforge {
+        /*DynamicClientResources.register();
+        *///?}
     }
 
     public static void onItemTooltips(ItemStack stack,
@@ -96,10 +101,8 @@ public class ClutterNoMoreClient {
                 ItemStack heldStack = slot.getItem();
                 //? if neoforge
                 /*Player player = screen.getMinecraft().player;*/
-                //? if fabric
+                //? if fabric || forge
                 Player player = Minecraft.getInstance().player;
-                //? if forge
-                /*Player player = Minecraft.getInstance().player;*/
 
                 if (slot.allowModification(player) && (ShapeMap.contains(heldStack.getItem()))) {
                     switch (CLIENT_CONFIG.HOLD.value()) {
@@ -148,9 +151,9 @@ public class ClutterNoMoreClient {
         /*ChangeStackPacket p = new ChangeStackPacket(containerId, slotId, next);
         //}
         //? if fabric
-        /^ClientPlayNetworking.send(p);^/
+        ClientPlayNetworking.send(p);
         //? if neoforge
-        PacketDistributor.sendToServer(p);
+        /^PacketDistributor.sendToServer(p);^/
         //? if forge && <1.21.1
         /^ForgeNetworking.sendToServer(p);^/
         *///?}

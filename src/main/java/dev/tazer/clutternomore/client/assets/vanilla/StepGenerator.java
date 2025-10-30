@@ -1,28 +1,19 @@
-package dev.tazer.clutternomore.client.assets;
+package dev.tazer.clutternomore.client.assets.vanilla;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import dev.tazer.clutternomore.ClutterNoMore;
 import dev.tazer.clutternomore.common.blocks.StepBlock;
-import dev.tazer.clutternomore.common.blocks.VerticalSlabBlock;
-import dev.tazer.clutternomore.common.registry.BlockSetRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Direction;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.Resource;
-import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.state.properties.SlabType;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-import static dev.tazer.clutternomore.client.assets.AssetGenerator.getModel;
-import static dev.tazer.clutternomore.client.assets.AssetGenerator.write;
+import static dev.tazer.clutternomore.client.assets.vanilla.AssetGenerator.write;
 
 public final class StepGenerator {
     public static ArrayList<ResourceLocation> STAIRS = new ArrayList<>();

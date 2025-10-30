@@ -1,17 +1,28 @@
 package dev.tazer.clutternomore;
 
 //import dev.tazer.clutternomore.common.data.DynamicServerResources;
-import dev.tazer.clutternomore.client.assets.AssetGenerator;
-import dev.tazer.clutternomore.client.assets.StepGenerator;
-import dev.tazer.clutternomore.client.assets.VerticalSlabGenerator;
+import dev.tazer.clutternomore.client.assets.vanilla.AssetGenerator;
+import dev.tazer.clutternomore.client.assets.vanilla.StepGenerator;
+import dev.tazer.clutternomore.client.assets.vanilla.VerticalSlabGenerator;
 import dev.tazer.clutternomore.common.blocks.StepBlock;
 import dev.tazer.clutternomore.common.blocks.VerticalSlabBlock;
 import dev.tazer.clutternomore.common.registry.CBlocks;
-import dev.tazer.clutternomore.common.registry.BlockSetRegistry;
+//? if neoforge {
+/*import dev.tazer.clutternomore.common.data.DynamicServerResources;
+*///?}
 import dev.tazer.clutternomore.common.shape_map.ShapeMap;
-import net.minecraft.core.HolderLookup;
+//? if neoforge {
+/*import dev.tazer.clutternomore.common.registry.moonlight.BlockSetRegistry;
+*///?} else {
+import dev.tazer.clutternomore.common.registry.vanilla.BlockSetRegistry;
+//?}
+
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.RegistryAccess;
+//? if <1.21 {
+/*import net.minecraft.core.RegistryAccess;
+*///?} else {
+import net.minecraft.core.HolderLookup;
+//?}
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -44,7 +55,9 @@ public class ClutterNoMore {
     public static void init() {
         LOGGER.info("Initializing {} on {}", MODID, Platform.INSTANCE.loader());
         BlockSetRegistry.init();
-//        DynamicServerResources.register();
+        //? neoforge {
+        /*DynamicServerResources.register();
+        *///?}
     }
 
     public static ResourceLocation location(String path) {
@@ -136,6 +149,7 @@ public class ClutterNoMore {
         *///?}
     }
 
+    //? if forge || fabric {
     public static void registerVariants() {
         if (STARTUP_CONFIG.VERTICAL_SLABS.value() || STARTUP_CONFIG.STEPS.value()) {
             //? if neoforge {
@@ -181,8 +195,9 @@ public class ClutterNoMore {
             *///?}
         }
     }
+    //?}
 
-    private static BlockBehaviour.Properties copy(Block block) {
+    public static BlockBehaviour.Properties copy(Block block) {
         //? if >1.21
         return BlockBehaviour.Properties.ofFullCopy(block);
         //? if <1.21

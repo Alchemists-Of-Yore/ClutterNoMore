@@ -29,7 +29,6 @@ public class ForgeNetworking {
 
     //FIXME
     public static void sendToPlayer(ServerPlayer serverPlayer) {
-
     }
 }
 *///?}

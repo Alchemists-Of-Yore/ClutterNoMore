@@ -7,20 +7,25 @@ import dev.tazer.clutternomore.common.compat.EIVCompat;
 //? if fabric || neoforge {
 import dev.tazer.clutternomore.common.networking.ShapeMapPayload;
 //?}
-import dev.tazer.clutternomore.common.registry.BlockSetRegistry;
-//? if fabric
+//? if fabric {
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import dev.tazer.clutternomore.common.registry.vanilla.BlockSetRegistry;
+//?}
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-//? if neoforge
-/*import net.neoforged.neoforge.network.PacketDistributor;*/
+//? if neoforge {
+/*import net.neoforged.neoforge.network.PacketDistributor;
+import dev.tazer.clutternomore.common.registry.moonlight.BlockSetRegistry;
+*///?}
 //? if forge {
 /*import dev.tazer.clutternomore.forge.networking.ForgeNetworking;
+import dev.tazer.clutternomore.common.registry.vanilla.BlockSetRegistry;
 *///?}
+
 
 import java.util.*;
 
@@ -84,6 +89,7 @@ public class ShapeMap {
             }
         }
 
+        //? if !neoforge {
         BuiltInRegistries.ITEM.entrySet().forEach((key -> {
             var id = key.getKey().location();
             var item = key.getValue();
@@ -92,6 +98,7 @@ public class ShapeMap {
                 BlockSetRegistry.ShapeSetRegistry.detectTypeFromBlock(block, id);
             }
         }));
+        //?}
 
         for (Item item : BuiltInRegistries.ITEM.stream().toList()) {
             List<Item> shapes = new ArrayList<>(getShapes(item));
@@ -102,7 +109,10 @@ public class ShapeMap {
                 Item mainChild = shapeSet.mainChild().asItem();
                 if (item == mainChild) {
                     shapeSet.getChildren().forEach(child -> {
-                        if (child != mainChild && child instanceof Item shape) {
+                        if (child != mainChild && child
+                                //? if neoforge
+                                /*.getValue()*/
+                                instanceof Item shape) {
                             shapes.add(shape);
                             //? if >1.21.4 {
                             if (Platform.INSTANCE.isModLoaded("eiv"))
