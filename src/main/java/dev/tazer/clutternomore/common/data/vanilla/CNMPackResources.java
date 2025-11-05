@@ -1,28 +1,21 @@
 package dev.tazer.clutternomore.common.data.vanilla;
 
 import com.google.gson.JsonElement;
+import com.google.gson.internal.Streams;
+import com.google.gson.stream.JsonWriter;
 import dev.tazer.clutternomore.ClutterNoMore;
-import net.mehvahdjukaar.moonlight.api.misc.ResourceLocationSearchTrie;
-import net.mehvahdjukaar.moonlight.api.resources.RPUtils;
-import net.mehvahdjukaar.moonlight.core.Moonlight;
-import net.minecraft.SharedConstants;
-import net.minecraft.network.chat.Component;
+import net.minecraft.FileUtil;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.AbstractPackResources;
-import net.minecraft.server.packs.PackLocationInfo;
-import net.minecraft.server.packs.PackResources;
-import net.minecraft.server.packs.PackType;
-import net.minecraft.server.packs.metadata.pack.PackMetadataSection;
+import net.minecraft.server.packs.*;
 import net.minecraft.server.packs.resources.IoSupplier;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.io.StringWriter;
+import java.nio.file.Path;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class CNMPackResources extends AbstractPackResources {
@@ -30,7 +23,6 @@ public class CNMPackResources extends AbstractPackResources {
     protected final Set<String> namespaces;
     protected final Map<ResourceLocation, byte[]> resources;
     protected final Map<String, byte[]> rootResources;
-    protected final ResourceLocationSearchTrie searchTrie;
 
     public CNMPackResources(PackLocationInfo info, PackType type) {
         this(info, type, false);
@@ -41,7 +33,6 @@ public class CNMPackResources extends AbstractPackResources {
         this.namespaces = new HashSet<>();
         this.resources = new ConcurrentHashMap<>();
         this.rootResources = new ConcurrentHashMap<>();
-        this.searchTrie = new ResourceLocationSearchTrie();
         this.packType = type;
     }
 
@@ -61,13 +52,12 @@ public class CNMPackResources extends AbstractPackResources {
         synchronized(this) {
             this.namespaces.add(id.getNamespace());
             this.resources.put(id, bytes);
-            this.searchTrie.insert(id);
         }
     }
 
     public void addJson(ResourceLocation path, JsonElement json) {
         try {
-            addResource(path, RPUtils.serializeJson(json).getBytes());
+            addResource(path, serializeJson(json).getBytes());
         } catch (IOException e) {
             ClutterNoMore.LOGGER.error("Failed to write JSON {} to resource pack.", path, e);
         }
@@ -75,7 +65,7 @@ public class CNMPackResources extends AbstractPackResources {
 
     public void addRootJson(String name, JsonElement json) {
         try {
-            addRootResource(name, RPUtils.serializeJson(json).getBytes());
+            addRootResource(name, serializeJson(json).getBytes());
         } catch (IOException e) {
             ClutterNoMore.LOGGER.error("Failed to write JSON {} to resource pack.", name, e);
         }
@@ -98,22 +88,41 @@ public class CNMPackResources extends AbstractPackResources {
         } : null;
     }
 
-    public void listResources(PackType packType, String namespace, String id, PackResources.ResourceOutput output) {
+    public void listResources(PackType packType, String namespace, String p_path, PackResources.ResourceOutput output) {
         if (packType == this.packType) {
-            synchronized(this) {
-                this.searchTrie.search(namespace + "/" + id).forEach((r) -> {
-                    byte[] buf = this.resources.get(r);
-                    output.accept(r, () -> {
-                        if (buf == null) {
-                            throw new IllegalStateException("Somehow search tree returned a resource not in resources " + String.valueOf(r));
-                        } else {
-                            return new ByteArrayInputStream(buf);
-                        }
-                    });
-                });
-            }
+            FileUtil.decomposePath(p_path).ifSuccess((p_248228_) -> {
+                List<ResourceLocation> list = resources.keySet().stream().toList();
+                int i = list.size();
+                if (i == 1) {
+                    getResources(output, namespace, list.get(0), p_248228_);
+                } else if (i > 1) {
+                    Map<ResourceLocation, IoSupplier<InputStream>> map = new HashMap();
+
+                    for (int j = 0; j < i - 1; ++j) {
+                        Objects.requireNonNull(map);
+                        getResources(map::putIfAbsent, namespace, list.get(j), p_248228_);
+                    }
+
+                    ResourceLocation path = list.get(i - 1);
+                    if (map.isEmpty()) {
+                        getResources(output, namespace, path, p_248228_);
+                    } else {
+                        Objects.requireNonNull(map);
+                        getResources(map::putIfAbsent, namespace, path, p_248228_);
+                        map.forEach(output);
+                    }
+                }
+
+            }).ifError((p_337564_) -> ClutterNoMore.LOGGER.error("Invalid path {}: {}", p_path, p_337564_.message()));
+
         }
     }
+
+    private static void getResources(PackResources.ResourceOutput resourceOutput, String namespace, ResourceLocation root, List<String> paths) {
+        Path path = Path.of(root.getPath());
+        PathPackResources.listPath(namespace, path, paths, resourceOutput);
+    }
+
     @Override
     public Set<String> getNamespaces(PackType packType) {
         return packType != this.packType ? Set.of() : this.namespaces;
@@ -121,5 +130,24 @@ public class CNMPackResources extends AbstractPackResources {
 
     @Override
     public void close() {
+    }
+
+    public static String serializeJson(JsonElement json) throws IOException {
+        try {
+            String var3;
+            try (
+                    StringWriter stringWriter = new StringWriter();
+                    JsonWriter jsonWriter = new JsonWriter(stringWriter);
+            ) {
+                jsonWriter.setLenient(true);
+                jsonWriter.setIndent("  ");
+                Streams.write(json, jsonWriter);
+                var3 = stringWriter.toString();
+            }
+
+            return var3;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

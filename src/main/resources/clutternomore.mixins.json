@@ -9,6 +9,8 @@
     "ItemDisplayBuilderMixin",
     "ItemMixin",
     "ItemStackMixin",
+    "PackRepositoryAccessor",
+    "PackRepositoryMixin",
     "SimpleRegistryMixin",
     "SlotAccessor",
     "recipe.ShapedRecipeMixin",
