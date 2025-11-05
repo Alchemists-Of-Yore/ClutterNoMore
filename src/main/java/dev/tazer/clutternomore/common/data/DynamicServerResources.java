@@ -27,7 +27,7 @@ import java.util.function.Consumer;
 public class DynamicServerResources extends DynamicServerResourceProvider {
 
     public static void register() {
-        RegHelper.registerDynamicResourceProvider(new DynamicServerResources());
+//        RegHelper.registerDynamicResourceProvider(new DynamicServerResources());
     }
 
     protected DynamicServerResources() {
