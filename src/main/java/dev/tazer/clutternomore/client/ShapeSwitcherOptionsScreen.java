@@ -55,8 +55,16 @@ public class ShapeSwitcherOptionsScreen extends OptionsSubScreen {
                 ClutterNoMoreClient.CLIENT_CONFIG.HOLD.value(),
                 ClutterNoMoreClient.CLIENT_CONFIG.HOLD::setValue);
 
+        OptionInstance<?> overscroll = new OptionInstance<>(
+                "key.clutternomore.wrap_scrolling",
+                OptionInstance.noTooltip(),
+                (component, value) -> value ? Component.translatable("key.clutternomore.enabled") : Component.translatable("key.clutternomore.disabled"),
+                OptionInstance.BOOLEAN_VALUES,
+                ClutterNoMoreClient.CLIENT_CONFIG.WRAP_SCROLLING.value(),
+                ClutterNoMoreClient.CLIENT_CONFIG.WRAP_SCROLLING::setValue);
 
-        if (list != null) list.addSmall(moving, toggleButton);
+
+        if (list != null) list.addSmall(moving, toggleButton, overscroll);
     }//?} else {
     /*@Override
     protected void init() {
