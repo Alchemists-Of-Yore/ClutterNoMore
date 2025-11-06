@@ -74,13 +74,16 @@ dependencies {
     modImplementation("net.fabricmc.fabric-api:fabric-api:${property("deps.fabric-api")}")
 
 //    modImplementation("maven.modrinth:moonlight:${property("deps.moonlight")}")
-    modCompileOnly("com.terraformersmc:modmenu:${property("deps.modmenu")}")
+    if (hasProperty("deps.modmenu")) {
+        modLocalRuntime("com.terraformersmc:modmenu:${property("deps.modmenu")}")
+    }
     if (hasProperty("deps.emi")) {
         modCompileOnly("dev.emi:emi-fabric:${property("deps.emi")}:api")
         modLocalRuntime("dev.emi:emi-fabric:${property("deps.emi")}")
     }
     if (hasProperty("deps.eiv")) {
         modCompileOnly("maven.modrinth:eiv:${property("deps.eiv")}")
+        modLocalRuntime("maven.modrinth:eiv:${property("deps.eiv")}")
         modLocalRuntime("maven.modrinth:pyrite:0.16.1+1.21.9-rc1")
     }
 
