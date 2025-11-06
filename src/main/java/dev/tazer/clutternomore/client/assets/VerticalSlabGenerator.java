@@ -27,7 +27,7 @@ public final class VerticalSlabGenerator {
                 var resourceManager = Minecraft.getInstance().getResourceManager();
 
                 //blockstate
-                var potentialBlockstate = resourceManager.getResource(ClutterNoMore.location(id.getNamespace(), "blockstates/" + name + ".json"));
+                var potentialBlockstate = resourceManager.getResource(ClutterNoMore.location(id.getNamespace(), "blockstates/%s.json".formatted(name)));
                 if (potentialBlockstate.isEmpty()) {
                     VerticalSlabBlock.FACING.getAllValues().forEach(directionValue -> {
                         VerticalSlabBlock.DOUBLE.getAllValues().forEach(doubleState->{
@@ -51,17 +51,17 @@ public final class VerticalSlabGenerator {
                         });
                     });
                     blockState.add("variants", variants);
-                    write(AssetGenerator.assets.resolve("blockstates"), "%s.json".formatted(name), blockState.toString());
+                    write("blockstates/%s.json".formatted(name), blockState);
                 }
 
                 // block models
-                var potentialSlabModel = resourceManager.getResource(ClutterNoMore.location(id.getNamespace(), "models/block/" + id.getPath() + ".json"));
+                var potentialSlabModel = resourceManager.getResource(ClutterNoMore.location(id.getNamespace(), "models/block/%s.json".formatted(id.getPath())));
                 if (potentialSlabModel.isPresent()) {
                     JsonObject blockModel = JsonParser.parseReader(potentialSlabModel.get().openAsReader()).getAsJsonObject();
                     blockModel.addProperty("parent", "clutternomore:block/templates/vertical_slab");
-                    write(AssetGenerator.assets.resolve("models/block"), name + ".json", blockModel.toString());
+                    write("models/block/%s.json".formatted(name), blockModel);
                     blockModel.addProperty("parent", "clutternomore:block/templates/vertical_slab_double");
-                    write(AssetGenerator.assets.resolve("models/block"), name + "_double.json", blockModel.toString());
+                    write("models/block/%s_double.json".formatted(name), blockModel);
                 }
                 // item models
                 var modelString = name;
@@ -73,11 +73,11 @@ public final class VerticalSlabGenerator {
                 model.addProperty("type", "minecraft:model");
                 model.addProperty("model", "clutternomore:block/"+modelString);
                 itemState.add("model", model);
-                write(AssetGenerator.assets.resolve("items") , "%s.json".formatted(name), itemState.toString());
+                write("items/%s.json".formatted(name), itemState);
                 //?} else {
                 /*JsonObject itemModel = new JsonObject();
                 itemModel.addProperty("parent", "clutternomore:block/"+modelString);
-                write(AssetGenerator.assets.resolve("models/item") , "%s.json".formatted(name), itemModel.toString());
+                write("models/item/%s.json".formatted(name), itemModel);
                 *///?}
             } catch (IOException e) {
                 throw new RuntimeException(e);

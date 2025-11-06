@@ -43,12 +43,14 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 //?}
+import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-//? if forge
-/*import net.minecraftforge.registries.RegistryManager;*/
+//? if forge {
+/*import net.minecraftforge.registries.RegistryManager;
+*///?}
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -60,7 +62,7 @@ public class ClutterNoMore {
     public static final Logger LOGGER = LogManager.getLogger("ClutterNoMore");
     public static final CNMConfig.StartupConfig STARTUP_CONFIG = CNMConfig.StartupConfig.createToml(Platform.INSTANCE.configPath(), "", MODID+"-startup", CNMConfig.StartupConfig.class);
     private static final PackLocationInfo PACK_INFO = new PackLocationInfo(ClutterNoMore.MODID+"-runtime", Component.literal("ClutterNoMore"), PackSource.BUILT_IN, Optional.empty());
-    private static final CNMPackResources RESOURCES = new CNMPackResources(PACK_INFO);
+    public static final CNMPackResources RESOURCES = new CNMPackResources(PACK_INFO);
 
     public static void init() {
         LOGGER.info("Initializing {} on {}", MODID, Platform.INSTANCE.loader());

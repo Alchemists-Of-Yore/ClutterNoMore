@@ -17,7 +17,6 @@ import static dev.tazer.clutternomore.client.assets.AssetGenerator.write;
 
 public final class StepGenerator {
     public static ArrayList<ResourceLocation> STAIRS = new ArrayList<>();
-    public static List<String> STEPS = new ArrayList<>();
 
     public static void generate() {
 
@@ -29,7 +28,7 @@ public final class StepGenerator {
                 var resourceManager = Minecraft.getInstance().getResourceManager();
 
                 //blockstate
-                var potentialBlockstate = resourceManager.getResource(ClutterNoMore.location(id.getNamespace(), "blockstates/" + name + ".json"));
+                var potentialBlockstate = resourceManager.getResource(ClutterNoMore.location(id.getNamespace(), "blockstates/%s.json".formatted(name)));
                 if (potentialBlockstate.isEmpty()) {
                     StepBlock.FACING.getAllValues().forEach(directionValue -> {
                         StepBlock.SLAB_TYPE.getAllValues().forEach(doubleState->{
@@ -56,21 +55,21 @@ public final class StepGenerator {
                         });
                     });
                     blockState.add("variants", variants);
-                    write(AssetGenerator.assets.resolve("blockstates"), "%s.json".formatted(name), blockState.toString());
+                    AssetGenerator.write("blockstates/%s.json".formatted(name), blockState);
                 }
 
                 // block models
-                var potentialModel = resourceManager.getResource(ClutterNoMore.location(id.getNamespace(), "models/block/" + name + ".json"));
+                var potentialModel = resourceManager.getResource(ClutterNoMore.location(id.getNamespace(), "models/block/%s.json".formatted(name)));
                 if (potentialModel.isEmpty()) {
-                    var baseSlabModel = resourceManager.getResource(ClutterNoMore.location(id.getNamespace(), "models/block/" + id.getPath() + ".json"));
+                    var baseSlabModel = resourceManager.getResource(ClutterNoMore.location(id.getNamespace(), "models/block/%s.json".formatted(id.getPath())));
                     if (baseSlabModel.isPresent()) {
                         JsonObject blockModel = JsonParser.parseReader(baseSlabModel.get().openAsReader()).getAsJsonObject();
                         blockModel.addProperty("parent", "clutternomore:block/templates/step");
-                        write(AssetGenerator.assets.resolve("models/block"), name + ".json", blockModel.toString());
+                        write("models/block/%s.json".formatted(name), blockModel);
                         blockModel.addProperty("parent", "clutternomore:block/templates/step_double");
-                        write(AssetGenerator.assets.resolve("models/block"), name + "_double.json", blockModel.toString());
+                        write("models/block/%s_double.json".formatted(name), blockModel);
                         blockModel.addProperty("parent", "clutternomore:block/templates/step_top");
-                        write(AssetGenerator.assets.resolve("models/block"), name + "_top.json", blockModel.toString());
+                        write("models/block/%s_top.json".formatted(name), blockModel);
                     }
                 }
                 // item models
@@ -83,11 +82,11 @@ public final class StepGenerator {
                 model.addProperty("type", "minecraft:model");
                 model.addProperty("model", "clutternomore:block/"+modelString);
                 itemState.add("model", model);
-                write(AssetGenerator.assets.resolve("items") , "%s.json".formatted(name), itemState.toString());
+                write("items/%s.json".formatted(name), itemState);
                 //?} else {
                 /*JsonObject itemModel = new JsonObject();
                 itemModel.addProperty("parent", "clutternomore:block/"+modelString);
-                write(AssetGenerator.assets.resolve("models/item") , "%s.json".formatted(name), itemModel.toString());
+                write("models/item/%s.json".formatted(name), itemModel);
                 *///?}
             } catch (IOException e) {
                 throw new RuntimeException(e);

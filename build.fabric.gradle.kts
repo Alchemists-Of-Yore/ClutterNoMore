@@ -83,7 +83,7 @@ dependencies {
     if (hasProperty("deps.eiv")) {
         modCompileOnly("maven.modrinth:eiv:${property("deps.eiv")}")
         modLocalRuntime("maven.modrinth:eiv:${property("deps.eiv")}")
-        modLocalRuntime("maven.modrinth:pyrite:0.16.1+1.21.9-rc1")
+//        modLocalRuntime("maven.modrinth:pyrite:0.16.1+1.21.9-rc1")
     }
 
 

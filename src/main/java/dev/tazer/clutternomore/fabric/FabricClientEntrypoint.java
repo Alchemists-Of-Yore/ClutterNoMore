@@ -42,7 +42,7 @@ public class FabricClientEntrypoint implements ClientModInitializer {
         *///?}
         ClientTickEvents.START_CLIENT_TICK.register(ClientEvents::onPlayerTick);
         ScreenEvents.AFTER_INIT.register(this::afterInitScreen);
-        ClientLifecycleEvents.CLIENT_STARTED.register((AssetGenerator::generate));
+        ClientLifecycleEvents.CLIENT_STARTED.register((mc)-> AssetGenerator.generate());
         ClientPlayNetworking.registerGlobalReceiver(ShapeMapPayload.TYPE, ShapeMapPayload::handleDataOnClient);
     }
 
