@@ -3,6 +3,7 @@ package dev.tazer.clutternomore;
 //import dev.tazer.clutternomore.common.data.DynamicServerResources;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import dev.tazer.clutternomore.client.assets.AssetGenerator;
 import dev.tazer.clutternomore.client.assets.StepGenerator;
 import dev.tazer.clutternomore.client.assets.VerticalSlabGenerator;
@@ -212,6 +213,7 @@ public class ClutterNoMore {
                     SoundType.GRASS
             );
 
+
             for (Map.Entry<ResourceKey<Item>, Item> resourceKeyItemEntry : BuiltInRegistries.ITEM.entrySet()) {
                 if (resourceKeyItemEntry.getValue().asItem() instanceof BlockItem blockItem) {
                     var blockId = resourceKeyItemEntry.getKey().location();
@@ -235,6 +237,9 @@ public class ClutterNoMore {
 
                         slabs.add(blockId);
 
+                        ResourceLocation shapeId = ClutterNoMore.location(path);
+                        addLootTable(blockId, shapeId);
+
                         if (woodenSoundTypes.contains(slabBlock.properties().soundType)) {
                             woodenVerticalSlabsArray.add(ClutterNoMore.location(path).toString());
                         } else {
@@ -242,6 +247,8 @@ public class ClutterNoMore {
                             if (shovelSoundTypes.contains(slabBlock.properties().soundType)) shovelMineableArray.add(ClutterNoMore.location(path).toString());
                             else pickaxeMineableArray.add(ClutterNoMore.location(path).toString());
                         }
+
+
                     }
                     if (blockItem.getBlock() instanceof StairBlock stairBlock && STARTUP_CONFIG.STEPS.value()) {
                         String shortPath = blockId.getPath().replace("stairs", "step");
@@ -259,12 +266,15 @@ public class ClutterNoMore {
 
                         stairs.add(blockId);
 
+                        ResourceLocation shapeId = ClutterNoMore.location(path);
+                        addLootTable(blockId, shapeId);
+
                         if (woodenSoundTypes.contains(stairBlock.properties().soundType)) {
-                            woodenStepsArray.add(ClutterNoMore.location(path).toString());
+                            woodenStepsArray.add(shapeId.toString());
                         } else {
-                            stepsArray.add(ClutterNoMore.location(path).toString());
-                            if (shovelSoundTypes.contains(stairBlock.properties().soundType)) shovelMineableArray.add(ClutterNoMore.location(path).toString());
-                            else pickaxeMineableArray.add(ClutterNoMore.location(path).toString());
+                            stepsArray.add(shapeId.toString());
+                            if (shovelSoundTypes.contains(stairBlock.properties().soundType)) shovelMineableArray.add(shapeId.toString());
+                            else pickaxeMineableArray.add(shapeId.toString());
                         }
                     }
                 }
@@ -278,18 +288,22 @@ public class ClutterNoMore {
             JsonObject verticalSlabTag = new JsonObject();
             verticalSlabTag.add("values", verticalSlabsArray);
             RESOURCES.addJson(PackType.SERVER_DATA, ClutterNoMore.location("tags/block/vertical_slabs.json"), verticalSlabTag);
+            RESOURCES.addJson(PackType.SERVER_DATA, ClutterNoMore.location("tags/item/vertical_slabs.json"), verticalSlabTag);
 
             JsonObject woodenVerticalSlabTag = new JsonObject();
             woodenVerticalSlabTag.add("values", woodenVerticalSlabsArray);
             RESOURCES.addJson(PackType.SERVER_DATA, ClutterNoMore.location("tags/block/wooden_vertical_slabs.json"), woodenVerticalSlabTag);
+            RESOURCES.addJson(PackType.SERVER_DATA, ClutterNoMore.location("tags/item/wooden_vertical_slabs.json"), woodenVerticalSlabTag);
 
             JsonObject stepTag = new JsonObject();
             stepTag.add("values", stepsArray);
             RESOURCES.addJson(PackType.SERVER_DATA, ClutterNoMore.location("tags/block/steps.json"), stepTag);
+            RESOURCES.addJson(PackType.SERVER_DATA, ClutterNoMore.location("tags/item/steps.json"), stepTag);
 
             JsonObject woodenStepTag = new JsonObject();
             woodenStepTag.add("values", woodenStepsArray);
             RESOURCES.addJson(PackType.SERVER_DATA, ClutterNoMore.location("tags/block/wooden_steps.json"), woodenStepTag);
+            RESOURCES.addJson(PackType.SERVER_DATA, ClutterNoMore.location("tags/item/wooden_steps.json"), woodenStepTag);
 
 
             JsonObject pickaxeMineableTag = new JsonObject();
@@ -308,6 +322,23 @@ public class ClutterNoMore {
             RegistryManager.ACTIVE.getRegistry(BuiltInRegistries.ITEM.key()).freeze();
             *///?}
         }
+    }
+
+    public static void addLootTable(ResourceLocation block, ResourceLocation shape) {
+        JsonObject lootTable = new JsonObject();
+        lootTable.add("type", new JsonPrimitive("block"));
+        JsonArray pools = new JsonArray();
+        JsonObject pool = new JsonObject();
+        pool.add("rolls", new JsonPrimitive(1));
+        JsonArray entries = new JsonArray();
+        JsonObject entry = new JsonObject();
+        entry.add("type", new JsonPrimitive("loot_table"));
+        entry.add("value", new JsonPrimitive(block.withPrefix("blocks/").toString()));
+        entries.add(entry);
+        pool.add("entries", entries);
+        pools.add(pool);
+        lootTable.add("pools", pools);
+        RESOURCES.addJson(PackType.SERVER_DATA, ClutterNoMore.location("loot_table/blocks/%s.json".formatted(shape.getPath())), lootTable);
     }
 
     public static BlockBehaviour.Properties copy(Block block) {

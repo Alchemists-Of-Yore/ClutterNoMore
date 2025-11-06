@@ -4,9 +4,12 @@
   "key.clutternomore.shape_switcher": "Shape Switcher...",
   "key.clutternomore.menu_type": "Menu Type",
   "key.clutternomore.menu_scrolling": "Scrolling",
+  "key.clutternomore.wrap_scrolling": "Wrap Scrolling",
   "key.clutternomore.menu_static": "Static",
   "key.clutternomore.open_menu": "Open Menu",
   "key.clutternomore.menu_hold": "Hold",
   "key.clutternomore.menu_toggle": "Toggle",
-  "key.clutternomore.menu_press": "Press"
+  "key.clutternomore.menu_press": "Press",
+  "key.clutternomore.enabled": "Enabled",
+  "key.clutternomore.disabled": "Disabled"
 }
