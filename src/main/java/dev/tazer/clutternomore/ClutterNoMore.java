@@ -199,6 +199,18 @@ public class ClutterNoMore {
             JsonArray woodenVerticalSlabsArray = new JsonArray();
             JsonArray woodenStepsArray = new JsonArray();
             JsonArray pickaxeMineableArray = new JsonArray();
+            JsonArray shovelMineableArray = new JsonArray();
+
+            List<SoundType> woodenSoundTypes = List.of(
+                    SoundType.WOOD,
+                    SoundType.BAMBOO_WOOD,
+                    SoundType.CHERRY_WOOD,
+                    SoundType.NETHER_WOOD
+            );
+            List<SoundType> shovelSoundTypes = List.of(
+                    SoundType.GRAVEL,
+                    SoundType.GRASS
+            );
 
             for (Map.Entry<ResourceKey<Item>, Item> resourceKeyItemEntry : BuiltInRegistries.ITEM.entrySet()) {
                 if (resourceKeyItemEntry.getValue().asItem() instanceof BlockItem blockItem) {
@@ -211,18 +223,12 @@ public class ClutterNoMore {
 
                         slabs.add(resourceKeyItemEntry.getKey().location());
 
-                        List<SoundType> woodenSoundTypes = List.of(
-                                SoundType.WOOD,
-                                SoundType.BAMBOO_WOOD,
-                                SoundType.CHERRY_WOOD,
-                                SoundType.NETHER_WOOD
-                        );
-
                         if (woodenSoundTypes.contains(slabBlock.properties().soundType)) {
                             woodenVerticalSlabsArray.add(ClutterNoMore.location(path).toString());
                         } else {
                             verticalSlabsArray.add(ClutterNoMore.location(path).toString());
-                            pickaxeMineableArray.add(ClutterNoMore.location(path).toString());
+                            if (shovelSoundTypes.contains(slabBlock.properties().soundType)) shovelMineableArray.add(ClutterNoMore.location(path).toString());
+                            else pickaxeMineableArray.add(ClutterNoMore.location(path).toString());
                         }
                     }
                     if (blockItem.getBlock() instanceof StairBlock stairBlock && STARTUP_CONFIG.STEPS.value()) {
@@ -234,18 +240,12 @@ public class ClutterNoMore {
 
                         stairs.add(resourceKeyItemEntry.getKey().location());
 
-                        List<SoundType> woodenSoundTypes = List.of(
-                                SoundType.WOOD,
-                                SoundType.BAMBOO_WOOD,
-                                SoundType.CHERRY_WOOD,
-                                SoundType.NETHER_WOOD
-                        );
-
                         if (woodenSoundTypes.contains(stairBlock.properties().soundType)) {
                             woodenStepsArray.add(ClutterNoMore.location(path).toString());
                         } else {
                             stepsArray.add(ClutterNoMore.location(path).toString());
-                            pickaxeMineableArray.add(ClutterNoMore.location(path).toString());
+                            if (shovelSoundTypes.contains(stairBlock.properties().soundType)) shovelMineableArray.add(ClutterNoMore.location(path).toString());
+                            else pickaxeMineableArray.add(ClutterNoMore.location(path).toString());
                         }
                     }
                 }
@@ -276,6 +276,10 @@ public class ClutterNoMore {
             JsonObject pickaxeMineableTag = new JsonObject();
             pickaxeMineableTag.add("values", pickaxeMineableArray);
             RESOURCES.addJson(PackType.SERVER_DATA, ClutterNoMore.location("minecraft", "tags/block/mineable/pickaxe.json"), pickaxeMineableTag);
+
+            JsonObject shovelMineableTag = new JsonObject();
+            shovelMineableTag.add("values", shovelMineableArray);
+            RESOURCES.addJson(PackType.SERVER_DATA, ClutterNoMore.location("minecraft", "tags/block/mineable/shovel.json"), shovelMineableTag);
 
             //? if neoforge {
             /*BuiltInRegistries.BLOCK.freeze();
