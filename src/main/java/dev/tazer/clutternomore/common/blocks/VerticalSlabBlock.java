@@ -3,6 +3,9 @@ package dev.tazer.clutternomore.common.blocks;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+//? if neoforge {
+import net.minecraft.core.registries.BuiltInRegistries;
+//?}
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -61,6 +64,13 @@ public class VerticalSlabBlock extends HorizontalDirectionalBlock implements Sim
         return CODEC;
     }
     //?}
+
+    //? if neoforge {
+    /*@Override
+    public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state) {
+        return BuiltInRegistries.ITEM.get(this.builtInRegistryHolder().key().location()).getDefaultInstance();
+    }
+    *///?}
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
