@@ -66,51 +66,51 @@ public class NeoForgeEntrypoint {
         }
     }
 
-    @SubscribeEvent
-    private static void addPackFinders(AddPackFindersEvent event) {
-        if (event.getPackType() == PackType.SERVER_DATA) {
-            PackLocationInfo info = new PackLocationInfo(ClutterNoMore.MODID, Component.literal("Dynamic server data for ClutterNoMore"), PackSource.BUILT_IN, Optional.empty());
-            CNMPackResources resources = new CNMPackResources(info, PackType.SERVER_DATA);
-
-            JsonObject object = new JsonObject();
-            object.add("description", new JsonPrimitive("Clutter No More resources"));
-            object.add("pack_format", new JsonPrimitive(15));
-            JsonObject meta = new JsonObject();
-            meta.add("pack", object);
-            resources.addRootJson("pack.mcmeta", meta);
-
-            JsonArray array = new JsonArray();
-            array.add("minecraft:iron_block");
-            JsonObject tag = new JsonObject();
-            tag.add("values", array);
-            resources.addJson(ClutterNoMore.location("tags/block/stupid.json"), tag);
-
-            var pack = Pack.readMetaAndCreate(
-                    info,
-                    new Pack.ResourcesSupplier() {
-                        @Override
-                        public PackResources openPrimary(PackLocationInfo location) {
-                            return resources;
-                        }
-
-                        @Override
-                        public PackResources openFull(PackLocationInfo location, Pack.Metadata metadata) {
-                            return resources;
-                        }
-                    },
-                    PackType.SERVER_DATA,
-                    new PackSelectionConfig(
-                            true,
-                            Pack.Position.TOP,
-                            false
-                    )
-            );
-
-            if (pack != null) {
-                event.addRepositorySource(infoConsumer -> infoConsumer.accept(pack));
-            }
-        }
-    }
+//    @SubscribeEvent
+//    private static void addPackFinders(AddPackFindersEvent event) {
+//        if (event.getPackType() == PackType.SERVER_DATA) {
+//            PackLocationInfo info = new PackLocationInfo(ClutterNoMore.MODID, Component.literal("Dynamic server data for ClutterNoMore"), PackSource.BUILT_IN, Optional.empty());
+//            CNMPackResources resources = new CNMPackResources(info, PackType.SERVER_DATA);
+//
+//            JsonObject object = new JsonObject();
+//            object.add("description", new JsonPrimitive("Clutter No More resources"));
+//            object.add("pack_format", new JsonPrimitive(15));
+//            JsonObject meta = new JsonObject();
+//            meta.add("pack", object);
+//            resources.addRootJson("pack.mcmeta", meta);
+//
+//            JsonArray array = new JsonArray();
+//            array.add("minecraft:iron_block");
+//            JsonObject tag = new JsonObject();
+//            tag.add("values", array);
+//            resources.addJson(ClutterNoMore.location("tags/block/stupid.json"), tag);
+//
+//            var pack = Pack.readMetaAndCreate(
+//                    info,
+//                    new Pack.ResourcesSupplier() {
+//                        @Override
+//                        public PackResources openPrimary(PackLocationInfo location) {
+//                            return resources;
+//                        }
+//
+//                        @Override
+//                        public PackResources openFull(PackLocationInfo location, Pack.Metadata metadata) {
+//                            return resources;
+//                        }
+//                    },
+//                    PackType.SERVER_DATA,
+//                    new PackSelectionConfig(
+//                            true,
+//                            Pack.Position.TOP,
+//                            false
+//                    )
+//            );
+//
+//            if (pack != null) {
+//                event.addRepositorySource(infoConsumer -> infoConsumer.accept(pack));
+//            }
+//        }
+//    }
 
     @SubscribeEvent
     private static void registerPayloadHandlers(RegisterPayloadHandlersEvent event) {

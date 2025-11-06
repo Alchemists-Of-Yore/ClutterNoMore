@@ -1,38 +1,42 @@
 package dev.tazer.clutternomore;
 
 //import dev.tazer.clutternomore.common.data.DynamicServerResources;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import dev.tazer.clutternomore.client.assets.vanilla.AssetGenerator;
 import dev.tazer.clutternomore.client.assets.vanilla.StepGenerator;
 import dev.tazer.clutternomore.client.assets.vanilla.VerticalSlabGenerator;
 import dev.tazer.clutternomore.common.blocks.StepBlock;
 import dev.tazer.clutternomore.common.blocks.VerticalSlabBlock;
+import dev.tazer.clutternomore.common.data.vanilla.CNMPackResources;
 import dev.tazer.clutternomore.common.registry.CBlocks;
 //? if neoforge {
 /*import dev.tazer.clutternomore.common.data.DynamicServerResources;
 *///?}
-import dev.tazer.clutternomore.common.shape_map.ShapeMap;
 //? if neoforge {
 /*import dev.tazer.clutternomore.common.registry.moonlight.BlockSetRegistry;
 *///?} else {
 import dev.tazer.clutternomore.common.registry.vanilla.BlockSetRegistry;
 //?}
 
-import net.minecraft.core.NonNullList;
 //? if <1.21 {
 /*import net.minecraft.core.RegistryAccess;
 *///?} else {
 import net.minecraft.core.HolderLookup;
 //?}
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.PackLocationInfo;
+import net.minecraft.server.packs.PackResources;
+import net.minecraft.server.packs.PackSelectionConfig;
+import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.repository.Pack;
+import net.minecraft.server.packs.repository.PackSource;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.Recipe;
 //? if >1.21
-import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SlabBlock;
@@ -45,12 +49,13 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.*;
 import java.util.function.Supplier;
-import java.util.stream.Stream;
 
 public class ClutterNoMore {
     public static final String MODID = "clutternomore";
     public static final Logger LOGGER = LogManager.getLogger("ClutterNoMore");
     public static final CNMConfig.StartupConfig STARTUP_CONFIG = CNMConfig.StartupConfig.createToml(Platform.INSTANCE.configPath(), "", MODID+"-startup", CNMConfig.StartupConfig.class);
+    private static final PackLocationInfo PACK_INFO = new PackLocationInfo(ClutterNoMore.MODID+"-runtime", Component.literal("ClutterNoMore"), PackSource.BUILT_IN, Optional.empty());
+    private static final CNMPackResources RESOURCES = new CNMPackResources(PACK_INFO);
 
     public static void init() {
         LOGGER.info("Initializing {} on {}", MODID, Platform.INSTANCE.loader());
@@ -58,6 +63,35 @@ public class ClutterNoMore {
         //? neoforge {
         /*DynamicServerResources.register();
         *///?}
+
+        JsonArray array = new JsonArray();
+        array.add("minecraft:iron_block");
+        JsonObject tag = new JsonObject();
+        tag.add("values", array);
+        RESOURCES.addJson(PackType.SERVER_DATA, ClutterNoMore.location("tags/block/stupid.json"), tag);
+    }
+
+    public static Pack createPack(PackType type) {
+        return Pack.readMetaAndCreate(
+                ClutterNoMore.PACK_INFO,
+                new Pack.ResourcesSupplier() {
+                    @Override
+                    public PackResources openPrimary(PackLocationInfo location) {
+                        return RESOURCES;
+                    }
+
+                    @Override
+                    public PackResources openFull(PackLocationInfo location, Pack.Metadata metadata) {
+                        return RESOURCES;
+                    }
+                },
+                type,
+                new PackSelectionConfig(
+                        true,
+                        Pack.Position.TOP,
+                        false
+                )
+        );
     }
 
     public static ResourceLocation location(String path) {

@@ -11,6 +11,7 @@
     "ItemStackMixin",
     "PackRepositoryAccessor",
     "PackRepositoryMixin",
+    "ServerPacksSourceMixin",
     "SimpleRegistryMixin",
     "SlotAccessor",
     "recipe.ShapedRecipeMixin",

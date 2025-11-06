@@ -13,12 +13,10 @@ import java.util.Set;
 
 @Mixin(PackRepository.class)
 public interface PackRepositoryAccessor {
-    // ? if fabric {
     @Accessor("sources")
     Set<RepositorySource> getSources();
 
     @Mutable
     @Accessor("sources")
     void setSources(Set<RepositorySource> sources);
-    // ?}
 }
