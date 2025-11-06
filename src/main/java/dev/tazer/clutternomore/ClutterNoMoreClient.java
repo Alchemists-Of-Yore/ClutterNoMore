@@ -147,15 +147,14 @@ public class ClutterNoMoreClient {
         if (slotId < 9) slotId += 36;
         //? if !forge {
         var p = new ChangeStackPayload(containerId, slotId, next);
-        //?} else {
-        /*ChangeStackPacket p = new ChangeStackPacket(containerId, slotId, next);
-        //}
+        //?}
         //? if fabric
         ClientPlayNetworking.send(p);
         //? if neoforge
-        /^PacketDistributor.sendToServer(p);^/
-        //? if forge && <1.21.1
-        /^ForgeNetworking.sendToServer(p);^/
+        /*PacketDistributor.sendToServer(p);*/
+        //? if forge && <1.21.1 {
+        /*ChangeStackPacket p = new ChangeStackPacket(containerId, slotId, next);
+        ForgeNetworking.sendToServer(p);
         *///?}
     }
 }

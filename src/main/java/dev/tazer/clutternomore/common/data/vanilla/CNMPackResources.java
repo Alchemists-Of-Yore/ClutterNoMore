@@ -1,7 +1,6 @@
 package dev.tazer.clutternomore.common.data.vanilla;
 
 import com.google.gson.JsonElement;
-import com.google.gson.Strictness;
 import com.google.gson.internal.Streams;
 import com.google.gson.stream.JsonWriter;
 import dev.tazer.clutternomore.ClutterNoMore;
@@ -140,7 +139,7 @@ public class CNMPackResources extends AbstractPackResources {
                     StringWriter stringWriter = new StringWriter();
                     JsonWriter jsonWriter = new JsonWriter(stringWriter);
             ) {
-                jsonWriter.setStrictness(Strictness.LENIENT);
+                jsonWriter.setLenient(true);
                 jsonWriter.setIndent("  ");
                 Streams.write(json, jsonWriter);
                 var3 = stringWriter.toString();
