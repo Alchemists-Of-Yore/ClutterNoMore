@@ -141,10 +141,10 @@ public class BlockSetRegistry {
             addChild("slab", findShape("slab"));
             addChild("stairs", findShape("stairs"));
             addChild("wall", findShape("wall"));
-            addChild("vertical_slab", findShape(MODID,id.getNamespace()+ "/vertical", "slab"));
+            addChild("vertical_slab", findShape(MODID,id.getNamespace() + "/vertical", "slab"));
             addChild("vertical_slab", findShape(MODID,"vertical", "slab"));
             addChild("vertical_slab", findShape("vertical", "slab"));
-            addChild("step", findShape(MODID, id.getNamespace() + "/","step"));
+            addChild("step", findShape(MODID, id.getNamespace() + "/","step", false));
             addChild("step", findShape(MODID, "","step"));
             addChild("step", findShape("", "step"));
             addChild("spiked", findShape("spiked", ""));
@@ -183,6 +183,10 @@ public class BlockSetRegistry {
         }
 
         protected @Nullable Item findShape(String namespace, String prefix, String postfix) {
+            return findShape(namespace, prefix, postfix, true);
+        }
+
+            protected @Nullable Item findShape(String namespace, String prefix, String postfix, boolean addUnderscore) {
             String basePath = id.getPath();
 
             List<String> parentSuffixes = List.of("block", "planks");
@@ -199,7 +203,7 @@ public class BlockSetRegistry {
                 }
             }
 
-            String prefixPart = prefix.isEmpty() ? "" : prefix + "_";
+            String prefixPart = prefix.isEmpty() ? "" : prefix + (addUnderscore ? "_" : "");
             String postfixPart = postfix.isEmpty() ? "" : "_" + postfix;
 
             List<String> candidates = new ArrayList<>();

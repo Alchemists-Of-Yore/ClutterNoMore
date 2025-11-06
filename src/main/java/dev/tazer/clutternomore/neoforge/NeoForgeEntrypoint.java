@@ -3,6 +3,7 @@
 
 import dev.tazer.clutternomore.ClutterNoMore;
 import dev.tazer.clutternomore.ClutterNoMoreClient;
+import dev.tazer.clutternomore.client.assets.AssetGenerator;
 import dev.tazer.clutternomore.common.networking.ShapeMapPayload;
 import dev.tazer.clutternomore.common.shape_map.ShapeMap;
 import dev.tazer.clutternomore.common.shape_map.ShapeMapFileHandler;
@@ -14,11 +15,13 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 import net.neoforged.neoforge.event.server.ServerStartedEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -67,5 +70,10 @@ public class NeoForgeEntrypoint {
         event.addListener(new ShapeMapFileHandler());
     }
 
+    @SubscribeEvent
+    private static void commonSetup(FMLCommonSetupEvent event) {
+        ClutterNoMore.registerVariants();
+        if (FMLLoader.getDist() == Dist.CLIENT) AssetGenerator.generate();
+    }
 }
 *///?}

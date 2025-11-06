@@ -132,10 +132,5 @@ public class ClientEvents {
             if (!OVERLAY.shouldStayOpenThisTick()) OVERLAY = null;
         }
     }
-
-    @SubscribeEvent
-    private static void setupAssets(FMLClientSetupEvent event) {
-        AssetGenerator.generate();
-    }
 }
 *///?}

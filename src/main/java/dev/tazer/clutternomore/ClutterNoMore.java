@@ -54,6 +54,13 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 //? if forge {
 /*import net.minecraftforge.registries.RegistryManager;
 *///?}
+//? if fabric {
+import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.api.EnvType;
+//?} else if neoforge {
+/*import net.neoforged.api.distmarker.Dist;
+import net.neoforged.fml.loading.FMLLoader;
+*///?}
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -226,8 +233,8 @@ public class ClutterNoMore {
                         String path = blockNamespace + shortPath;
                         //? if =1.21.1 {
                         /*if (!blockNamespace.isEmpty()) {
-                            BuiltInRegistries.BLOCK.addAlias(ClutterNoMore.location(shortPath), ClutterNoMore.location(path));
-                            BuiltInRegistries.ITEM.addAlias(ClutterNoMore.location(shortPath), ClutterNoMore.location(path));
+//                            BuiltInRegistries.BLOCK.addAlias(ClutterNoMore.location(shortPath), ClutterNoMore.location(path));
+//                            BuiltInRegistries.ITEM.addAlias(ClutterNoMore.location(shortPath), ClutterNoMore.location(path));
                         }
                         *///?}
                         toRegister.put(path, ()->new VerticalSlabBlock(copy(slabBlock)
@@ -255,8 +262,8 @@ public class ClutterNoMore {
                         String path = blockNamespace + shortPath;
                         //? if =1.21.1 {
                         /*if (!blockNamespace.isEmpty()) {
-                            BuiltInRegistries.BLOCK.addAlias(ClutterNoMore.location(shortPath), ClutterNoMore.location(path));
-                            BuiltInRegistries.ITEM.addAlias(ClutterNoMore.location(shortPath), ClutterNoMore.location(path));
+//                            BuiltInRegistries.BLOCK.addAlias(ClutterNoMore.location(shortPath), ClutterNoMore.location(path));
+//                            BuiltInRegistries.ITEM.addAlias(ClutterNoMore.location(shortPath), ClutterNoMore.location(path));
                         }
                         *///?}
                         toRegister.put(path, ()->new StepBlock(copy(stairBlock)
@@ -282,8 +289,6 @@ public class ClutterNoMore {
             toRegister.forEach(CBlocks::register);
             VerticalSlabGenerator.SLABS = slabs;
             StepGenerator.STAIRS = stairs;
-            AssetGenerator.keys = toRegister.keySet();
-
 
             JsonObject verticalSlabTag = new JsonObject();
             verticalSlabTag.add("values", verticalSlabsArray);

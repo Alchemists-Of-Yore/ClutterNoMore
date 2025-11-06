@@ -1,5 +1,8 @@
 {
   "values": [
-    "#clutternomore:wooden_steps"
+    {
+      "id": "#clutternomore:wooden_steps",
+      "required": false
+    }
   ]
 }
