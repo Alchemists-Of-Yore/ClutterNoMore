@@ -61,6 +61,9 @@ repositories {
     maven ( "https://repo.sleeping.town/" ) {
         name = "Sisby Maven"
     }
+    maven ( "https://maven.isxander.dev/releases") {
+        name = "Xander Maven"
+    }
 }
 
 dependencies {
@@ -76,6 +79,13 @@ dependencies {
     if (hasProperty("deps.modmenu")) {
         modLocalRuntime("com.terraformersmc:modmenu:${property("deps.modmenu")}")
     }
+
+    // YACL - required by McQoy
+    if (hasProperty("deps.yacl")) {
+        modLocalRuntime("dev.isxander:yet-another-config-lib:${property("deps.yacl")}-fabric")
+    }
+    modLocalRuntime("maven.modrinth:mcqoy:${property("deps.mcqoy")}")
+
     if (hasProperty("deps.emi")) {
         modCompileOnly("dev.emi:emi-fabric:${property("deps.emi")}:api")
         modLocalRuntime("dev.emi:emi-fabric:${property("deps.emi")}")
@@ -83,7 +93,9 @@ dependencies {
     if (hasProperty("deps.eiv")) {
         modCompileOnly("maven.modrinth:eiv:${property("deps.eiv")}")
         modLocalRuntime("maven.modrinth:eiv:${property("deps.eiv")}")
-//        modLocalRuntime("maven.modrinth:pyrite:0.16.1+1.21.9-rc1")
+    }
+    if (hasProperty("deps.pyrite")) {
+        modLocalRuntime("maven.modrinth:pyrite:${property("deps.pyrite")}")
     }
 
 

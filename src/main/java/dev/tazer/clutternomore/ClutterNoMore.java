@@ -28,6 +28,7 @@ import java.util.stream.Stream;
 *///?}
 
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -61,7 +62,7 @@ import java.util.function.Supplier;
 public class ClutterNoMore {
     public static final String MODID = "clutternomore";
     public static final Logger LOGGER = LogManager.getLogger("ClutterNoMore");
-    public static final CNMConfig.StartupConfig STARTUP_CONFIG = CNMConfig.StartupConfig.createToml(Platform.INSTANCE.configPath(), "", MODID+"-startup", CNMConfig.StartupConfig.class);
+    public static final CNMConfig.StartupConfig STARTUP_CONFIG = CNMConfig.StartupConfig.createToml(Platform.INSTANCE.configPath(), MODID, "startup", CNMConfig.StartupConfig.class);
     private static final PackLocationInfo PACK_INFO = new PackLocationInfo(ClutterNoMore.MODID+"-runtime", Component.literal("ClutterNoMore"), PackSource.BUILT_IN, Optional.empty());
     public static final CNMPackResources RESOURCES = new CNMPackResources(PACK_INFO);
 
@@ -118,7 +119,6 @@ public class ClutterNoMore {
             /*RegistryAccess
             *///?}
                     registries, RecipeManager recipeManager) {
-        //FIXME 1.21.8
         //? if <1.21.2 {
         /*boolean changed = false;
         var originalRecipes = recipeManager.getRecipes();
@@ -214,14 +214,26 @@ public class ClutterNoMore {
 
             for (Map.Entry<ResourceKey<Item>, Item> resourceKeyItemEntry : BuiltInRegistries.ITEM.entrySet()) {
                 if (resourceKeyItemEntry.getValue().asItem() instanceof BlockItem blockItem) {
+                    var blockId = resourceKeyItemEntry.getKey().location();
+                    var blockNamespace = blockId.getNamespace() + "/";
+                    if (blockId.getNamespace().equals("minecraft")) {
+                        blockNamespace = "";
+                    }
                     if (blockItem.getBlock() instanceof SlabBlock slabBlock && STARTUP_CONFIG.VERTICAL_SLABS.value()) {
-                        String path = "vertical_" + resourceKeyItemEntry.getKey().location().getPath();
+                        String shortPath = "vertical_" + blockId.getPath();
+                        String path = blockNamespace + shortPath;
+                        //? if =1.21.1 {
+                        /*if (!blockNamespace.isEmpty()) {
+                            BuiltInRegistries.BLOCK.addAlias(ClutterNoMore.location(shortPath), ClutterNoMore.location(path));
+                            BuiltInRegistries.ITEM.addAlias(ClutterNoMore.location(shortPath), ClutterNoMore.location(path));
+                        }
+                        *///?}
                         toRegister.put(path, ()->new VerticalSlabBlock(copy(slabBlock)
                                 //? if >1.21.2
                                 .setId(CBlocks.registryKey(path))
                         ));
 
-                        slabs.add(resourceKeyItemEntry.getKey().location());
+                        slabs.add(blockId);
 
                         if (woodenSoundTypes.contains(slabBlock.properties().soundType)) {
                             woodenVerticalSlabsArray.add(ClutterNoMore.location(path).toString());
@@ -232,13 +244,20 @@ public class ClutterNoMore {
                         }
                     }
                     if (blockItem.getBlock() instanceof StairBlock stairBlock && STARTUP_CONFIG.STEPS.value()) {
-                        String path = resourceKeyItemEntry.getKey().location().getPath().replace("stairs", "step");
+                        String shortPath = blockId.getPath().replace("stairs", "step");
+                        String path = blockNamespace + shortPath;
+                        //? if =1.21.1 {
+                        /*if (!blockNamespace.isEmpty()) {
+                            BuiltInRegistries.BLOCK.addAlias(ClutterNoMore.location(shortPath), ClutterNoMore.location(path));
+                            BuiltInRegistries.ITEM.addAlias(ClutterNoMore.location(shortPath), ClutterNoMore.location(path));
+                        }
+                        *///?}
                         toRegister.put(path, ()->new StepBlock(copy(stairBlock)
                                 //? if >1.21.2
                                 .setId(CBlocks.registryKey(path))
                         ));
 
-                        stairs.add(resourceKeyItemEntry.getKey().location());
+                        stairs.add(blockId);
 
                         if (woodenSoundTypes.contains(stairBlock.properties().soundType)) {
                             woodenStepsArray.add(ClutterNoMore.location(path).toString());

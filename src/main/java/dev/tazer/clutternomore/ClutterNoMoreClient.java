@@ -36,7 +36,7 @@ import static dev.tazer.clutternomore.ClutterNoMore.MODID;
 public class ClutterNoMoreClient {
     public static boolean showTooltip = false;
     public static ShapeSwitcherOverlay OVERLAY = null;
-    public static final CNMConfig.ClientConfig CLIENT_CONFIG = CNMConfig.ClientConfig.createToml(Platform.INSTANCE.configPath(), "", MODID +"-client", CNMConfig.ClientConfig.class);
+    public static final CNMConfig.ClientConfig CLIENT_CONFIG = CNMConfig.ClientConfig.createToml(Platform.INSTANCE.configPath(), MODID,  "client", CNMConfig.ClientConfig.class);
 
     public static void init() {
     }

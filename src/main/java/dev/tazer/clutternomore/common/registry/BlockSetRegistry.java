@@ -141,8 +141,12 @@ public class BlockSetRegistry {
             addChild("slab", findShape("slab"));
             addChild("stairs", findShape("stairs"));
             addChild("wall", findShape("wall"));
-            addChild("vertical_slab", findShape(MODID, "vertical", "slab"));
+            addChild("vertical_slab", findShape(MODID,id.getNamespace()+ "/vertical", "slab"));
+            addChild("vertical_slab", findShape(MODID,"vertical", "slab"));
+            addChild("vertical_slab", findShape("vertical", "slab"));
+            addChild("step", findShape(MODID, id.getNamespace() + "/","step"));
             addChild("step", findShape(MODID, "","step"));
+            addChild("step", findShape("", "step"));
             addChild("spiked", findShape("spiked", ""));
         }
 

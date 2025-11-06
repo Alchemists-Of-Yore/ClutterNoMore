@@ -19,9 +19,12 @@ public final class StepGenerator {
     public static ArrayList<ResourceLocation> STAIRS = new ArrayList<>();
 
     public static void generate() {
-
         for (ResourceLocation id : STAIRS) {
-            var name = id.getPath().replace("stairs", "step");
+            var blockNamespace = id.getNamespace() + "/";
+            if (id.getNamespace().equals("minecraft")) {
+                blockNamespace = "";
+            }
+            var name = blockNamespace + id.getPath().replace("stairs", "step");
             try {
                 var blockState = new JsonObject();
                 var variants = new JsonObject();

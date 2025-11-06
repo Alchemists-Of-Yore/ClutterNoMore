@@ -76,6 +76,13 @@ repositories {
     maven ( "https://repo.sleeping.town/" ) {
         name = "Sisby Maven"
     }
+    maven ( "https://maven.isxander.dev/releases") {
+        name = "Xander Maven"
+    }
+    maven {
+        name = "Kotlin for Forge"
+        setUrl("https://thedarkcolour.github.io/KotlinForForge/")
+    }
 }
 
 dependencies {
@@ -85,7 +92,7 @@ dependencies {
 
     implementation("folk.sisby:kaleido-config:${property("deps.kaleido")}")
     jarJar("folk.sisby:kaleido-config:${property("deps.kaleido")}")
-    "additionalRuntimeClasspath"("folk.sisby:kaleido-config:${property("deps.kaleido")}")
+//    "additionalRuntimeClasspath"("folk.sisby:kaleido-config:${property("deps.kaleido")}")
 
     runtimeOnly("me.djtheredstoner:DevAuth-neoforge:1.2.1")
 
@@ -95,6 +102,15 @@ dependencies {
     runtimeOnly("maven.modrinth:no-mans-land:1.3.3")
     runtimeOnly("maven.modrinth:biolith:hd0IDIF5")
     runtimeOnly("maven.modrinth:mixed-litter:0.1.2")
+    if (hasProperty("deps.would")) {
+        runtimeOnly("maven.modrinth:would:${property("deps.would")}")
+    }
+    // YACL - required by McQoy
+    if (hasProperty("deps.yacl")) {
+        runtimeOnly("dev.isxander:yet-another-config-lib:${property("deps.yacl")}-neoforge")
+    }
+    runtimeOnly("maven.modrinth:mcqoy:${property("deps.mcqoy")}")
+
 
 }
 

@@ -8,8 +8,8 @@ import dev.tazer.clutternomore.ClutterNoMore;
 import dev.tazer.clutternomore.ClutterNoMoreClient;
 import dev.tazer.clutternomore.Platform;
 //? if <1.21.9 {
-import dev.tazer.clutternomore.common.data.CNMPackResources;
-//?}
+/*import dev.tazer.clutternomore.common.data.CNMPackResources;
+*///?}
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.Resource;
@@ -54,7 +54,7 @@ public class AssetGenerator {
         //lang
         var jsonObject = new JsonObject();
         keys.forEach((s)-> {
-            jsonObject.addProperty("block.clutternomore." + s, VerticalSlabGenerator.langName(s));
+            jsonObject.addProperty("block.clutternomore." + s.replace("/", "."), VerticalSlabGenerator.langName(s));
         });
         write("lang/en_us.json", jsonObject);
 

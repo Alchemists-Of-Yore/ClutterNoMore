@@ -20,7 +20,11 @@ public final class VerticalSlabGenerator {
     public static void generate() {
 
         for (ResourceLocation id : SLABS) {
-            var name = "vertical_" + id.getPath();
+            var blockNamespace = id.getNamespace() + "/";
+            if (id.getNamespace().equals("minecraft")) {
+                blockNamespace = "";
+            }
+            var name = blockNamespace + "vertical_" + id.getPath();
             try {
                 var blockState = new JsonObject();
                 var variants = new JsonObject();
@@ -86,6 +90,7 @@ public final class VerticalSlabGenerator {
     }
 
     public static String langName(String name) {
+        if (name.contains("/")) name = name.substring(name.lastIndexOf("/")+1);
         String processed = name.replace("_", " ");
 
         List<String> nonCapital = List.of("of", "and", "with");
