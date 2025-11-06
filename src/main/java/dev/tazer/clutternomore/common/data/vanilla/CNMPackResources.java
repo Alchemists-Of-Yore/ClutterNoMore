@@ -11,8 +11,13 @@ import net.minecraft.SharedConstants;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.*;
-import net.minecraft.server.packs.metadata.MetadataSectionSerializer;
+//? if =1.21.1 {
+/*import net.minecraft.server.packs.metadata.MetadataSectionSerializer;
+*///?}
 import net.minecraft.server.packs.metadata.MetadataSectionType;
+//? if >1.21.4 {
+import net.minecraft.server.packs.metadata.pack.PackFormat;
+//?}
 import net.minecraft.server.packs.metadata.pack.PackMetadataSection;
 import net.minecraft.server.packs.resources.IoSupplier;
 import net.minecraft.util.InclusiveRange;
@@ -30,15 +35,27 @@ public class CNMPackResources extends AbstractPackResources {
     protected final Map<ResourceLocation, byte[]> serverData;
     protected final PackMetadataSection clientMetadata;
     protected final PackMetadataSection serverMetadata;
-    private static final int resourcePackVersion = SharedConstants.getCurrentVersion()
+    private static final
             //? if >1.21.8 {
-            .packVersion(PackType.CLIENT_RESOURCES).minorRange());
+                InclusiveRange<PackFormat>
+            //?} else {
+                /*int
+            *///?}
+                resourcePackVersion = SharedConstants.getCurrentVersion()
+            //? if >1.21.8 {
+                .packVersion(PackType.CLIENT_RESOURCES).minorRange();
              //?} else {
             /*.getPackVersion(PackType.CLIENT_RESOURCES);
     *///?}
-    private static final int dataPackVersion = SharedConstants.getCurrentVersion()
+    private static final
+             //? if >1.21.8 {
+                    InclusiveRange<PackFormat>
+             //?} else {
+                     /*int
+             *///?}
+                    dataPackVersion = SharedConstants.getCurrentVersion()
             //? if >1.21.8 {
-            .packVersion(PackType.SERVER_DATA).minorRange());
+                    .packVersion(PackType.SERVER_DATA).minorRange();
              //?} else {
             /*.getPackVersion(PackType.SERVER_DATA);
     *///?}
@@ -49,7 +66,8 @@ public class CNMPackResources extends AbstractPackResources {
         this.serverData = new ConcurrentHashMap<>();
         this.clientMetadata = new PackMetadataSection(Component.literal("ClutterNoMore Runtime Client Resources"), resourcePackVersion
                 //? if <1.21.4
-                /*, Optional.empty());*/
+                /*, Optional.empty()*/
+        );
         this.serverMetadata = new PackMetadataSection(Component.literal("ClutterNoMore Runtime Server Data"), dataPackVersion
                 //? if <1.21.4
                 /*, Optional.empty()*/
