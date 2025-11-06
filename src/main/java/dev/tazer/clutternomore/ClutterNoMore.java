@@ -24,6 +24,16 @@ import dev.tazer.clutternomore.common.registry.vanilla.BlockSetRegistry;
 *///?} else {
 import net.minecraft.core.HolderLookup;
 //?}
+
+//? if <1.21.4 {
+/*import net.minecraft.core.NonNullList;
+import net.minecraft.world.item.crafting.Ingredient;
+import dev.tazer.clutternomore.common.shape_map.ShapeMap;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Recipe;
+import java.util.stream.Stream;
+*///?}
+
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
@@ -36,8 +46,10 @@ import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.repository.PackSource;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
-//? if >1.21
+//? if >1.21 {
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
+//?}
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.StairBlock;
@@ -63,12 +75,6 @@ public class ClutterNoMore {
         //? neoforge {
         /*DynamicServerResources.register();
         *///?}
-
-        JsonArray array = new JsonArray();
-        array.add("minecraft:iron_block");
-        JsonObject tag = new JsonObject();
-        tag.add("values", array);
-        RESOURCES.addJson(PackType.SERVER_DATA, ClutterNoMore.location("tags/block/stupid.json"), tag);
     }
 
     public static Pack createPack(PackType type) {
@@ -196,6 +202,10 @@ public class ClutterNoMore {
             LinkedHashMap<String, Supplier<? extends Block>> toRegister = new LinkedHashMap<>();
             ArrayList<ResourceLocation> slabs = new ArrayList<>();
             ArrayList<ResourceLocation> stairs = new ArrayList<>();
+
+            JsonArray verticalSlabsArray = new JsonArray();
+            JsonArray stepsArray = new JsonArray();
+
             for (Map.Entry<ResourceKey<Item>, Item> resourceKeyItemEntry : BuiltInRegistries.ITEM.entrySet()) {
                 if (resourceKeyItemEntry.getValue().asItem() instanceof BlockItem blockItem) {
                     if (blockItem.getBlock() instanceof SlabBlock slabBlock && STARTUP_CONFIG.VERTICAL_SLABS.value()) {
@@ -205,6 +215,7 @@ public class ClutterNoMore {
                                 .setId(CBlocks.registryKey(path))
                         ));
                         slabs.add(resourceKeyItemEntry.getKey().location());
+                        verticalSlabsArray.add(ClutterNoMore.location(path).toString());
                     }
                     if (blockItem.getBlock() instanceof StairBlock stairBlock && STARTUP_CONFIG.STEPS.value()) {
                         var path = resourceKeyItemEntry.getKey().location().getPath().replace("stairs", "step");
@@ -213,6 +224,7 @@ public class ClutterNoMore {
                                 .setId(CBlocks.registryKey(path))
                         ));
                         stairs.add(resourceKeyItemEntry.getKey().location());
+                        stepsArray.add(ClutterNoMore.location(path).toString());
                     }
                 }
             }
@@ -220,6 +232,16 @@ public class ClutterNoMore {
             VerticalSlabGenerator.SLABS = slabs;
             StepGenerator.STAIRS = stairs;
             AssetGenerator.keys = toRegister.keySet();
+
+
+            JsonObject verticalSlabTag = new JsonObject();
+            verticalSlabTag.add("values", verticalSlabsArray);
+            RESOURCES.addJson(PackType.SERVER_DATA, ClutterNoMore.location("tags/block/vertical_slabs.json"), verticalSlabTag);
+
+            JsonObject stepTag = new JsonObject();
+            stepTag.add("values", stepsArray);
+            RESOURCES.addJson(PackType.SERVER_DATA, ClutterNoMore.location("tags/block/steps.json"), stepTag);
+
             //? if neoforge {
             /*BuiltInRegistries.BLOCK.freeze();
             BuiltInRegistries.ITEM.freeze();

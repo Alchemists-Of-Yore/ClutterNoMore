@@ -1,7 +1,9 @@
 package dev.tazer.clutternomore.common.data.vanilla;
 
 import com.google.gson.JsonElement;
+//? if >1.21.9 {
 import com.google.gson.Strictness;
+//?}
 import com.google.gson.internal.Streams;
 import com.google.gson.stream.JsonWriter;
 import dev.tazer.clutternomore.ClutterNoMore;
@@ -9,8 +11,8 @@ import net.minecraft.SharedConstants;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.*;
+import net.minecraft.server.packs.metadata.MetadataSectionSerializer;
 import net.minecraft.server.packs.metadata.MetadataSectionType;
-import net.minecraft.server.packs.metadata.pack.PackFormat;
 import net.minecraft.server.packs.metadata.pack.PackMetadataSection;
 import net.minecraft.server.packs.resources.IoSupplier;
 import net.minecraft.util.InclusiveRange;
@@ -28,13 +30,30 @@ public class CNMPackResources extends AbstractPackResources {
     protected final Map<ResourceLocation, byte[]> serverData;
     protected final PackMetadataSection clientMetadata;
     protected final PackMetadataSection serverMetadata;
+    private static final int resourcePackVersion = SharedConstants.getCurrentVersion()
+            //? if >1.21.8 {
+            .packVersion(PackType.CLIENT_RESOURCES).minorRange());
+             //?} else {
+            /*.getPackVersion(PackType.CLIENT_RESOURCES);
+    *///?}
+    private static final int dataPackVersion = SharedConstants.getCurrentVersion()
+            //? if >1.21.8 {
+            .packVersion(PackType.SERVER_DATA).minorRange());
+             //?} else {
+            /*.getPackVersion(PackType.SERVER_DATA);
+    *///?}
 
     public CNMPackResources(PackLocationInfo info) {
         super(info);
         this.clientResources = new ConcurrentHashMap<>();
         this.serverData = new ConcurrentHashMap<>();
-        this.clientMetadata = new PackMetadataSection(Component.literal("ClutterNoMore Runtime Client Resources"), SharedConstants.getCurrentVersion().packVersion(PackType.CLIENT_RESOURCES).minorRange());
-        this.serverMetadata = new PackMetadataSection(Component.literal("ClutterNoMore Runtime Server Data"), SharedConstants.getCurrentVersion().packVersion(PackType.SERVER_DATA).minorRange());
+        this.clientMetadata = new PackMetadataSection(Component.literal("ClutterNoMore Runtime Client Resources"), resourcePackVersion
+                //? if <1.21.4
+                /*, Optional.empty());*/
+        this.serverMetadata = new PackMetadataSection(Component.literal("ClutterNoMore Runtime Server Data"), dataPackVersion
+                //? if <1.21.4
+                /*, Optional.empty()*/
+        );
     }
 
     @Override
@@ -42,10 +61,22 @@ public class CNMPackResources extends AbstractPackResources {
         return Set.of(ClutterNoMore.MODID);
     }
 
+    //? if >1.21.4 {
     @Override
     public @Nullable <T> T getMetadataSection(MetadataSectionType<T> type) {
         return type == PackMetadataSection.CLIENT_TYPE ? (T) clientMetadata : type == PackMetadataSection.SERVER_TYPE ? (T) serverMetadata : null;
     }
+    //?} else {
+    /*@Nullable
+    public <T> T getMetadataSection(MetadataSectionSerializer<T> deserializer) throws IOException {
+        //FIXME
+        try {
+            return (T)(deserializer == PackMetadataSection.TYPE ? this.clientMetadata : null);
+        } catch (Exception var3) {
+            return null;
+        }
+    }
+    *///?}
 
     public void addResource(PackType packType, ResourceLocation id, byte[] bytes) {
         Map<ResourceLocation, byte[]> resources = packType == PackType.CLIENT_RESOURCES ? clientResources : serverData;
@@ -90,7 +121,11 @@ public class CNMPackResources extends AbstractPackResources {
         try {
             String string;
             try (StringWriter stringWriter = new StringWriter(); JsonWriter jsonWriter = new JsonWriter(stringWriter)) {
+                //? if >1.21.9 {
                 jsonWriter.setStrictness(Strictness.LENIENT);
+                //?} else {
+                /*jsonWriter.setLenient(true);
+                *///?}
                 jsonWriter.setIndent("  ");
                 Streams.write(json, jsonWriter);
                 string = stringWriter.toString();
