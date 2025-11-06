@@ -7,10 +7,8 @@ import com.google.gson.JsonPrimitive;
 import dev.tazer.clutternomore.ClutterNoMore;
 import dev.tazer.clutternomore.ClutterNoMoreClient;
 import dev.tazer.clutternomore.Platform;
-import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
-import net.minecraft.server.packs.repository.PackRepository;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import org.jetbrains.annotations.Nullable;
@@ -21,10 +19,10 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class AssetGenerator {
     public static Set<String> keys;
+    public static final Path pack = Platform.INSTANCE.getResourcePack().resolve("clutternomore");
 
     public static @Nullable String getModel(ResourceManager manager, ResourceLocation blockstate) {
         Optional<Resource> file = manager.getResource(blockstate.withPath(path -> "blockstates/" + path + ".json"));
@@ -50,21 +48,55 @@ public class AssetGenerator {
     }
 
     public static void generate() {
-        if (ClutterNoMoreClient.CLIENT_CONFIG.RUNTIME_ASSET_GENERATION.value()) {
-            //lang
-            var jsonObject = new JsonObject();
-            keys.forEach((s)-> {
-                jsonObject.addProperty("block.clutternomore." + s, VerticalSlabGenerator.langName(s));
-            });
-            write("lang/en_us.json", jsonObject);
+        //lang
+        var jsonObject = new JsonObject();
+        keys.forEach((s)-> {
+            jsonObject.addProperty("block.clutternomore." + s, VerticalSlabGenerator.langName(s));
+        });
+        write("lang/en_us.json", jsonObject);
 
-            // blockstates and models
-            VerticalSlabGenerator.generate();
-            StepGenerator.generate();
+        // blockstates and models
+        VerticalSlabGenerator.generate();
+        StepGenerator.generate();
+        if (ClutterNoMoreClient.CLIENT_CONFIG.RUNTIME_ASSET_GENERATION.value()) {
+            int minFormat = 15;
+            int maxFormat = 70;
+
+            JsonObject object = new JsonObject();
+            object.add("description", new JsonPrimitive("Clutter No More generated assets."));
+            //? if <1.21.9 {
+            /*object.add("pack_format", new JsonPrimitive(CNMPackResources.resourcePackVersion));
+            *///?}
+            object.add("min_format", new JsonPrimitive(minFormat));
+            object.add("max_format", new JsonPrimitive(maxFormat));
+            var supportedFormats = new JsonArray(2);
+            supportedFormats.add(minFormat);
+            supportedFormats.add(maxFormat);
+            object.add("supported_formats", supportedFormats);
+            JsonObject mcmeta = new JsonObject();
+            mcmeta.add("pack", object);
+            writeFile(pack, pack.resolve("pack.mcmeta"), mcmeta.toString());
         }
     }
 
-    public static void write(String path, JsonElement contents) {
-        ClutterNoMore.RESOURCES.addJson(PackType.CLIENT_RESOURCES, ClutterNoMore.location(path), contents);
+    public static void write(String fileName, JsonElement contents) {
+        ClutterNoMore.RESOURCES.addJson(PackType.CLIENT_RESOURCES, ClutterNoMore.location(fileName), contents);
+        if (ClutterNoMoreClient.CLIENT_CONFIG.RUNTIME_ASSET_GENERATION.value()) {
+            var assets = pack.resolve("assets/clutternomore");
+            writeFile(assets.resolve(fileName.substring(0, fileName.lastIndexOf("/"))), assets.resolve(fileName), contents.toString());
+        }
+    }
+
+
+    public static void writeFile(Path path, Path filePath, String contents) {
+        try {
+            path.toFile().mkdirs();
+            FileWriter langWriter = new FileWriter(filePath.toFile());
+            langWriter.write(contents);
+            langWriter.close();  // must close manually
+            ClutterNoMore.LOGGER.debug("Successfully wrote to {}", filePath);
+        } catch (IOException e) {
+            ClutterNoMore.LOGGER.error("Failed to write dynamic data. %s".formatted(e));
+        }
     }
 }

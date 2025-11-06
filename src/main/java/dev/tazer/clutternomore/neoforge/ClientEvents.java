@@ -3,8 +3,10 @@ package dev.tazer.clutternomore.neoforge;
 /*import dev.tazer.clutternomore.ClutterNoMore;
 import dev.tazer.clutternomore.ClutterNoMoreClient;
 import dev.tazer.clutternomore.client.ClientShapeTooltip;
+import dev.tazer.clutternomore.client.assets.AssetGenerator;
 import dev.tazer.clutternomore.common.shape_map.ShapeMap;
 import dev.tazer.clutternomore.common.networking.ShapeTooltip;
+import dev.tazer.clutternomore.common.shape_map.ShapeMapFileHandler;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.player.LocalPlayer;
@@ -14,8 +16,10 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.*;
 import net.neoforged.neoforge.common.util.Lazy;
+import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import org.lwjgl.glfw.GLFW;
@@ -127,6 +131,11 @@ public class ClientEvents {
         if (event.getEntity() instanceof LocalPlayer && OVERLAY != null) {
             if (!OVERLAY.shouldStayOpenThisTick()) OVERLAY = null;
         }
+    }
+
+    @SubscribeEvent
+    private static void setupAssets(FMLClientSetupEvent event) {
+        AssetGenerator.generate();
     }
 }
 *///?}

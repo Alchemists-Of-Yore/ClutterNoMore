@@ -35,7 +35,7 @@ public class CNMPackResources extends AbstractPackResources {
     protected final Map<ResourceLocation, byte[]> serverData;
     protected final PackMetadataSection clientMetadata;
     protected final PackMetadataSection serverMetadata;
-    private static final
+    public static final
             //? if >1.21.8 {
                 InclusiveRange<PackFormat>
             //?} else {
