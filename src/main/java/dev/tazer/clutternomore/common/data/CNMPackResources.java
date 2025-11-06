@@ -8,14 +8,15 @@ import com.google.gson.internal.Streams;
 import com.google.gson.stream.JsonWriter;
 import dev.tazer.clutternomore.ClutterNoMore;
 import net.minecraft.SharedConstants;
+import net.minecraft.WorldVersion;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.*;
 //? if =1.21.1 {
 /*import net.minecraft.server.packs.metadata.MetadataSectionSerializer;
-*///?}
+ *///?}
 import net.minecraft.server.packs.metadata.MetadataSectionType;
-//? if >1.21.8 {
+//? if >1.21.9 {
 import net.minecraft.server.packs.metadata.pack.PackFormat;
 //?}
 import net.minecraft.server.packs.metadata.pack.PackMetadataSection;
@@ -35,33 +36,18 @@ public class CNMPackResources extends AbstractPackResources {
     protected final Map<ResourceLocation, byte[]> serverData;
     protected final PackMetadataSection clientMetadata;
     protected final PackMetadataSection serverMetadata;
-    public static final
-            //? if >1.21.8 {
-                InclusiveRange<PackFormat>
-            //?} else {
-                /*int
-            *///?}
-                resourcePackVersion = SharedConstants.getCurrentVersion()
-            //? if >1.21.4 {
-                .packVersion(PackType.CLIENT_RESOURCES)
-            //? if >1.21.8 {
-            .minorRange()
-            //?}
-             //?} else {
-            /*.getPackVersion(PackType.CLIENT_RESOURCES)
-            *///?}
-            ;
-    private static final
-             //? if >1.21.8 {
-                    InclusiveRange<PackFormat>
-             //?} else {
-                     /*int
-             *///?}
-                    dataPackVersion = SharedConstants.getCurrentVersion()
-            //? if >1.21.8 {
-                    .packVersion(PackType.SERVER_DATA).minorRange();
-             //?} else {
-            /*.getPackVersion(PackType.SERVER_DATA);
+
+    private static final WorldVersion currentVersion = SharedConstants.getCurrentVersion();
+
+    //? if >1.21.9 {
+    public static final InclusiveRange<PackFormat> resourcePackVersion = currentVersion.packVersion(PackType.CLIENT_RESOURCES).minorRange();
+    public static final InclusiveRange<PackFormat> dataPackVersion = currentVersion.packVersion(PackType.SERVER_DATA).minorRange();
+    //?} else if >1.21.1 {
+    /*public static final int resourcePackVersion = currentVersion.packVersion(PackType.CLIENT_RESOURCES);
+    public static final int dataPackVersion = currentVersion.packVersion(PackType.SERVER_DATA);
+    *///?} else {
+    /*public static final int resourcePackVersion = currentVersion.getPackVersion(PackType.CLIENT_RESOURCES);
+    public static final int dataPackVersion = currentVersion.getPackVersion(PackType.SERVER_DATA);
     *///?}
 
     public CNMPackResources(PackLocationInfo info) {
@@ -69,11 +55,11 @@ public class CNMPackResources extends AbstractPackResources {
         this.clientResources = new ConcurrentHashMap<>();
         this.serverData = new ConcurrentHashMap<>();
         this.clientMetadata = new PackMetadataSection(Component.literal("ClutterNoMore Runtime Client Resources"), resourcePackVersion
-                //? if <1.21.4
+                //? if <1.21.9
                 /*, Optional.empty()*/
         );
         this.serverMetadata = new PackMetadataSection(Component.literal("ClutterNoMore Runtime Server Data"), dataPackVersion
-                //? if <1.21.4
+                //? if <1.21.9
                 /*, Optional.empty()*/
         );
     }
@@ -83,7 +69,7 @@ public class CNMPackResources extends AbstractPackResources {
         return Set.of(ClutterNoMore.MODID);
     }
 
-    //? if >1.21.4 {
+    //? if >1.21.9 {
     @Override
     public @Nullable <T> T getMetadataSection(MetadataSectionType<T> type) {
         return type == PackMetadataSection.CLIENT_TYPE ? (T) clientMetadata : type == PackMetadataSection.SERVER_TYPE ? (T) serverMetadata : null;
@@ -92,7 +78,7 @@ public class CNMPackResources extends AbstractPackResources {
     /*@Nullable
     public <T> T getMetadataSection(MetadataSectionSerializer<T> deserializer) throws IOException {
         try {
-            return (T) (deserializer == PackMetadataSection.TYPE ? this.clientMetadata : null);
+            return (T) (deserializer == PackMetadataSection.TYPE ? clientMetadata : null);
         } catch (Exception var3) {
             return null;
         }
@@ -146,7 +132,7 @@ public class CNMPackResources extends AbstractPackResources {
                 jsonWriter.setStrictness(Strictness.LENIENT);
                 //?} else {
                 /*jsonWriter.setLenient(true);
-                *///?}
+                 *///?}
                 jsonWriter.setIndent("  ");
                 Streams.write(json, jsonWriter);
                 string = stringWriter.toString();
