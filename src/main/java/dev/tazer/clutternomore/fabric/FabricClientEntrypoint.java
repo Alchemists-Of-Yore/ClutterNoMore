@@ -14,18 +14,16 @@ import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.TooltipComponentCallback;
+//? if >1.21.6 {
+import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
+//?}
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenKeyboardEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenMouseEvents;
-import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.ResourceManager;
 
 import static dev.tazer.clutternomore.ClutterNoMore.MODID;
@@ -37,12 +35,14 @@ public class FabricClientEntrypoint implements ClientModInitializer {
         ClientEvents.registerKeyMappings();
         TooltipComponentCallback.EVENT.register(ClientEvents::registerTooltipComponent);
         ItemTooltipCallback.EVENT.register(ClutterNoMoreClient::onItemTooltips);
-        HudRenderCallback.EVENT.register(ClientEvents::onRenderGui);
+        //? if >1.21.6 {
+        HudElementRegistry.addLast(ClutterNoMore.location("overlay"), ClientEvents::onRenderGui);
+        //?} else {
+        /*HudRenderCallback.EVENT.register(ClientEvents::onRenderGui);
+        *///?}
         ClientTickEvents.START_CLIENT_TICK.register(ClientEvents::onPlayerTick);
         ScreenEvents.AFTER_INIT.register(this::afterInitScreen);
-        ClientLifecycleEvents.CLIENT_STARTED.register((minecraft -> {
-            AssetGenerator.generate();
-        }));
+        ClientLifecycleEvents.CLIENT_STARTED.register((AssetGenerator::generate));
         ClientPlayNetworking.registerGlobalReceiver(ShapeMapPayload.TYPE, ShapeMapPayload::handleDataOnClient);
     }
 

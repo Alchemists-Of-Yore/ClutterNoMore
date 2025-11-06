@@ -1,6 +1,8 @@
 package dev.tazer.clutternomore.client.assets.vanilla;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import dev.tazer.clutternomore.ClutterNoMore;
 import dev.tazer.clutternomore.ClutterNoMoreClient;
 import dev.tazer.clutternomore.Platform;
@@ -47,7 +49,7 @@ public class AssetGenerator {
         return null;
     }
 
-    public static void generate() {
+    public static void generate(Minecraft minecraft) {
         if (ClutterNoMoreClient.CLIENT_CONFIG.RUNTIME_ASSET_GENERATION.value()) {
             //lang
             var jsonObject = new JsonObject();
@@ -57,23 +59,39 @@ public class AssetGenerator {
             final Path assets = pack.resolve("assets/clutternomore");
             write(assets.resolve("lang"), "en_us.json", jsonObject.toString());
             // pack.mcmeta
-            String packVersion =
-                    //? if >1.21.8 {
-                    "69";
+            int packVersion =
+            //? if >1.21.8 {
+            69;
             //?} else if >1.21.6 {
-            /*"64";
+            /*64;
              */
             //?} else if >1.21 {
-            /*"34";
+            /*34;
              *///?} else {
-            /*"15";
+            /*15;
              *///?}
-            write(pack, "pack.mcmeta", "{   \"pack\": {     \"description\": \"Dynamic data for Clutter No More\",     \"pack_format\": "+packVersion+"   } }");
+
+            int minFormat = 15;
+            int maxFormat = 69;
+
+            JsonObject object = new JsonObject();
+            object.add("description", new JsonPrimitive("Clutter No More dynamic assets."));
+            object.add("pack_format", new JsonPrimitive(packVersion));
+            object.add("min_format", new JsonPrimitive(minFormat));
+            object.add("max_format", new JsonPrimitive(maxFormat));
+            var supportedFormats = new JsonArray(2);
+            supportedFormats.add(minFormat);
+            supportedFormats.add(maxFormat);
+            object.add("supported_formats", supportedFormats);
+            JsonObject mcmeta = new JsonObject();
+            mcmeta.add("pack", object);
+            write(pack, "pack.mcmeta", mcmeta.toString());
+
             VerticalSlabGenerator.generate();
             StepGenerator.generate();
         }
         if (ClutterNoMore.STARTUP_CONFIG.VERTICAL_SLABS.value() || ClutterNoMore.STARTUP_CONFIG.STEPS.value())
-            enablePack(Minecraft.getInstance());
+            enablePack(minecraft);
     }
 
     static void enablePack(Minecraft client) {
