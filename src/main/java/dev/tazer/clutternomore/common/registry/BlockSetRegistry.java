@@ -15,9 +15,6 @@ import static dev.tazer.clutternomore.ClutterNoMore.MODID;
 
 public class BlockSetRegistry {
 
-    public static void init() {
-    }
-
     public static ShapeSet getBlockTypeOf(Item item) {
         return ShapeSetRegistry.items.get(item);
     }

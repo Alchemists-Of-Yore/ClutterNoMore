@@ -46,6 +46,7 @@ import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SlabBlock;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 //? if forge {
@@ -66,7 +67,6 @@ public class ClutterNoMore {
 
     public static void init() {
         LOGGER.info("Initializing {} on {}", MODID, Platform.INSTANCE.loader());
-        BlockSetRegistry.init();
     }
 
     public static Pack createPack(PackType type) {
@@ -196,26 +196,57 @@ public class ClutterNoMore {
 
             JsonArray verticalSlabsArray = new JsonArray();
             JsonArray stepsArray = new JsonArray();
+            JsonArray woodenVerticalSlabsArray = new JsonArray();
+            JsonArray woodenStepsArray = new JsonArray();
+            JsonArray pickaxeMineableArray = new JsonArray();
 
             for (Map.Entry<ResourceKey<Item>, Item> resourceKeyItemEntry : BuiltInRegistries.ITEM.entrySet()) {
                 if (resourceKeyItemEntry.getValue().asItem() instanceof BlockItem blockItem) {
                     if (blockItem.getBlock() instanceof SlabBlock slabBlock && STARTUP_CONFIG.VERTICAL_SLABS.value()) {
-                        var path = "vertical_" + resourceKeyItemEntry.getKey().location().getPath();
+                        String path = "vertical_" + resourceKeyItemEntry.getKey().location().getPath();
                         toRegister.put(path, ()->new VerticalSlabBlock(copy(slabBlock)
                                 //? if >1.21.2
                                 .setId(CBlocks.registryKey(path))
                         ));
+
                         slabs.add(resourceKeyItemEntry.getKey().location());
-                        verticalSlabsArray.add(ClutterNoMore.location(path).toString());
+
+                        List<SoundType> woodenSoundTypes = List.of(
+                                SoundType.WOOD,
+                                SoundType.BAMBOO_WOOD,
+                                SoundType.CHERRY_WOOD,
+                                SoundType.NETHER_WOOD
+                        );
+
+                        if (woodenSoundTypes.contains(slabBlock.properties().soundType)) {
+                            woodenVerticalSlabsArray.add(ClutterNoMore.location(path).toString());
+                        } else {
+                            verticalSlabsArray.add(ClutterNoMore.location(path).toString());
+                            pickaxeMineableArray.add(ClutterNoMore.location(path).toString());
+                        }
                     }
                     if (blockItem.getBlock() instanceof StairBlock stairBlock && STARTUP_CONFIG.STEPS.value()) {
-                        var path = resourceKeyItemEntry.getKey().location().getPath().replace("stairs", "step");
+                        String path = resourceKeyItemEntry.getKey().location().getPath().replace("stairs", "step");
                         toRegister.put(path, ()->new StepBlock(copy(stairBlock)
                                 //? if >1.21.2
                                 .setId(CBlocks.registryKey(path))
                         ));
+
                         stairs.add(resourceKeyItemEntry.getKey().location());
-                        stepsArray.add(ClutterNoMore.location(path).toString());
+
+                        List<SoundType> woodenSoundTypes = List.of(
+                                SoundType.WOOD,
+                                SoundType.BAMBOO_WOOD,
+                                SoundType.CHERRY_WOOD,
+                                SoundType.NETHER_WOOD
+                        );
+
+                        if (woodenSoundTypes.contains(stairBlock.properties().soundType)) {
+                            woodenStepsArray.add(ClutterNoMore.location(path).toString());
+                        } else {
+                            stepsArray.add(ClutterNoMore.location(path).toString());
+                            pickaxeMineableArray.add(ClutterNoMore.location(path).toString());
+                        }
                     }
                 }
             }
@@ -229,9 +260,22 @@ public class ClutterNoMore {
             verticalSlabTag.add("values", verticalSlabsArray);
             RESOURCES.addJson(PackType.SERVER_DATA, ClutterNoMore.location("tags/block/vertical_slabs.json"), verticalSlabTag);
 
+            JsonObject woodenVerticalSlabTag = new JsonObject();
+            woodenVerticalSlabTag.add("values", woodenVerticalSlabsArray);
+            RESOURCES.addJson(PackType.SERVER_DATA, ClutterNoMore.location("tags/block/wooden_vertical_slabs.json"), woodenVerticalSlabTag);
+
             JsonObject stepTag = new JsonObject();
             stepTag.add("values", stepsArray);
             RESOURCES.addJson(PackType.SERVER_DATA, ClutterNoMore.location("tags/block/steps.json"), stepTag);
+
+            JsonObject woodenStepTag = new JsonObject();
+            woodenStepTag.add("values", woodenStepsArray);
+            RESOURCES.addJson(PackType.SERVER_DATA, ClutterNoMore.location("tags/block/wooden_steps.json"), woodenStepTag);
+
+
+            JsonObject pickaxeMineableTag = new JsonObject();
+            pickaxeMineableTag.add("values", pickaxeMineableArray);
+            RESOURCES.addJson(PackType.SERVER_DATA, ClutterNoMore.location("minecraft", "tags/block/mineable/pickaxe.json"), pickaxeMineableTag);
 
             //? if neoforge {
             /*BuiltInRegistries.BLOCK.freeze();

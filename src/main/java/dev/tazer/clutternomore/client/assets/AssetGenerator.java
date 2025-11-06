@@ -7,6 +7,7 @@ import com.google.gson.JsonPrimitive;
 import dev.tazer.clutternomore.ClutterNoMore;
 import dev.tazer.clutternomore.ClutterNoMoreClient;
 import dev.tazer.clutternomore.Platform;
+import dev.tazer.clutternomore.common.data.CNMPackResources;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.Resource;

@@ -15,7 +15,7 @@ import net.minecraft.server.packs.*;
 /*import net.minecraft.server.packs.metadata.MetadataSectionSerializer;
 *///?}
 import net.minecraft.server.packs.metadata.MetadataSectionType;
-//? if >1.21.4 {
+//? if >1.21.8 {
 import net.minecraft.server.packs.metadata.pack.PackFormat;
 //?}
 import net.minecraft.server.packs.metadata.pack.PackMetadataSection;
@@ -42,11 +42,15 @@ public class CNMPackResources extends AbstractPackResources {
                 /*int
             *///?}
                 resourcePackVersion = SharedConstants.getCurrentVersion()
+            //? if >1.21.4 {
+                .packVersion(PackType.CLIENT_RESOURCES)
             //? if >1.21.8 {
-                .packVersion(PackType.CLIENT_RESOURCES).minorRange();
+            .minorRange()
+            //?}
              //?} else {
-            /*.getPackVersion(PackType.CLIENT_RESOURCES);
-    *///?}
+            /*.getPackVersion(PackType.CLIENT_RESOURCES)
+            *///?}
+            ;
     private static final
              //? if >1.21.8 {
                     InclusiveRange<PackFormat>
@@ -87,9 +91,8 @@ public class CNMPackResources extends AbstractPackResources {
     //?} else {
     /*@Nullable
     public <T> T getMetadataSection(MetadataSectionSerializer<T> deserializer) throws IOException {
-        //FIXME
         try {
-            return (T)(deserializer == PackMetadataSection.TYPE ? this.clientMetadata : null);
+            return (T) (deserializer == PackMetadataSection.TYPE ? this.clientMetadata : null);
         } catch (Exception var3) {
             return null;
         }
@@ -124,7 +127,7 @@ public class CNMPackResources extends AbstractPackResources {
     public void listResources(PackType packType, String namespace, String path, PackResources.ResourceOutput output) {
         Map<ResourceLocation, byte[]> resources = packType == PackType.CLIENT_RESOURCES ? clientResources : serverData;
         for (ResourceLocation location : resources.keySet()) {
-            if (getFolderPath(location.getPath()).equals(path)) {
+            if (location.getPath().startsWith(path)) {
                 byte[] resource = resources.get(location);
                 output.accept(location, () -> new ByteArrayInputStream(resource));
             }
@@ -153,10 +156,5 @@ public class CNMPackResources extends AbstractPackResources {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-    }
-
-    private static String getFolderPath(String path) {
-        int lastIndex = path.lastIndexOf('/');
-        return lastIndex == -1 ? "" : path.substring(0, lastIndex);
     }
 }
