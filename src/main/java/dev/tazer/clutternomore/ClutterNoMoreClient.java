@@ -26,8 +26,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 //? if neoforge {
-/*import dev.tazer.clutternomore.client.assets.moonlight.DynamicClientResources;
-import net.neoforged.neoforge.network.PacketDistributor;
+/*import net.neoforged.neoforge.network.PacketDistributor;
 *///?}
 import java.util.ArrayList;
 import java.util.List;
@@ -40,9 +39,6 @@ public class ClutterNoMoreClient {
     public static final CNMConfig.ClientConfig CLIENT_CONFIG = CNMConfig.ClientConfig.createToml(Platform.INSTANCE.configPath(), "", MODID +"-client", CNMConfig.ClientConfig.class);
 
     public static void init() {
-        //? if neoforge {
-        /*DynamicClientResources.register();
-        *///?}
     }
 
     public static void onItemTooltips(ItemStack stack,

@@ -18,7 +18,7 @@ import net.minecraft.util.profiling.ProfilerFiller;
 
 import java.util.*;
 
-public class ShapeMapHandler extends SimpleJsonResourceReloadListener
+public class ShapeMapFileHandler extends SimpleJsonResourceReloadListener
 //? >1.21.2
 <JsonElement>
 //? if fabric {
@@ -29,13 +29,13 @@ public class ShapeMapHandler extends SimpleJsonResourceReloadListener
     //? if >1.21.2 {
 
     public static final FileToIdConverter CONVERTER = FileToIdConverter.json("shape_map");
-    public ShapeMapHandler() {
+    public ShapeMapFileHandler() {
         super(ExtraCodecs.JSON, CONVERTER);
     }
     //?} else {
     /*public static final Gson GSON = new GsonBuilder().create();
 
-    public ShapeMapHandler() {
+    public ShapeMapFileHandler() {
         super(GSON, "shape_map");
     }
     *///?}

@@ -1,4 +1,4 @@
-package dev.tazer.clutternomore.common.registry.vanilla;
+package dev.tazer.clutternomore.common.registry;
 
 import dev.tazer.clutternomore.ClutterNoMore;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -16,34 +16,26 @@ import static dev.tazer.clutternomore.ClutterNoMore.MODID;
 public class BlockSetRegistry {
 
     public static void init() {
-//        BlockSetAPI.registerBlockSetDefinition(new ShapeSetRegistry());
-//        BlockSetAPI.addDynamicBlockRegistration(BlockSetRegistry::registerShapeBlocks, ShapeSet.class);
-//        BlockSetAPI.addDynamicItemRegistration(BlockSetRegistry::registerShapeItems, ShapeSet.class);
-
     }
 
-    public static ShapeSet getBlockTypeOf(Item item, Class<ShapeSet> shapeSetClass) {
+    public static ShapeSet getBlockTypeOf(Item item) {
         return ShapeSetRegistry.items.get(item);
     }
 
     public static class ShapeSetRegistry {
-
         public static final Map<Item, ShapeSet> items = new LinkedHashMap<>();
-        protected ShapeSetRegistry() {
-        }
 
         public static void register(Item block, ShapeSet shapeSet) {
             items.put(block, shapeSet);
         }
 
-        public static Optional<ShapeSet> detectTypeFromBlock(Block block, ResourceLocation blockId) {
+        public static void detectTypeFromBlock(Block block, ResourceLocation blockId) {
             if (block.asItem() != Items.AIR) {
                 if (isParentBlock(blockId)) {
-                    return Optional.of(new ShapeSet(blockId, block));
+                    new ShapeSet(blockId, block);
                 }
             }
 
-            return Optional.empty();
         }
 
         private static boolean has(ResourceLocation block) {
@@ -122,13 +114,6 @@ public class BlockSetRegistry {
 
             return false;
         }
-
-        //        @Override
-        public ShapeSet getDefaultType() {
-            return STONE;
-        }
-
-        public static final ShapeSet STONE = new ShapeSet(ClutterNoMore.location("minecraft", "stone"), Blocks.STONE);
     }
 
     public static class ShapeSet {
@@ -156,12 +141,12 @@ public class BlockSetRegistry {
                     addChild("hollow_log", ClutterNoMore.location("wilderwild", "hollowed_"+ id.getPath()));
                 }
             }
-            addChild("slab", findRelatedEntry("slab"));
-            addChild("stairs", findRelatedEntry("stairs"));
-            addChild("wall", findRelatedEntry("wall"));
-            addChild("vertical_slab", findRelatedEntry(MODID, "vertical", "slab"));
-            addChild("step", findRelatedEntry(MODID, "","step"));
-            addChild("spiked", findRelatedEntry("spiked", ""));
+            addChild("slab", findShape("slab"));
+            addChild("stairs", findShape("stairs"));
+            addChild("wall", findShape("wall"));
+            addChild("vertical_slab", findShape(MODID, "vertical", "slab"));
+            addChild("step", findShape(MODID, "","step"));
+            addChild("spiked", findShape("spiked", ""));
         }
 
         private void addChild(String block, ItemLike block1) {
@@ -192,11 +177,11 @@ public class BlockSetRegistry {
             return type;
         }
 
-        protected @Nullable Item findRelatedEntry(String prefix, String postfix) {
-            return findRelatedEntry(id.getNamespace(), prefix, postfix);
+        protected @Nullable Item findShape(String prefix, String postfix) {
+            return findShape(id.getNamespace(), prefix, postfix);
         }
 
-        protected @Nullable Item findRelatedEntry(String namespace, String prefix, String postfix) {
+        protected @Nullable Item findShape(String namespace, String prefix, String postfix) {
             String basePath = id.getPath();
 
             List<String> parentSuffixes = List.of("block", "planks");
@@ -232,8 +217,8 @@ public class BlockSetRegistry {
             return null;
         }
 
-        protected @Nullable Item findRelatedEntry(String postfix) {
-            return findRelatedEntry("", postfix);
+        protected @Nullable Item findShape(String postfix) {
+            return findShape("", postfix);
         }
 
         protected @Nullable Item getWood() {
@@ -247,24 +232,8 @@ public class BlockSetRegistry {
             return null;
         }
 
-        public String getTranslationKey() {
-            return "shape_set." + this.getNamespace() + "." + this.getTypeName();
-        }
-
-        private String getNamespace() {
-            return id.getNamespace();
-        }
-
         public Block mainChild() {
             return block;
-        }
-
-        public boolean hasChild(String slab) {
-            return items.containsKey(slab);
-        }
-
-        public ItemLike getChild(String slab) {
-            return items.get(slab);
         }
 
         public Collection<ItemLike> getChildren() {

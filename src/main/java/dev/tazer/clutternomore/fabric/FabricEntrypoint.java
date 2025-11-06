@@ -6,7 +6,7 @@ import dev.tazer.clutternomore.ClutterNoMore;
 import dev.tazer.clutternomore.common.networking.ChangeStackPayload;
 import dev.tazer.clutternomore.common.networking.ShapeMapPayload;
 import dev.tazer.clutternomore.common.shape_map.ShapeMap;
-import dev.tazer.clutternomore.common.shape_map.ShapeMapHandler;
+import dev.tazer.clutternomore.common.shape_map.ShapeMapFileHandler;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
@@ -25,9 +25,9 @@ public class FabricEntrypoint implements ModInitializer {
         ClutterNoMore.init();
         registerPayloadHandlers();
         //? if >=1.21.9 {
-        ResourceLoader.get(PackType.SERVER_DATA).registerReloader(ClutterNoMore.location("shape_map"), new ShapeMapHandler());
+        ResourceLoader.get(PackType.SERVER_DATA).registerReloader(ClutterNoMore.location("shape_map"), new ShapeMapFileHandler());
         //?} else {
-        /*ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(new ShapeMapHandler());
+        /*ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(new ShapeMapFileHandler());
         *///?}
         ServerLifecycleEvents.START_DATA_PACK_RELOAD.register(((minecraftServer, closeableResourceManager) -> {
             ClutterNoMore.load(minecraftServer.registryAccess(), minecraftServer.getRecipeManager());

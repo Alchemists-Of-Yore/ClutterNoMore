@@ -1,4 +1,4 @@
-package dev.tazer.clutternomore.client.assets.vanilla;
+package dev.tazer.clutternomore.client.assets;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;

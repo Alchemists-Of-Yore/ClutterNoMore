@@ -3,25 +3,18 @@ package dev.tazer.clutternomore;
 //import dev.tazer.clutternomore.common.data.DynamicServerResources;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import dev.tazer.clutternomore.client.assets.vanilla.AssetGenerator;
-import dev.tazer.clutternomore.client.assets.vanilla.StepGenerator;
-import dev.tazer.clutternomore.client.assets.vanilla.VerticalSlabGenerator;
+import dev.tazer.clutternomore.client.assets.AssetGenerator;
+import dev.tazer.clutternomore.client.assets.StepGenerator;
+import dev.tazer.clutternomore.client.assets.VerticalSlabGenerator;
+import dev.tazer.clutternomore.common.access.RegistryAccess;
 import dev.tazer.clutternomore.common.blocks.StepBlock;
 import dev.tazer.clutternomore.common.blocks.VerticalSlabBlock;
-import dev.tazer.clutternomore.common.data.vanilla.CNMPackResources;
-import dev.tazer.clutternomore.common.registry.CBlocks;
-//? if neoforge {
-/*import dev.tazer.clutternomore.common.data.DynamicServerResources;
-*///?}
-//? if neoforge {
-/*import dev.tazer.clutternomore.common.registry.moonlight.BlockSetRegistry;
-*///?} else {
-import dev.tazer.clutternomore.common.registry.vanilla.BlockSetRegistry;
-//?}
-
+import dev.tazer.clutternomore.common.data.CNMPackResources;
 //? if <1.21 {
 /*import net.minecraft.core.RegistryAccess;
 *///?} else {
+import dev.tazer.clutternomore.common.registry.BlockSetRegistry;
+import dev.tazer.clutternomore.common.registry.CBlocks;
 import net.minecraft.core.HolderLookup;
 //?}
 
@@ -72,9 +65,6 @@ public class ClutterNoMore {
     public static void init() {
         LOGGER.info("Initializing {} on {}", MODID, Platform.INSTANCE.loader());
         BlockSetRegistry.init();
-        //? neoforge {
-        /*DynamicServerResources.register();
-        *///?}
     }
 
     public static Pack createPack(PackType type) {
@@ -189,12 +179,11 @@ public class ClutterNoMore {
         *///?}
     }
 
-    //? if forge || fabric {
     public static void registerVariants() {
         if (STARTUP_CONFIG.VERTICAL_SLABS.value() || STARTUP_CONFIG.STEPS.value()) {
             //? if neoforge {
-            /*((dev.tazer.clutternomore.common.access.RegistryAccess) BuiltInRegistries.BLOCK).clutternomore$unfreeze();
-            ((dev.tazer.clutternomore.common.access.RegistryAccess) BuiltInRegistries.ITEM).clutternomore$unfreeze();
+            /*((RegistryAccess) BuiltInRegistries.BLOCK).clutternomore$unfreeze();
+            ((RegistryAccess) BuiltInRegistries.ITEM).clutternomore$unfreeze();
             *///?} else if forge {
             /*RegistryManager.ACTIVE.getRegistry(BuiltInRegistries.BLOCK.key()).unfreeze();
             RegistryManager.ACTIVE.getRegistry(BuiltInRegistries.ITEM.key()).unfreeze();
@@ -251,7 +240,6 @@ public class ClutterNoMore {
             *///?}
         }
     }
-    //?}
 
     public static BlockBehaviour.Properties copy(Block block) {
         //? if >1.21

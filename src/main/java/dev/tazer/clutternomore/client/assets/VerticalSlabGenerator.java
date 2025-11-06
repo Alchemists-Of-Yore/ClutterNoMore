@@ -1,28 +1,26 @@
-package dev.tazer.clutternomore.client.assets.vanilla;
+package dev.tazer.clutternomore.client.assets;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import dev.tazer.clutternomore.ClutterNoMore;
-import dev.tazer.clutternomore.common.blocks.StepBlock;
+import dev.tazer.clutternomore.common.blocks.VerticalSlabBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.block.state.properties.SlabType;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static dev.tazer.clutternomore.client.assets.vanilla.AssetGenerator.write;
+import static dev.tazer.clutternomore.client.assets.AssetGenerator.write;
 
-public final class StepGenerator {
-    public static ArrayList<ResourceLocation> STAIRS = new ArrayList<>();
-    public static List<String> STEPS = new ArrayList<>();
+public final class VerticalSlabGenerator {
+    public static ArrayList<ResourceLocation> SLABS = new ArrayList<>();
 
     public static void generate() {
 
-        for (ResourceLocation id : STAIRS) {
-            var name = id.getPath().replace("stairs", "step");
+        for (ResourceLocation id : SLABS) {
+            var name = "vertical_" + id.getPath();
             try {
                 var blockState = new JsonObject();
                 var variants = new JsonObject();
@@ -31,17 +29,14 @@ public final class StepGenerator {
                 //blockstate
                 var potentialBlockstate = resourceManager.getResource(ClutterNoMore.location(id.getNamespace(), "blockstates/" + name + ".json"));
                 if (potentialBlockstate.isEmpty()) {
-                    StepBlock.FACING.getAllValues().forEach(directionValue -> {
-                        StepBlock.SLAB_TYPE.getAllValues().forEach(doubleState->{
+                    VerticalSlabBlock.FACING.getAllValues().forEach(directionValue -> {
+                        VerticalSlabBlock.DOUBLE.getAllValues().forEach(doubleState->{
                             JsonObject model = new JsonObject();
                             var modelString = "clutternomore:block/"+name;
                             if (modelString.contains("waxed"))
                                 modelString = modelString.replace("waxed_", "");
-                            model.addProperty("uvlock", true);
-                            if (doubleState.value().equals(SlabType.DOUBLE)) {
+                            if (doubleState.value()) {
                                 model.addProperty("model", modelString+"_double");
-                            } else if (doubleState.value().equals(SlabType.TOP)) {
-                                model.addProperty("model", modelString+"_top");
                             } else {
                                 model.addProperty("model", modelString);
                             }
@@ -60,18 +55,13 @@ public final class StepGenerator {
                 }
 
                 // block models
-                var potentialModel = resourceManager.getResource(ClutterNoMore.location(id.getNamespace(), "models/block/" + name + ".json"));
-                if (potentialModel.isEmpty()) {
-                    var baseSlabModel = resourceManager.getResource(ClutterNoMore.location(id.getNamespace(), "models/block/" + id.getPath() + ".json"));
-                    if (baseSlabModel.isPresent()) {
-                        JsonObject blockModel = JsonParser.parseReader(baseSlabModel.get().openAsReader()).getAsJsonObject();
-                        blockModel.addProperty("parent", "clutternomore:block/templates/step");
-                        write(AssetGenerator.assets.resolve("models/block"), name + ".json", blockModel.toString());
-                        blockModel.addProperty("parent", "clutternomore:block/templates/step_double");
-                        write(AssetGenerator.assets.resolve("models/block"), name + "_double.json", blockModel.toString());
-                        blockModel.addProperty("parent", "clutternomore:block/templates/step_top");
-                        write(AssetGenerator.assets.resolve("models/block"), name + "_top.json", blockModel.toString());
-                    }
+                var potentialSlabModel = resourceManager.getResource(ClutterNoMore.location(id.getNamespace(), "models/block/" + id.getPath() + ".json"));
+                if (potentialSlabModel.isPresent()) {
+                    JsonObject blockModel = JsonParser.parseReader(potentialSlabModel.get().openAsReader()).getAsJsonObject();
+                    blockModel.addProperty("parent", "clutternomore:block/templates/vertical_slab");
+                    write(AssetGenerator.assets.resolve("models/block"), name + ".json", blockModel.toString());
+                    blockModel.addProperty("parent", "clutternomore:block/templates/vertical_slab_double");
+                    write(AssetGenerator.assets.resolve("models/block"), name + "_double.json", blockModel.toString());
                 }
                 // item models
                 var modelString = name;
@@ -114,13 +104,13 @@ public final class StepGenerator {
         return result.toString().trim();
     }
 
-    public static String stepName(String name) {
-        name = name.substring(0, name.length() - 7);
+    public static String verticalSlabName(String name) {
+        name = "vertical_" + name.substring(0, name.length() - 5);
 
         if (name.endsWith("_block")) name = name.substring(0, name.length() - 6);
         if (name.endsWith("_planks")) name = name.substring(0, name.length() - 7);
         if (name.endsWith("s")) name = name.substring(0, name.length() - 1);
-        return name + "_step";
+        return name + "_slab";
     }
 }
 

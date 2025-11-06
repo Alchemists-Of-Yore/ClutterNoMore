@@ -73,7 +73,6 @@ dependencies {
     modImplementation("net.fabricmc:fabric-loader:${property("deps.fabric-loader")}")
     modImplementation("net.fabricmc.fabric-api:fabric-api:${property("deps.fabric-api")}")
 
-//    modImplementation("maven.modrinth:moonlight:${property("deps.moonlight")}")
     if (hasProperty("deps.modmenu")) {
         modLocalRuntime("com.terraformersmc:modmenu:${property("deps.modmenu")}")
     }

@@ -1,4 +1,4 @@
-package dev.tazer.clutternomore.common.data.vanilla;
+package dev.tazer.clutternomore.common.data;
 
 import com.google.gson.JsonElement;
 //? if >1.21.9 {

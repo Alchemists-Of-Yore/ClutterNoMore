@@ -12,11 +12,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(BuiltInRegistries.class)
 public class BuiltInRegistriesMixin {
-
-    //? if fabric {
     @Inject(method = "bootStrap", at = @At(value = "HEAD"))
     private static void accept(CallbackInfo ci) {
         ClutterNoMore.registerVariants();
     }
-    //?}
 }

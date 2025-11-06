@@ -1,14 +1,6 @@
 package dev.tazer.clutternomore.common.mixin;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 import dev.tazer.clutternomore.ClutterNoMore;
-import dev.tazer.clutternomore.common.data.vanilla.CNMPackResources;
-import net.minecraft.network.chat.Component;
-import net.minecraft.server.packs.PackLocationInfo;
-import net.minecraft.server.packs.PackResources;
-import net.minecraft.server.packs.PackSelectionConfig;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.repository.*;
 import net.minecraft.world.level.validation.DirectoryValidator;
@@ -19,7 +11,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.nio.file.Path;
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 
 @Mixin(ServerPacksSource.class)

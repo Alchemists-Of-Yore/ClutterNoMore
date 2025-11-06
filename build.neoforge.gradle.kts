@@ -79,8 +79,6 @@ repositories {
 }
 
 dependencies {
-    implementation("maven.modrinth:moonlight:${property("deps.moonlight")}")
-
     compileOnly("mezz.jei:jei-${property("deps.minecraft")}-common-api:19.21.0.247")
     compileOnly("mezz.jei:jei-${property("deps.minecraft")}-neoforge-api:19.21.0.247")
     runtimeOnly("mezz.jei:jei-${property("deps.minecraft")}-neoforge:19.21.0.247")
