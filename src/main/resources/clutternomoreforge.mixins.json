@@ -9,7 +9,6 @@
     "ItemDisplayBuilderMixin",
     "ItemMixin",
     "ItemStackMixin",
-    "SimpleRegistryMixin",
     "SlotAccessor",
     "recipe.ShapelessRecipeMixin",
     "recipe.SingleItemRecipeMixin"

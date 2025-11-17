@@ -7,14 +7,12 @@ import com.google.gson.JsonPrimitive;
 import dev.tazer.clutternomore.client.assets.AssetGenerator;
 import dev.tazer.clutternomore.client.assets.StepGenerator;
 import dev.tazer.clutternomore.client.assets.VerticalSlabGenerator;
-import dev.tazer.clutternomore.common.access.RegistryAccess;
 import dev.tazer.clutternomore.common.blocks.StepBlock;
 import dev.tazer.clutternomore.common.blocks.VerticalSlabBlock;
 import dev.tazer.clutternomore.common.data.CNMPackResources;
 //? if <1.21 {
 /*import net.minecraft.core.RegistryAccess;
 *///?} else {
-import dev.tazer.clutternomore.common.registry.BlockSetRegistry;
 import dev.tazer.clutternomore.common.registry.CBlocks;
 import net.minecraft.core.HolderLookup;
 //?}
@@ -29,7 +27,6 @@ import java.util.stream.Stream;
 *///?}
 
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -45,7 +42,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 //?}
-import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.SoundType;
@@ -58,9 +54,7 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.api.EnvType;
 //?} else if neoforge {
-/*import net.neoforged.api.distmarker.Dist;
-import net.neoforged.fml.loading.FMLLoader;
-*///?}
+//?}
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -73,6 +67,7 @@ public class ClutterNoMore {
     public static final CNMConfig.StartupConfig STARTUP_CONFIG = CNMConfig.StartupConfig.createToml(Platform.INSTANCE.configPath(), MODID, "startup", CNMConfig.StartupConfig.class);
     private static final PackLocationInfo PACK_INFO = new PackLocationInfo(ClutterNoMore.MODID+"-runtime", Component.literal("ClutterNoMore"), PackSource.BUILT_IN, Optional.empty());
     public static final CNMPackResources RESOURCES = new CNMPackResources(PACK_INFO);
+    public static final ArrayList<ResourceLocation> ALIASES = new ArrayList<>();
 
     public static void init() {
         LOGGER.info("Initializing {} on {}", MODID, Platform.INSTANCE.loader());
@@ -191,13 +186,6 @@ public class ClutterNoMore {
 
     public static void registerVariants() {
         if (STARTUP_CONFIG.VERTICAL_SLABS.value() || STARTUP_CONFIG.STEPS.value()) {
-            //? if neoforge {
-            /*((RegistryAccess) BuiltInRegistries.BLOCK).clutternomore$unfreeze();
-            ((RegistryAccess) BuiltInRegistries.ITEM).clutternomore$unfreeze();
-            *///?} else if forge {
-            /*RegistryManager.ACTIVE.getRegistry(BuiltInRegistries.BLOCK.key()).unfreeze();
-            RegistryManager.ACTIVE.getRegistry(BuiltInRegistries.ITEM.key()).unfreeze();
-            *///?}
             LinkedHashMap<String, Supplier<? extends Block>> toRegister = new LinkedHashMap<>();
             ArrayList<ResourceLocation> slabs = new ArrayList<>();
             ArrayList<ResourceLocation> stairs = new ArrayList<>();
@@ -232,10 +220,7 @@ public class ClutterNoMore {
                         String shortPath = "vertical_" + blockId.getPath();
                         String path = blockNamespace + shortPath;
                         //? if =1.21.1 {
-                        /*if (!blockNamespace.isEmpty()) {
-//                            BuiltInRegistries.BLOCK.addAlias(ClutterNoMore.location(shortPath), ClutterNoMore.location(path));
-//                            BuiltInRegistries.ITEM.addAlias(ClutterNoMore.location(shortPath), ClutterNoMore.location(path));
-                        }
+                        /*addAlias(blockNamespace, shortPath, path);
                         *///?}
                         toRegister.put(path, ()->new VerticalSlabBlock(copy(slabBlock)
                                 //? if >1.21.2
@@ -261,10 +246,7 @@ public class ClutterNoMore {
                         String shortPath = blockId.getPath().replace("stairs", "step");
                         String path = blockNamespace + shortPath;
                         //? if =1.21.1 {
-                        /*if (!blockNamespace.isEmpty()) {
-//                            BuiltInRegistries.BLOCK.addAlias(ClutterNoMore.location(shortPath), ClutterNoMore.location(path));
-//                            BuiltInRegistries.ITEM.addAlias(ClutterNoMore.location(shortPath), ClutterNoMore.location(path));
-                        }
+                        /*addAlias(blockNamespace, shortPath, path);
                         *///?}
                         toRegister.put(path, ()->new StepBlock(copy(stairBlock)
                                 //? if >1.21.2
@@ -319,14 +301,16 @@ public class ClutterNoMore {
             JsonObject shovelMineableTag = new JsonObject();
             shovelMineableTag.add("values", shovelMineableArray);
             RESOURCES.addJson(PackType.SERVER_DATA, ClutterNoMore.location("minecraft", "tags/block/mineable/shovel.json"), shovelMineableTag);
+        }
+    }
 
-            //? if neoforge {
-            /*BuiltInRegistries.BLOCK.freeze();
-            BuiltInRegistries.ITEM.freeze();
-            *///?} else if forge {
-            /*RegistryManager.ACTIVE.getRegistry(BuiltInRegistries.BLOCK.key()).freeze();
-            RegistryManager.ACTIVE.getRegistry(BuiltInRegistries.ITEM.key()).freeze();
-            *///?}
+    private static void addAlias(String blockNamespace, String shortPath, String path) {
+        ResourceLocation shortNamespace = ClutterNoMore.location(shortPath);
+        if (!blockNamespace.isEmpty() && !ALIASES.contains(shortNamespace)) {
+            ResourceLocation id = ClutterNoMore.location(path);
+            BuiltInRegistries.BLOCK.addAlias(shortNamespace, id);
+            BuiltInRegistries.ITEM.addAlias(shortNamespace, id);
+            ALIASES.add(shortNamespace);
         }
     }
 

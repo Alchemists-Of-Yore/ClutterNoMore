@@ -7,8 +7,8 @@ import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 //? if neoforge {
-import net.minecraft.core.registries.BuiltInRegistries;
-//?}
+/*import net.minecraft.core.registries.BuiltInRegistries;
+*///?}
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -58,13 +58,6 @@ public class StepBlock extends HorizontalDirectionalBlock implements SimpleWater
     }
     //?}
 
-
-    //? if neoforge {
-    /*@Override
-    public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state) {
-        return BuiltInRegistries.ITEM.get(this.builtInRegistryHolder().key().location()).getDefaultInstance();
-    }
-    *///?}
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {

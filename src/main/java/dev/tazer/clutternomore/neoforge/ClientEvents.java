@@ -132,5 +132,10 @@ public class ClientEvents {
             if (!OVERLAY.shouldStayOpenThisTick()) OVERLAY = null;
         }
     }
+
+    @SubscribeEvent
+    private static void clientSetup(FMLClientSetupEvent event) {
+        AssetGenerator.generate();
+    }
 }
 *///?}

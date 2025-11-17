@@ -13,7 +13,6 @@
     "PackRepositoryAccessor",
     "PackRepositoryMixin",
     "ServerPacksSourceMixin",
-    "SimpleRegistryMixin",
     "SlotAccessor",
     "recipe.ShapedRecipeMixin",
     "recipe.ShapelessRecipeMixin",

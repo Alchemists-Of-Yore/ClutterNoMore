@@ -76,7 +76,18 @@ public class CNMPackResources extends AbstractPackResources {
     public @Nullable <T> T getMetadataSection(MetadataSectionType<T> type) {
         return type == PackMetadataSection.CLIENT_TYPE ? (T) clientMetadata : type == PackMetadataSection.SERVER_TYPE ? (T) serverMetadata : null;
     }
-    //?} else {
+    //?} else if >1.21.1 {
+    
+    /*@Override
+    public @Nullable <T> T getMetadataSection(MetadataSectionType<T> type) throws IOException {
+        try {
+            return (T) (type == PackMetadataSection.TYPE ? clientMetadata : null);
+        } catch (Exception var3) {
+            return null;
+        }
+    }
+
+    *///?} else {
     /*@Nullable
     public <T> T getMetadataSection(MetadataSectionSerializer<T> deserializer) throws IOException {
         try {

@@ -8,6 +8,7 @@ import dev.tazer.clutternomore.common.networking.ShapeMapPayload;
 import dev.tazer.clutternomore.common.shape_map.ShapeMap;
 import dev.tazer.clutternomore.common.shape_map.ShapeMapFileHandler;
 import dev.tazer.clutternomore.common.networking.ChangeStackPayload;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.server.MinecraftServer;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
@@ -22,6 +23,7 @@ import net.neoforged.neoforge.event.server.ServerStartedEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.registries.RegisterEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -71,9 +73,10 @@ public class NeoForgeEntrypoint {
     }
 
     @SubscribeEvent
-    private static void commonSetup(FMLCommonSetupEvent event) {
-        ClutterNoMore.registerVariants();
-        if (FMLLoader.getDist() == Dist.CLIENT) AssetGenerator.generate();
+    private static void registerBlocks(RegisterEvent event) {
+        if (event.getRegistryKey().equals(Registries.POTION)) {
+            ClutterNoMore.registerVariants();
+        }
     }
 }
 *///?}
