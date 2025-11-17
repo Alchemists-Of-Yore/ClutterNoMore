@@ -2,15 +2,12 @@
     "type": "minecraft:crafting_shaped",
     "pattern": [
         " # ",
-        "C C",
-        " C "
+        "# #",
+        " # "
     ],
     "key": {
         "#": {
             "item": "minecraft:polished_blackstone"
-        },
-        "C": {
-            "item": "minecraft:chiseled_polished_blackstone"
         }
     },
     "result": {

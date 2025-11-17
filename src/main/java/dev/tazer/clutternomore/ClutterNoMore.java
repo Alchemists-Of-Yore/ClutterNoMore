@@ -287,6 +287,7 @@ public class ClutterNoMore {
                 }
             }
             toRegister.forEach(CBlocks::register);
+            AssetGenerator.keys = toRegister.keySet();
             VerticalSlabGenerator.SLABS = slabs;
             StepGenerator.STAIRS = stairs;
 

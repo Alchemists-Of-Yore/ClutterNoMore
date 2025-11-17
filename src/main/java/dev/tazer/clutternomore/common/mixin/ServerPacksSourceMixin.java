@@ -16,7 +16,7 @@ import java.util.Set;
 @Mixin(ServerPacksSource.class)
 public class ServerPacksSourceMixin {
     @Inject(method = "createPackRepository(Ljava/nio/file/Path;Lnet/minecraft/world/level/validation/DirectoryValidator;)Lnet/minecraft/server/packs/repository/PackRepository;", at = @At("RETURN"), cancellable = true)
-    private static void addPacks(Path folder, DirectoryValidator validator, CallbackInfoReturnable<PackRepository> cir) {
+    private static void addPack(Path folder, DirectoryValidator validator, CallbackInfoReturnable<PackRepository> cir) {
         PackRepository packRepository = cir.getReturnValue();
         Pack pack = ClutterNoMore.createPack(PackType.SERVER_DATA);
         Set<RepositorySource> newSources = new HashSet<>(((PackRepositoryAccessor) packRepository).getSources());

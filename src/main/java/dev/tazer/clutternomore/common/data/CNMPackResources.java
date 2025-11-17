@@ -34,6 +34,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class CNMPackResources extends AbstractPackResources {
     protected final Map<ResourceLocation, byte[]> clientResources;
     protected final Map<ResourceLocation, byte[]> serverData;
+    protected final Map<String, byte[]> rootResources;
     protected final PackMetadataSection clientMetadata;
     protected final PackMetadataSection serverMetadata;
 
@@ -54,6 +55,7 @@ public class CNMPackResources extends AbstractPackResources {
         super(info);
         this.clientResources = new ConcurrentHashMap<>();
         this.serverData = new ConcurrentHashMap<>();
+        this.rootResources = new ConcurrentHashMap<>();
         this.clientMetadata = new PackMetadataSection(Component.literal("ClutterNoMore Runtime Client Resources"), resourcePackVersion
                 //? if <1.21.9
                 /*, Optional.empty()*/
@@ -99,8 +101,8 @@ public class CNMPackResources extends AbstractPackResources {
     }
 
     public @Nullable IoSupplier<InputStream> getRootResource(String... strings) {
-        return null;
-    }
+        byte[] resource = rootResources.get(String.join("/", strings));
+        return resource != null ? () -> new ByteArrayInputStream(resource) : null;    }
 
     @Override
     public IoSupplier<InputStream> getResource(PackType packType, ResourceLocation id) {
