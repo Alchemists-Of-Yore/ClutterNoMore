@@ -151,7 +151,7 @@ public class BlockSetRegistry {
         }
 
         private void addChild(String block, ItemLike block1) {
-            if (block1 != null)
+            if (block1 != null && !items.containsKey(block))
                 items.put(block, block1);
         }
 
