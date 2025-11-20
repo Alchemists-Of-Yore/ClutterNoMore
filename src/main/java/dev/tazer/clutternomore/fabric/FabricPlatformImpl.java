@@ -4,6 +4,7 @@ package dev.tazer.clutternomore.fabric;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import dev.tazer.clutternomore.Platform;
+import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
@@ -41,6 +42,11 @@ public class FabricPlatformImpl implements Platform {
     @Override
     public Path configPath() {
         return FabricLoader.getInstance().getConfigDir();
+    }
+
+    @Override
+    public boolean isClient() {
+        return FabricLoader.getInstance().getEnvironmentType().equals(EnvType.CLIENT);
     }
 
 }

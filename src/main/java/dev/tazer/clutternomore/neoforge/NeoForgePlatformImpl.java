@@ -6,6 +6,7 @@ import com.google.gson.JsonParser;
 import dev.tazer.clutternomore.Platform;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.ModLoadingContext;
+import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.fml.loading.FMLPaths;
 
 import java.io.FileNotFoundException;
@@ -41,6 +42,11 @@ public class NeoForgePlatformImpl implements Platform {
     @Override
     public Path configPath() {
         return FMLPaths.CONFIGDIR.get();
+    }
+
+    @Override
+    public boolean isClient() {
+        return FMLEnvironment.dist.isClient();
     }
 
 }

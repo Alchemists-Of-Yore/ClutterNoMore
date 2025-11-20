@@ -68,20 +68,71 @@ repositories {
     mavenCentral()
     maven ( url = "https://maven.blamejared.com/" )
     maven ( url = "https://repo1.maven.org/maven2" )
-    maven ( url = "https://api.modrinth.com/maven" )
-    maven ( url = "https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1" )
-    maven ( url = "https://maven.terraformersmc.com/" )
-    maven ( url = "https://cursemaven.com" )
-    maven ( url = "https://api.modrinth.com/maven")
-    maven ( "https://repo.sleeping.town/" ) {
-        name = "Sisby Maven"
+    maven {
+        name = "Curse Maven"
+        url = uri("https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1")
+        content {
+            includeGroup("me.djtheredstoner")
+        }
     }
-    maven ( "https://maven.isxander.dev/releases") {
-        name = "Xander Maven"
+    maven {
+        name = "Curse Maven"
+        url = uri("https://cursemaven.com")
+        content {
+            includeGroupAndSubgroups("curse.maven")
+        }
     }
     maven {
         name = "Kotlin for Forge"
-        setUrl("https://thedarkcolour.github.io/KotlinForForge/")
+        url = uri("https://thedarkcolour.github.io/KotlinForForge/")
+        content {
+            includeGroupAndSubgroups("thedarkcolour")
+        }
+    }
+    maven {
+        name = "Greenhouse Maven"
+        url = uri("https://maven.greenhouse.lgbt/releases/")
+        content {
+            includeGroup("house.greenhouse")
+            includeGroup("umpaz.brewinandchewin")
+        }
+    }
+    maven {
+        name = "Terraformers (Mod Menu)"
+        url = uri("https://maven.terraformersmc.com/releases/")
+        content {
+            includeGroupAndSubgroups("com.terraformersmc")
+            includeGroupAndSubgroups("dev.emi")
+        }
+    }
+    maven {
+        name = "Modrinth"
+        url = uri("https://api.modrinth.com/maven")
+        content {
+            includeGroupAndSubgroups("maven.modrinth")
+        }
+    }
+    maven {
+        name = "Sisby Maven"
+        url = uri("https://repo.sleeping.town/")
+        content {
+            includeGroupAndSubgroups("folk.sisby")
+        }
+    }
+    maven {
+        name = "Parchment Mappings"
+        url = uri("https://maven.parchmentmc.org")
+        content {
+            includeGroupAndSubgroups("org.parchmentmc")
+        }
+    }
+    maven {
+        name = "Xander Maven"
+        url = uri("https://maven.isxander.dev/releases")
+        content {
+            includeGroupAndSubgroups("dev.isxander")
+            includeGroupAndSubgroups("org.quiltmc.parsers")
+        }
     }
 }
 
@@ -92,7 +143,7 @@ dependencies {
 
     implementation("folk.sisby:kaleido-config:${property("deps.kaleido")}")
     jarJar("folk.sisby:kaleido-config:${property("deps.kaleido")}")
-//    "additionalRuntimeClasspath"("folk.sisby:kaleido-config:${property("deps.kaleido")}")
+    "additionalRuntimeClasspath"("folk.sisby:kaleido-config:${property("deps.kaleido")}")
 
     runtimeOnly("me.djtheredstoner:DevAuth-neoforge:1.2.1")
 
@@ -109,7 +160,16 @@ dependencies {
     if (hasProperty("deps.yacl")) {
         runtimeOnly("dev.isxander:yet-another-config-lib:${property("deps.yacl")}-neoforge")
     }
-    runtimeOnly("maven.modrinth:mcqoy:${property("deps.mcqoy")}")
+    if (hasProperty("deps.brewin_and_chewin")) {
+        implementation("umpaz.brewinandchewin:BrewinAndChewin-neoforge:${property("deps.brewin_and_chewin")}+${property("deps.minecraft")}") { isTransitive = false }
+        implementation("house.greenhouse:greenhouseconfig:${property("deps.greenhouse_config")}+${property("deps.minecraft")}-neoforge")
+        implementation("house.greenhouse:greenhouseconfig_toml:${property("deps.greenhouse_config_toml")}")
+
+    }
+    if (hasProperty("deps.farmers_delight")) {
+        implementation("maven.modrinth:farmers-delight:${property("deps.farmers_delight")}")
+    }
+//    runtimeOnly("maven.modrinth:mcqoy:${property("deps.mcqoy")}")
 
 
 }

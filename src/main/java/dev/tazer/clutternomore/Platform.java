@@ -14,6 +14,7 @@ import java.nio.file.Path;
 import net.minecraft.resources.ResourceLocation;
 import java.nio.file.Path;
 import com.google.gson.JsonObject;
+import net.minecraft.server.packs.repository.Pack;
 
 
 public interface Platform {
@@ -37,4 +38,6 @@ public interface Platform {
     JsonObject getFileInJar(String namespace, String path);
 
     Path configPath();
+
+    boolean isClient();
 }

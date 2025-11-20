@@ -1,6 +1,7 @@
 package dev.tazer.clutternomore.common.mixin;
 
 import dev.tazer.clutternomore.ClutterNoMore;
+import dev.tazer.clutternomore.Platform;
 import net.minecraft.client.resources.ClientPackSource;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.repository.Pack;
@@ -19,7 +20,7 @@ import java.util.Set;
 public class PackRepositoryMixin {
     @Inject(method = "<init>", at = @At("TAIL"))
     private void init(RepositorySource[] sources, CallbackInfo ci) {
-        Pack pack = ClutterNoMore.createPack(Arrays.stream(sources).toList().stream().anyMatch(source -> source instanceof ClientPackSource) ? PackType.CLIENT_RESOURCES : PackType.SERVER_DATA);
+        Pack pack = Platform.INSTANCE.isClient() && Arrays.stream(sources).toList().stream().anyMatch(source -> source instanceof ClientPackSource) ? ClutterNoMore.createPack(PackType.CLIENT_RESOURCES) : ClutterNoMore.createPack(PackType.SERVER_DATA);
         Set<RepositorySource> newSources = new HashSet<>(((PackRepositoryAccessor) this).getSources());
         newSources.add(consumer -> consumer.accept(pack));
         ((PackRepositoryAccessor) this).setSources(newSources);

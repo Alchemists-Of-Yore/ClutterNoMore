@@ -43,5 +43,10 @@ public class ForgePlatformImpl implements Platform {
         return FMLPaths.CONFIGDIR.get();
     }
 
+    @Override
+    public boolean isClient() {
+        return FMLEnvironment.dist.isClient();
+    }
+
 }
 *///?}
