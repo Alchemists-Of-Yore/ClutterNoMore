@@ -21,6 +21,8 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.packs.repository.PackRepository;
+import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
@@ -31,9 +33,12 @@ import net.minecraft.world.item.TooltipFlag;
 //? if neoforge {
 /*import net.neoforged.neoforge.network.PacketDistributor;
 *///?}
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
+import static dev.tazer.clutternomore.ClutterNoMore.LOGGER;
 import static dev.tazer.clutternomore.ClutterNoMore.MODID;
 
 public class ClutterNoMoreClient {
@@ -167,6 +172,7 @@ public class ClutterNoMoreClient {
     }
 
     public static void onPlayerTick(Minecraft minecraft) {
+        ClutterNoMoreClient.enablePack();
         if (OVERLAY != null) {
             if (!OVERLAY.shouldStayOpenThisTick()) OVERLAY = null;
         }
@@ -203,5 +209,15 @@ public class ClutterNoMoreClient {
             return true;
         }
         return false;
+    }
+
+    static boolean hasReloaded = false;
+
+    public static void enablePack() {
+        if (!hasReloaded) {
+            LOGGER.info("Attempting to enable pack!");
+            Minecraft.getInstance().reloadResourcePacks();
+            hasReloaded = true;
+        }
     }
 }
