@@ -13,6 +13,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.nio.file.Path;
 
+import static dev.tazer.clutternomore.neoforge.NeoForgeClientEvents.SHAPE_KEY;
+
 public class NeoForgePlatformImpl implements Platform {
 
     @Override
@@ -47,6 +49,11 @@ public class NeoForgePlatformImpl implements Platform {
     @Override
     public boolean isClient() {
         return FMLEnvironment.dist.isClient();
+    }
+
+    @Override
+    public int shapeKey() {
+        return SHAPE_KEY.get().getKey().getValue();
     }
 
 }

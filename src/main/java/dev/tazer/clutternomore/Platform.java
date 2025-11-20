@@ -40,4 +40,6 @@ public interface Platform {
     Path configPath();
 
     boolean isClient();
+
+    int shapeKey();
 }

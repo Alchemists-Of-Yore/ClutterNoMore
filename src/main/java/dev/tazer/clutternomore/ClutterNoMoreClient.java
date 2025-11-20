@@ -11,10 +11,13 @@ import dev.tazer.clutternomore.common.mixin.screen.ScreenAccessor;
 import dev.tazer.clutternomore.forge.networking.ForgeNetworking;
 *///?}
 //? if fabric {
+import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 //?}
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
@@ -56,42 +59,44 @@ public class ClutterNoMoreClient {
         }
     }
 
-    public static void onKeyInput(int action) {
-        Minecraft minecraft = Minecraft.getInstance();
-        if (minecraft.screen == null) {
-            Player player = minecraft.player;
-            if (player != null) {
-                ItemStack heldStack = player.getItemInHand(InteractionHand.MAIN_HAND);
-                if (ShapeMap.contains(heldStack.getItem())) {
-                    switch (CLIENT_CONFIG.HOLD.value()) {
-                        case HOLD -> {
-                            if (OVERLAY == null && action == 1)
-                                OVERLAY = new ShapeSwitcherOverlay(minecraft, heldStack, true);
-                            else if (action == 0) OVERLAY = null;
-                        }
-                        case TOGGLE -> {
-                            if (action == 1) {
-                                if (OVERLAY == null) OVERLAY = new ShapeSwitcherOverlay(minecraft, heldStack, true);
-                                else OVERLAY = null;
+    public static void onKeyInput(int keyCode, int action) {
+        if (keyCode == shapeKey()) {
+            Minecraft minecraft = Minecraft.getInstance();
+            if (minecraft.screen == null) {
+                Player player = minecraft.player;
+                if (player != null) {
+                    ItemStack heldStack = player.getItemInHand(InteractionHand.MAIN_HAND);
+                    if (ShapeMap.contains(heldStack.getItem())) {
+                        switch (CLIENT_CONFIG.HOLD.value()) {
+                            case HOLD -> {
+                                if (OVERLAY == null && action == 1)
+                                    OVERLAY = new ShapeSwitcherOverlay(minecraft, heldStack, true);
+                                else if (action == 0) OVERLAY = null;
+                            }
+                            case TOGGLE -> {
+                                if (action == 1) {
+                                    if (OVERLAY == null) OVERLAY = new ShapeSwitcherOverlay(minecraft, heldStack, true);
+                                    else OVERLAY = null;
+                                }
+                            }
+                            case PRESS -> {
+                                if (action == 1) {
+                                    if (OVERLAY == null)
+                                        OVERLAY = new ShapeSwitcherOverlay(minecraft, heldStack, false);
+                                    OVERLAY.onMouseScrolled(-1);
+                                    OVERLAY = null;
+                                }
                             }
                         }
-                        case PRESS -> {
-                            if (action == 1) {
-                                if (OVERLAY == null)
-                                    OVERLAY = new ShapeSwitcherOverlay(minecraft, heldStack, false);
-                                OVERLAY.onMouseScrolled(-1);
-                                OVERLAY = null;
-                            }
-                        }
-                    }
 
+                    }
                 }
             }
         }
     }
 
-    public static void onKeyPress(Screen screen) {
-        if (screen instanceof AbstractContainerScreen<?> containerScreen) {
+    public static void onKeyPress(Screen screen, int button) {
+        if (button == shapeKey() && screen instanceof AbstractContainerScreen<?> containerScreen) {
             Slot slot = ((ScreenAccessor) screen).getSlotUnderMouse();
             if (slot != null) {
                 ItemStack heldStack = slot.getItem();
@@ -117,10 +122,13 @@ public class ClutterNoMoreClient {
         }
     }
 
-    public static void onKeyRelease() {
-        if (CLIENT_CONFIG.HOLD.value() == CNMConfig.InputType.HOLD) {
-            showTooltip = false;
+    public static boolean onKeyReleased(int button) {
+        if (button == shapeKey()) {
+            if (CLIENT_CONFIG.HOLD.value() == CNMConfig.InputType.HOLD) {
+                showTooltip = false;
+            }
         }
+        return false;
     }
 
     public static void switchShapeInSlot(Player player, int containerId, int slotId, ItemStack heldStack, int direction) {
@@ -152,5 +160,48 @@ public class ClutterNoMoreClient {
         /*ChangeStackPacket p = new ChangeStackPacket(containerId, slotId, next);
         ForgeNetworking.sendToServer(p);
         *///?}
+    }
+
+    public static int shapeKey() {
+        return Platform.INSTANCE.shapeKey();
+    }
+
+    public static void onPlayerTick(Minecraft minecraft) {
+        if (OVERLAY != null) {
+            if (!OVERLAY.shouldStayOpenThisTick()) OVERLAY = null;
+        }
+    }
+
+    public static void onRenderGui(GuiGraphics guiGraphics, DeltaTracker tracker) {
+        if (OVERLAY != null && OVERLAY.render) {
+            OVERLAY.render(guiGraphics, tracker.getGameTimeDeltaTicks());
+        }
+    }
+
+    public static boolean allowScreenScroll(Screen pScreen, double mouseX, double mouseY, double scrollX, double scrollY) {
+        if (showTooltip) {
+            if (pScreen instanceof AbstractContainerScreen<?> screen) {
+                Slot slot = ((ScreenAccessor) screen).getSlotUnderMouse();
+                Player player = Minecraft.getInstance().player;
+                if (slot != null && slot.allowModification(player)) {
+                    ItemStack heldStack = slot.getItem();
+                    if (ShapeMap.contains(heldStack.getItem())) {
+                        switchShapeInSlot(player, screen.getMenu().containerId, ((SlotAccessor) slot).getSlotIndex(), heldStack, (int) scrollY);
+                        return false;
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
+
+    public static boolean onMouseScrolling(double yOffset) {
+        int direction = (int) yOffset;
+        if (OVERLAY != null) {
+            OVERLAY.onMouseScrolled(direction);
+            return true;
+        }
+        return false;
     }
 }

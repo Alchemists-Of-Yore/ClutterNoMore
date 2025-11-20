@@ -64,5 +64,10 @@ public class ForgeEntrypoint {
         AssetGenerator.generate();
     }
 
+    @Override
+    public int shapeKey() {
+        return SHAPE_KEY.get().getKey().getValue();
+    }
+
 }
 *///?}

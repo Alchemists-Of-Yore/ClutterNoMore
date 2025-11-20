@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import dev.tazer.clutternomore.Platform;
 import net.fabricmc.api.EnvType;
+import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
@@ -12,6 +13,8 @@ import net.minecraft.resources.ResourceLocation;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.nio.file.Path;
+
+import static dev.tazer.clutternomore.fabric.FabricClientEvents.SHAPE_KEY;
 
 public class FabricPlatformImpl implements Platform {
 
@@ -47,6 +50,11 @@ public class FabricPlatformImpl implements Platform {
     @Override
     public boolean isClient() {
         return FabricLoader.getInstance().getEnvironmentType().equals(EnvType.CLIENT);
+    }
+
+    @Override
+    public int shapeKey() {
+        return KeyBindingHelper.getBoundKeyOf(SHAPE_KEY).getValue();
     }
 
 }

@@ -1,7 +1,7 @@
 package dev.tazer.clutternomore.common.mixin;
 
 //? fabric {
-import dev.tazer.clutternomore.fabric.ClientEvents;
+import dev.tazer.clutternomore.ClutterNoMoreClient;
 //?}
 import net.minecraft.client.KeyboardHandler;
 //? if >1.21.8
@@ -23,7 +23,7 @@ public class KeyboardHandlerMixin {
     
     /*private void key(long windowPointer, int key, int scanCode, int action, int modifiers, CallbackInfo ci) {
     *///?}
-        ClientEvents.onKeyInput(key, action);
+        ClutterNoMoreClient.onKeyInput(key, action);
     }
     //?}
 
