@@ -67,15 +67,71 @@ legacyForge {
 
 repositories {
     mavenCentral()
-    maven ( url = "https://maven.blamejared.com/" )
-    maven ( url = "https://repo1.maven.org/maven2" )
-    maven ( url = "https://api.modrinth.com/maven" )
-    maven ( url = "https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1" )
-    maven ( url = "https://maven.terraformersmc.com/" )
-    maven ( url = "https://cursemaven.com" )
-    maven ( url = "https://api.modrinth.com/maven")
-    maven ( "https://repo.sleeping.town/" ) {
+    maven {
+        name = "DevAuth"
+        url = uri("https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1")
+        content {
+            includeGroup("me.djtheredstoner")
+        }
+    }
+    maven {
+        name = "Curse Maven"
+        url = uri("https://cursemaven.com")
+        content {
+            includeGroupAndSubgroups("curse.maven")
+        }
+    }
+    maven {
+        name = "Kotlin for Forge"
+        url = uri("https://thedarkcolour.github.io/KotlinForForge/")
+        content {
+            includeGroupAndSubgroups("thedarkcolour")
+        }
+    }
+    maven {
+        name = "Greenhouse Maven"
+        url = uri("https://maven.greenhouse.lgbt/releases/")
+        content {
+            includeGroup("house.greenhouse")
+            includeGroup("umpaz.brewinandchewin")
+        }
+    }
+    maven {
+        name = "Terraformers (Mod Menu)"
+        url = uri("https://maven.terraformersmc.com/releases/")
+        content {
+            includeGroupAndSubgroups("com.terraformersmc")
+            includeGroupAndSubgroups("dev.emi")
+        }
+    }
+    maven {
+        name = "Modrinth"
+        url = uri("https://api.modrinth.com/maven")
+        content {
+            includeGroupAndSubgroups("maven.modrinth")
+        }
+    }
+    maven {
         name = "Sisby Maven"
+        url = uri("https://repo.sleeping.town/")
+        content {
+            includeGroupAndSubgroups("folk.sisby")
+        }
+    }
+    maven {
+        name = "Parchment Mappings"
+        url = uri("https://maven.parchmentmc.org")
+        content {
+            includeGroupAndSubgroups("org.parchmentmc")
+        }
+    }
+    maven {
+        name = "Xander Maven"
+        url = uri("https://maven.isxander.dev/releases")
+        content {
+            includeGroupAndSubgroups("dev.isxander")
+            includeGroupAndSubgroups("org.quiltmc.parsers")
+        }
     }
 }
 
