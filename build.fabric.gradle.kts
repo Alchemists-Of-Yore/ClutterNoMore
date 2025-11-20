@@ -18,7 +18,7 @@ tasks.named<ProcessResources>("processResources") {
     fun prop(name: String) = project.property(name) as String
 
     val props = HashMap<String, String>().apply {
-        this["mod_version"] = prop("mod.version")
+        this["mod_version"] = prop("mod.version") + "+" + prop("deps.minecraft")
         this["minecraft"] = prop("deps.minecraft")
         this["loader_version_range"] = prop("deps.loader_version_range")
         this["mod_license"] = prop("mod.license")
@@ -106,12 +106,12 @@ dependencies {
     for (it in modules) modImplementation(fabricApi.module("fabric-$it", property("deps.fabric-api") as String))
 }
 
-fabricApi {
-    configureDataGeneration() {
-        outputDirectory = file("$rootDir/src/main/generated")
-        client = true
-    }
-}
+//fabricApi {
+//    configureDataGeneration() {
+//        outputDirectory = file("$rootDir/src/main/generated")
+//        client = true
+//    }
+//}
 
 tasks {
     processResources {

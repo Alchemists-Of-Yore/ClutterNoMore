@@ -7,6 +7,11 @@
   "authors": [
     "${mod_authors}"
   ],
+  "contact": {
+    "homepage": "https://modrinth.com/mod/clutter-no-more",
+    "sources": "https://github.com/Alchemists-Of-Yore/ClutterNoMore",
+    "issues": "https://github.com/Alchemists-Of-Yore/ClutterNoMore/issues"
+  },
   "license": "${mod_license}",
   "icon": "logo.png",
   "environment": "*",

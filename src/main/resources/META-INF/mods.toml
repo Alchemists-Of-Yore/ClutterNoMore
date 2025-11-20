@@ -2,14 +2,14 @@ modLoader="javafml"
 
 loaderVersion="[4,)"
 license="${mod_license}"
-#issueTrackerURL="https://change.me.to.your.issue.tracker.example.invalid/"
+issueTrackerURL="https://github.com/Alchemists-Of-Yore/ClutterNoMore/issues"
 
 [[mods]]
 modId="${mod_id}"
 version="${mod_version}"
 displayName="${mod_name}"
 #updateJSONURL="https://change.me.example.invalid/updates.json"
-#displayURL="https://change.me.to.your.mods.homepage.example.invalid/"
+displayURL="https://modrinth.com/mod/clutter-no-more"
 logoFile="logo.png"
 #credits=""
 authors="${mod_authors}"
