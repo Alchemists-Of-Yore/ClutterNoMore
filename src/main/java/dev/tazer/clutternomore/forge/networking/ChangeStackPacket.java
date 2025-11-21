@@ -13,16 +13,7 @@ import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class ChangeStackPacket {
-    private final int containerId;
-    private final int slot;
-    private final ItemStack stack;
-
-    public ChangeStackPacket(int containerId, int slot, ItemStack stack) {
-        this.containerId = containerId;
-        this.slot = slot;
-        this.stack = stack;
-    }
+public record ChangeStackPacket(int containerId, int slot, ItemStack stack) {
 
     public static void encode(ChangeStackPacket packet, FriendlyByteBuf buf) {
         buf.writeInt(packet.containerId);

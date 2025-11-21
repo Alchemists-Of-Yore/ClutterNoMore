@@ -22,7 +22,7 @@ import net.minecraft.world.item.ItemStack;
 *///?}
 //? if forge {
 /*import dev.tazer.clutternomore.forge.networking.ForgeNetworking;
-import dev.tazer.clutternomore.common.registry.BlockSetRegistry;
+import dev.tazer.clutternomore.forge.networking.ShapeMapPacket;
 *///?}
 
 
@@ -157,6 +157,6 @@ public class ShapeMap {
         //? if neoforge
         /*PacketDistributor.sendToPlayer(serverPlayer, new ShapeMapPayload(shapes, inverseShapes));*/
         //? if forge
-        /*ForgeNetworking.sendToPlayer(serverPlayer);*/
+        /*ForgeNetworking.sendToPlayer(serverPlayer, new ShapeMapPacket(shapes, inverseShapes));*/
     }
 }

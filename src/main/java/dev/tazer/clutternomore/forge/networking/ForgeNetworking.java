@@ -4,6 +4,7 @@ package dev.tazer.clutternomore.forge.networking;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkRegistry;
+import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
 
 public class ForgeNetworking {
@@ -21,6 +22,10 @@ public class ForgeNetworking {
                 ChangeStackPacket::encode,
                 ChangeStackPacket::decode,
                 ChangeStackPacket::handle);
+        INSTANCE.registerMessage(packetId++, ShapeMapPacket.class,
+                ShapeMapPacket::encode,
+                ShapeMapPacket::decode,
+                ShapeMapPacket::handle);
     }
 
     public static void sendToServer(ChangeStackPacket packet) {
@@ -28,7 +33,8 @@ public class ForgeNetworking {
     }
 
     //FIXME
-    public static void sendToPlayer(ServerPlayer serverPlayer) {
+    public static void sendToPlayer(ServerPlayer serverPlayer, ShapeMapPacket packet) {
+        INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer), packet);
     }
 }
 *///?}
