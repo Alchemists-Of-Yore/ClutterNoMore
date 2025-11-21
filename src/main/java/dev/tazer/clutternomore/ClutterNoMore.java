@@ -311,11 +311,11 @@ public class ClutterNoMore {
 
             JsonObject pickaxeMineableTag = new JsonObject();
             pickaxeMineableTag.add("values", pickaxeMineableArray);
-            ClutterNoMore.blockAndItemTag("minecraft","mineable/pickaxe", woodenStepTag);
+            ClutterNoMore.blockAndItemTag("minecraft","mineable/pickaxe", pickaxeMineableTag);
 
             JsonObject shovelMineableTag = new JsonObject();
             shovelMineableTag.add("values", shovelMineableArray);
-            ClutterNoMore.blockAndItemTag("minecraft","mineable/shovel", woodenStepTag);
+            ClutterNoMore.blockAndItemTag("minecraft","mineable/shovel", shovelMineableTag);
         }
     }
 

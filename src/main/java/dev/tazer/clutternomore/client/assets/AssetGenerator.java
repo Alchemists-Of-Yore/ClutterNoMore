@@ -1,9 +1,6 @@
 package dev.tazer.clutternomore.client.assets;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
+import com.google.gson.*;
 import dev.tazer.clutternomore.ClutterNoMore;
 import dev.tazer.clutternomore.ClutterNoMoreClient;
 import dev.tazer.clutternomore.Platform;
@@ -20,6 +17,7 @@ import java.io.BufferedReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -27,40 +25,18 @@ public class AssetGenerator {
     public static Set<String> keys;
     public static final Path pack = Platform.INSTANCE.getResourcePack().resolve("clutternomore");
 
-    public static @Nullable String getModel(ResourceManager manager, ResourceLocation blockstate) {
-        Optional<Resource> file = manager.getResource(blockstate.withPath(path -> "blockstates/" + path + ".json"));
-        if (file.isEmpty()) return null;
-
-        try (BufferedReader reader = file.get().openAsReader()) {
-            String line = reader.readLine();
-            while (line != null) {
-                int idx = line.indexOf("\"model\":");
-                if (idx >= 0) {
-                    int start = line.indexOf('"', idx + 8) + 1;
-                    int end = line.indexOf('"', start);
-                    if (start > 0 && end > start) return line.substring(start, end);
-                }
-                line = reader.readLine();
-            }
-        } catch (IOException e) {
-            ClutterNoMore.LOGGER.catching(e);
-            throw new RuntimeException(e);
-        }
-
-        return null;
-    }
-
     public static void generate() {
         //lang
-        var jsonObject = new JsonObject();
+        JsonObject lang = new JsonObject();
         keys.forEach((s)-> {
-            jsonObject.addProperty("block.clutternomore." + s.replace("/", "."), VerticalSlabGenerator.langName(s));
+            lang.addProperty("block.clutternomore." + s.replace("/", "."), langName(s));
         });
-        write("lang/en_us.json", jsonObject);
+        write("lang/en_us.json", lang);
 
-        // blockstates and models
+        // block assets
         VerticalSlabGenerator.generate();
         StepGenerator.generate();
+
         if (ClutterNoMoreClient.CLIENT_CONFIG.RUNTIME_ASSET_GENERATION.value()) {
             int minFormat = 15;
             int maxFormat = 70;
@@ -87,7 +63,7 @@ public class AssetGenerator {
     public static void write(String fileName, JsonElement contents) {
         ClutterNoMore.RESOURCES.addJson(PackType.CLIENT_RESOURCES, ClutterNoMore.location(fileName), contents);
         if (ClutterNoMoreClient.CLIENT_CONFIG.RUNTIME_ASSET_GENERATION.value()) {
-            var assets = pack.resolve("assets/clutternomore");
+            Path assets = pack.resolve("assets/clutternomore");
             writeFile(assets.resolve(fileName.substring(0, fileName.lastIndexOf("/"))), assets.resolve(fileName), contents.toString());
         }
     }
@@ -103,5 +79,92 @@ public class AssetGenerator {
         } catch (IOException e) {
             ClutterNoMore.LOGGER.error("Failed to write dynamic data. %s".formatted(e));
         }
+    }
+
+    public static String langName(String name) {
+        if (name.contains("/")) name = name.substring(name.lastIndexOf("/")+1);
+        String processed = name.replace("_", " ");
+
+        List<String> nonCapital = List.of("of", "and", "with");
+
+        String[] words = processed.split(" ");
+        StringBuilder result = new StringBuilder();
+
+        for (String word : words) {
+            if (!word.isEmpty()) {
+                if (!nonCapital.contains(word)) result.append(Character.toUpperCase(word.charAt(0)));
+                else result.append(word.charAt(0));
+                result.append(word.substring(1)).append(" ");
+            }
+        }
+
+        return result.toString().trim();
+    }
+
+    public static @Nullable JsonObject getTextures(ResourceManager manager, ResourceLocation parent) throws IOException {
+        Optional<Resource> parentBlockState = manager.getResource(parent.withPrefix("blockstates/").withSuffix(".json"));
+        if (parentBlockState.isEmpty()) return null;
+
+        String model = null;
+        BufferedReader reader = parentBlockState.get().openAsReader();
+        String line = reader.readLine();
+        while (line != null) {
+            if (line.contains("\"model\":")) {
+                int firstIndex = line.indexOf("\"", line.indexOf("model\":") + 7);
+                int secondIndex = line.indexOf("\"", firstIndex + 1);
+                model = line.substring(firstIndex + 1, secondIndex);
+                break;
+            }
+
+            line = reader.readLine();
+        }
+
+        if (model == null) return null;
+
+        Optional<Resource> parentModel = manager.getResource(ClutterNoMore.location(model.split(":")[0], "models/%s.json".formatted(model.split(":")[1])));
+        if (parentModel.isEmpty()) return null;
+
+        JsonObject textures = JsonParser.parseReader(parentModel.get().openAsReader()).getAsJsonObject().getAsJsonObject("textures");
+
+        if (textures.get("top") == null) {
+            if (textures.get("side") != null) {
+                textures.add("top", textures.get("side"));
+            } else if (textures.get("bottom") != null) {
+                textures.add("top", textures.get("bottom"));
+            }
+        }
+
+        if (textures.get("side") == null) {
+            textures.add("side", textures.get("top"));
+        }
+
+        if (textures.get("bottom") == null) {
+            textures.add("bottom", textures.get("top"));
+        }
+
+        return textures.get("top") == null ? null : textures;
+    }
+
+    public static void generateItem(ResourceLocation shape, ResourceManager manager) {
+        var modelString = shape.getPath();
+        modelString = modelString.replace("waxed_", "");
+        //? if >1.21.4 {
+        Optional<Resource> existingItemState = manager.getResource(shape.withPrefix("items/").withSuffix(".json"));
+        if (existingItemState.isPresent()) return;
+
+        JsonObject itemState = new JsonObject();
+        JsonObject model = new JsonObject();
+        model.addProperty("type", "minecraft:model");
+        model.addProperty("model", "clutternomore:block/"+modelString);
+        itemState.add("model", model);
+        write("items/%s.json".formatted(shape.getPath()), itemState);
+        //?} else {
+        /*Optional<Resource> existingItemState = manager.getResource(shape.withPrefix("models/item/").withSuffix(".json"));
+        if (existingItemState.isPresent()) return;
+
+        JsonObject model = new JsonObject();
+        model.addProperty("parent", "clutternomore:block/"+modelString);
+        write("models/item/%s.json".formatted(shape.getPath()), model);
+        *///?}
     }
 }
