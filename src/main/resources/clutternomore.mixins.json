@@ -1,11 +1,12 @@
 {
   "required": true,
   "package": "dev.tazer.clutternomore.common.mixin",
-  "compatibilityLevel": "JAVA_21",
+  "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "BlockBehaviorAccessor",
     "BlockItemMixin",
-    "ClientPackSourceMixin",
     "BuiltInRegistriesMixin",
+    "ClientPackSourceMixin",
     "CreativeModeTabEntriesMixin",
     "ItemDisplayBuilderMixin",
     "ItemMixin",

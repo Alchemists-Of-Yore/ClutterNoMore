@@ -6,6 +6,7 @@ import dev.tazer.clutternomore.common.mixin.SlotAccessor;
 import dev.tazer.clutternomore.common.mixin.screen.ScreenAccessor;
 //? if !forge {
  import dev.tazer.clutternomore.common.networking.ChangeStackPayload;
+ import net.minecraft.client.DeltaTracker;
 //?} else if forge && <1.21.1 {
 /*import dev.tazer.clutternomore.forge.networking.ChangeStackPacket;
 import dev.tazer.clutternomore.forge.networking.ForgeNetworking;
@@ -15,7 +16,7 @@ import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 //?}
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.DeltaTracker;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
@@ -178,11 +179,13 @@ public class ClutterNoMoreClient {
         }
     }
 
+    //? if >1.21 {
     public static void onRenderGui(GuiGraphics guiGraphics, DeltaTracker tracker) {
         if (OVERLAY != null && OVERLAY.render) {
             OVERLAY.render(guiGraphics, tracker.getGameTimeDeltaTicks());
         }
     }
+    //?}
 
     public static boolean allowScreenScroll(Screen pScreen, double mouseX, double mouseY, double scrollX, double scrollY) {
         if (showTooltip) {
@@ -214,10 +217,10 @@ public class ClutterNoMoreClient {
     static boolean hasReloaded = false;
 
     public static void enablePack() {
-        if (!hasReloaded) {
-            LOGGER.info("Attempting to enable pack!");
-            Minecraft.getInstance().reloadResourcePacks();
-            hasReloaded = true;
-        }
+//        if (!hasReloaded) {
+//            LOGGER.info("Attempting to enable pack!");
+//            Minecraft.getInstance().reloadResourcePacks();
+//            hasReloaded = true;
+//        }
     }
 }

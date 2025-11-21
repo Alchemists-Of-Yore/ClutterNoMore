@@ -6,8 +6,10 @@ package dev.tazer.clutternomore.forge;
 import dev.tazer.clutternomore.ClutterNoMore;
 import dev.tazer.clutternomore.ClutterNoMoreClient;
 import dev.tazer.clutternomore.client.assets.AssetGenerator;
-import dev.tazer.clutternomore.common.shape_map.ShapeMapHandler;
+import dev.tazer.clutternomore.common.shape_map.ShapeMapFileHandler;
 import dev.tazer.clutternomore.forge.networking.ForgeNetworking;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
@@ -22,6 +24,8 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.minecraftforge.registries.RegisterEvent;
+import net.minecraftforge.registries.RegistryManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -44,6 +48,7 @@ public class ForgeEntrypoint {
         MinecraftForge.EVENT_BUS.addListener(ForgeEntrypoint::addReloadListeners);
         MinecraftForge.EVENT_BUS.addListener(ForgeEntrypoint::onServerStarted);
         modEventBus.addListener(ForgeEntrypoint::commonSetup);
+        modEventBus.addListener(ForgeEntrypoint::registerBlocks);
     }
 
     private static void onServerStarted(ServerStartedEvent event) {
@@ -53,20 +58,25 @@ public class ForgeEntrypoint {
 
     private static void addReloadListeners(AddReloadListenerEvent event) {
         event.addListener(new CReloadListener(event.getServerResources(), event.getRegistryAccess()));
-        event.addListener(new ShapeMapHandler());
+        event.addListener(new ShapeMapFileHandler());
+
     }
 
+    @SuppressWarnings("deprecation")
     public static void commonSetup(FMLCommonSetupEvent event) {
-        ClutterNoMore.registerVariants();
+        BuiltInRegistries.BLOCK.freeze();
+        BuiltInRegistries.ITEM.freeze();
     }
 
     public static void clientSetup(FMLClientSetupEvent event) {
         AssetGenerator.generate();
     }
 
-    @Override
-    public int shapeKey() {
-        return SHAPE_KEY.get().getKey().getValue();
+
+    static void registerBlocks(RegisterEvent event) {
+        if (event.getRegistryKey().equals(Registries.POTION)) {
+            ClutterNoMore.registerVariants();
+        }
     }
 
 }

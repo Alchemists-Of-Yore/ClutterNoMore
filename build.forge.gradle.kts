@@ -67,6 +67,7 @@ legacyForge {
 
 repositories {
     mavenCentral()
+    maven ( url = "https://maven.blamejared.com/" )
     maven {
         name = "DevAuth"
         url = uri("https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1")
@@ -143,14 +144,18 @@ dependencies {
     jarJar("folk.sisby:kaleido-config:${property("deps.kaleido")}")
     "additionalRuntimeClasspath"("folk.sisby:kaleido-config:${property("deps.kaleido")}")
 
-    modCompileOnly("io.github.llamalad7:mixinextras-common:0.5.0")
-    modImplementation("io.github.llamalad7:mixinextras-forge:0.5.0")
+    modRuntimeOnly("maven.modrinth:moonlight:${property("deps.moonlight")}")
+    modRuntimeOnly("maven.modrinth:supplementaries:LAQ22yJj")
+    modRuntimeOnly("maven.modrinth:would:2FZ421Oh")
+
+    compileOnly("io.github.llamalad7:mixinextras-common:0.5.0")
+    implementation("io.github.llamalad7:mixinextras-forge:0.5.0")
     jarJar("io.github.llamalad7:mixinextras-forge:0.5.0")
 }
 
 mixin {
     add(sourceSets["main"], "clutternomore.mixin-refmap.json")
-    config("clutternomoreforge.mixins.json")
+    config("clutternomore.mixins.json")
 }
 
 tasks {

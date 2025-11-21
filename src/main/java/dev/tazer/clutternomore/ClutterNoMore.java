@@ -2,6 +2,7 @@ package dev.tazer.clutternomore;
 
 //import dev.tazer.clutternomore.common.data.DynamicServerResources;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import dev.tazer.clutternomore.client.assets.AssetGenerator;
@@ -10,10 +11,12 @@ import dev.tazer.clutternomore.client.assets.VerticalSlabGenerator;
 import dev.tazer.clutternomore.common.blocks.StepBlock;
 import dev.tazer.clutternomore.common.blocks.VerticalSlabBlock;
 import dev.tazer.clutternomore.common.data.CNMPackResources;
+import dev.tazer.clutternomore.common.registry.CBlocks;
+import dev.tazer.clutternomore.common.mixin.BlockBehaviorAccessor;
 //? if <1.21 {
 /*import net.minecraft.core.RegistryAccess;
 *///?} else {
-import dev.tazer.clutternomore.common.registry.CBlocks;
+
 import net.minecraft.core.HolderLookup;
 //?}
 
@@ -30,9 +33,11 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+//? if >1.21 {
 import net.minecraft.server.packs.PackLocationInfo;
-import net.minecraft.server.packs.PackResources;
 import net.minecraft.server.packs.PackSelectionConfig;
+//?}
+import net.minecraft.server.packs.PackResources;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.repository.PackSource;
@@ -40,8 +45,8 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 //? if >1.21 {
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.item.crafting.RecipeManager;
 //?}
+import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.SoundType;
@@ -65,7 +70,11 @@ public class ClutterNoMore {
     public static final String MODID = "clutternomore";
     public static final Logger LOGGER = LogManager.getLogger("ClutterNoMore");
     public static final CNMConfig.StartupConfig STARTUP_CONFIG = CNMConfig.StartupConfig.createToml(Platform.INSTANCE.configPath(), MODID, "startup", CNMConfig.StartupConfig.class);
+    //? if >1.21 {
     private static final PackLocationInfo PACK_INFO = new PackLocationInfo(ClutterNoMore.MODID+"-runtime", Component.literal("ClutterNoMore"), PackSource.BUILT_IN, Optional.empty());
+    //?} else {
+    /*private static final String PACK_INFO = ClutterNoMore.MODID+"-runtime";
+    *///?}
     public static final CNMPackResources RESOURCES = new CNMPackResources(PACK_INFO);
     public static final ArrayList<ResourceLocation> ALIASES = new ArrayList<>();
 
@@ -74,19 +83,10 @@ public class ClutterNoMore {
     }
 
     public static Pack createPack(PackType type) {
+        //? if >1.21 {
         return Pack.readMetaAndCreate(
                 ClutterNoMore.PACK_INFO,
-                new Pack.ResourcesSupplier() {
-                    @Override
-                    public PackResources openPrimary(PackLocationInfo location) {
-                        return RESOURCES;
-                    }
-
-                    @Override
-                    public PackResources openFull(PackLocationInfo location, Pack.Metadata metadata) {
-                        return RESOURCES;
-                    }
-                },
+                new PackResourcesSupplier(),
                 type,
                 new PackSelectionConfig(
                         true,
@@ -94,6 +94,18 @@ public class ClutterNoMore {
                         false
                 )
         );
+        //?} else {
+        /*return Pack.readMetaAndCreate(
+                PACK_INFO,
+                Component.literal("ClutterNoMore"),
+                true,
+                new PackResourcesSupplier(),
+                type,
+                Pack.Position.TOP,
+                PackSource.BUILT_IN
+        );
+        *///?}
+
     }
 
     public static ResourceLocation location(String path) {
@@ -185,6 +197,10 @@ public class ClutterNoMore {
     }
 
     public static void registerVariants() {
+        //? if forge {
+        /*RegistryManager.ACTIVE.getRegistry(BuiltInRegistries.BLOCK.key()).unfreeze();
+        RegistryManager.ACTIVE.getRegistry(BuiltInRegistries.ITEM.key()).unfreeze();
+         *///?}
         if (STARTUP_CONFIG.VERTICAL_SLABS.value() || STARTUP_CONFIG.STEPS.value()) {
             LinkedHashMap<String, Supplier<? extends Block>> toRegister = new LinkedHashMap<>();
             ArrayList<ResourceLocation> slabs = new ArrayList<>();
@@ -232,11 +248,14 @@ public class ClutterNoMore {
                         ResourceLocation shapeId = ClutterNoMore.location(path);
                         addLootTable(blockId, shapeId);
 
-                        if (woodenSoundTypes.contains(slabBlock.properties().soundType)) {
+                        
+                        var soundType = ((BlockBehaviorAccessor) slabBlock).getSoundType();
+
+                        if (woodenSoundTypes.contains(soundType)) {
                             woodenVerticalSlabsArray.add(ClutterNoMore.location(path).toString());
                         } else {
                             verticalSlabsArray.add(ClutterNoMore.location(path).toString());
-                            if (shovelSoundTypes.contains(slabBlock.properties().soundType)) shovelMineableArray.add(ClutterNoMore.location(path).toString());
+                            if (shovelSoundTypes.contains(soundType)) shovelMineableArray.add(ClutterNoMore.location(path).toString());
                             else pickaxeMineableArray.add(ClutterNoMore.location(path).toString());
                         }
 
@@ -258,11 +277,13 @@ public class ClutterNoMore {
                         ResourceLocation shapeId = ClutterNoMore.location(path);
                         addLootTable(blockId, shapeId);
 
-                        if (woodenSoundTypes.contains(stairBlock.properties().soundType)) {
+                        var soundType = ((BlockBehaviorAccessor) stairBlock).getSoundType();
+
+                        if (woodenSoundTypes.contains(soundType)) {
                             woodenStepsArray.add(shapeId.toString());
                         } else {
                             stepsArray.add(shapeId.toString());
-                            if (shovelSoundTypes.contains(stairBlock.properties().soundType)) shovelMineableArray.add(shapeId.toString());
+                            if (shovelSoundTypes.contains(soundType)) shovelMineableArray.add(shapeId.toString());
                             else pickaxeMineableArray.add(shapeId.toString());
                         }
                     }
@@ -275,36 +296,69 @@ public class ClutterNoMore {
 
             JsonObject verticalSlabTag = new JsonObject();
             verticalSlabTag.add("values", verticalSlabsArray);
-            RESOURCES.addJson(PackType.SERVER_DATA, ClutterNoMore.location("tags/block/vertical_slabs.json"), verticalSlabTag);
-            RESOURCES.addJson(PackType.SERVER_DATA, ClutterNoMore.location("tags/item/vertical_slabs.json"), verticalSlabTag);
+            ClutterNoMore.blockAndItemTag("vertical_slabs", verticalSlabTag);
 
             JsonObject woodenVerticalSlabTag = new JsonObject();
             woodenVerticalSlabTag.add("values", woodenVerticalSlabsArray);
-            RESOURCES.addJson(PackType.SERVER_DATA, ClutterNoMore.location("tags/block/wooden_vertical_slabs.json"), woodenVerticalSlabTag);
-            RESOURCES.addJson(PackType.SERVER_DATA, ClutterNoMore.location("tags/item/wooden_vertical_slabs.json"), woodenVerticalSlabTag);
+            ClutterNoMore.blockAndItemTag("wooden_vertical_slabs", woodenVerticalSlabTag);
 
             JsonObject stepTag = new JsonObject();
             stepTag.add("values", stepsArray);
-            RESOURCES.addJson(PackType.SERVER_DATA, ClutterNoMore.location("tags/block/steps.json"), stepTag);
-            RESOURCES.addJson(PackType.SERVER_DATA, ClutterNoMore.location("tags/item/steps.json"), stepTag);
+            ClutterNoMore.blockAndItemTag("steps", stepTag);
 
             JsonObject woodenStepTag = new JsonObject();
             woodenStepTag.add("values", woodenStepsArray);
-            RESOURCES.addJson(PackType.SERVER_DATA, ClutterNoMore.location("tags/block/wooden_steps.json"), woodenStepTag);
-            RESOURCES.addJson(PackType.SERVER_DATA, ClutterNoMore.location("tags/item/wooden_steps.json"), woodenStepTag);
+            ClutterNoMore.blockAndItemTag("wooden_steps", woodenStepTag);
 
 
             JsonObject pickaxeMineableTag = new JsonObject();
             pickaxeMineableTag.add("values", pickaxeMineableArray);
-            RESOURCES.addJson(PackType.SERVER_DATA, ClutterNoMore.location("minecraft", "tags/block/mineable/pickaxe.json"), pickaxeMineableTag);
+            ClutterNoMore.blockAndItemTag("minecraft","mineable/pickaxe", woodenStepTag);
 
             JsonObject shovelMineableTag = new JsonObject();
             shovelMineableTag.add("values", shovelMineableArray);
-            RESOURCES.addJson(PackType.SERVER_DATA, ClutterNoMore.location("minecraft", "tags/block/mineable/shovel.json"), shovelMineableTag);
+            ClutterNoMore.blockAndItemTag("minecraft","mineable/shovel", woodenStepTag);
         }
     }
 
-    private static void addAlias(String blockNamespace, String shortPath, String path) {
+    private static void blockTag(String s, JsonElement verticalSlabTag) {
+        blockTag(ClutterNoMore.MODID, s, verticalSlabTag);
+    }
+
+    private static void itemTag(String namespace, String s, JsonElement verticalSlabTag) {
+        //? if >1.21 {
+        var location = ClutterNoMore.location(namespace, "tags/item/" +s + ".json");
+        //?} else {
+        /*var location = ClutterNoMore.location(namespace, "tags/items/" +s + ".json");
+        *///?}
+        RESOURCES.addJson(PackType.SERVER_DATA, location, verticalSlabTag);
+    }
+
+    private static void blockTag(String namespace, String s, JsonElement verticalSlabTag) {
+        //? if >1.21 {
+        var location = ClutterNoMore.location(namespace, "tags/block/" +s + ".json");
+         //?} else {
+        /*var location = ClutterNoMore.location(namespace, "tags/blocks/" +s + ".json");
+        *///?}
+        RESOURCES.addJson(PackType.SERVER_DATA, location, verticalSlabTag);
+    }
+
+    private static void itemTag(String path, JsonElement verticalSlabTag) {
+        itemTag(ClutterNoMore.MODID, path, verticalSlabTag);
+    }
+
+    private static void blockAndItemTag(String path, JsonElement verticalSlabTag) {
+        blockTag(path, verticalSlabTag);
+        itemTag(path, verticalSlabTag);
+    }
+
+    private static void blockAndItemTag(String namespace, String path, JsonElement verticalSlabTag) {
+        blockTag(namespace, path, verticalSlabTag);
+        itemTag(namespace, path, verticalSlabTag);
+    }
+
+    //? if =1.21.1 {
+    /*private static void addAlias(String blockNamespace, String shortPath, String path) {
         ResourceLocation shortNamespace = ClutterNoMore.location(shortPath);
         if (!blockNamespace.isEmpty() && !ALIASES.contains(shortNamespace)) {
             ResourceLocation id = ClutterNoMore.location(path);
@@ -313,6 +367,7 @@ public class ClutterNoMore {
             ALIASES.add(shortNamespace);
         }
     }
+    *///?}
 
     public static void addLootTable(ResourceLocation block, ResourceLocation shape) {
         JsonObject lootTable = new JsonObject();
@@ -328,7 +383,12 @@ public class ClutterNoMore {
         pool.add("entries", entries);
         pools.add(pool);
         lootTable.add("pools", pools);
-        RESOURCES.addJson(PackType.SERVER_DATA, ClutterNoMore.location("loot_table/blocks/%s.json".formatted(shape.getPath())), lootTable);
+        //? if >1.21 {
+        var path = "loot_table";
+        //?} else {
+        /*var path = "loot_tables";
+        *///?}
+        RESOURCES.addJson(PackType.SERVER_DATA, ClutterNoMore.location("%s/blocks/%s.json".formatted(path, shape.getPath())), lootTable);
     }
 
     public static BlockBehaviour.Properties copy(Block block) {
@@ -336,5 +396,24 @@ public class ClutterNoMore {
         return BlockBehaviour.Properties.ofFullCopy(block);
         //? if <1.21
         /*return BlockBehaviour.Properties.copy(block);*/
+    }
+
+    private static class PackResourcesSupplier implements Pack.ResourcesSupplier {
+        //? if >1.21 {
+        @Override
+        public PackResources openPrimary(PackLocationInfo location) {
+            return RESOURCES;
+        }
+
+        @Override
+        public PackResources openFull(PackLocationInfo location, Pack.Metadata metadata) {
+            return RESOURCES;
+        }
+        //?} else {
+        /*@Override
+        public PackResources open(String s) {
+            return RESOURCES;
+        }
+        *///?}
     }
 }

@@ -12,7 +12,7 @@ import net.minecraft.WorldVersion;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.*;
-//? if =1.21.1 {
+//? if =1.21.1 || 1.20.1 {
 /*import net.minecraft.server.packs.metadata.MetadataSectionSerializer;
  *///?}
 import net.minecraft.server.packs.metadata.MetadataSectionType;
@@ -51,17 +51,28 @@ public class CNMPackResources extends AbstractPackResources {
     public static final int dataPackVersion = currentVersion.getPackVersion(PackType.SERVER_DATA);
     *///?}
 
-    public CNMPackResources(PackLocationInfo info) {
-        super(info);
+    public CNMPackResources(
+            //? if >1.21 {
+            PackLocationInfo
+            //?} else {
+            /*String
+            *///?}
+             info
+    ) {
+        super(info
+        //? if <1.21 {
+            /*, true
+        *///?}
+        );
         this.clientResources = new ConcurrentHashMap<>();
         this.serverData = new ConcurrentHashMap<>();
         this.rootResources = new ConcurrentHashMap<>();
         this.clientMetadata = new PackMetadataSection(Component.literal("ClutterNoMore Runtime Client Resources"), resourcePackVersion
-                //? if <1.21.9
+                //? if >1.21 && <1.21.9
                 /*, Optional.empty()*/
         );
         this.serverMetadata = new PackMetadataSection(Component.literal("ClutterNoMore Runtime Server Data"), dataPackVersion
-                //? if <1.21.9
+                //? if >1.21 && <1.21.9
                 /*, Optional.empty()*/
         );
     }

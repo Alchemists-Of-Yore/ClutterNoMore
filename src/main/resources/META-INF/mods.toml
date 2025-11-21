@@ -33,10 +33,3 @@ config="${mod_id}.mixins.json"
     versionRange="${minecraft_version_range}"
     ordering="AFTER"
     side="BOTH"
-
-[[dependencies.${mod_id}]]
-    modId="moonlight"
-    mandatory=true
-    versionRange="*"
-    ordering="AFTER"
-    side="BOTH"

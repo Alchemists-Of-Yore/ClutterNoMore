@@ -6,11 +6,14 @@ import com.google.gson.JsonParser;
 import dev.tazer.clutternomore.Platform;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.fml.loading.FMLPaths;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.nio.file.Path;
+
+import static dev.tazer.clutternomore.forge.ForgeClientEvents.SHAPE_KEY;
 
 public class ForgePlatformImpl implements Platform {
 
@@ -46,6 +49,11 @@ public class ForgePlatformImpl implements Platform {
     @Override
     public boolean isClient() {
         return FMLEnvironment.dist.isClient();
+    }
+
+    @Override
+    public int shapeKey() {
+        return SHAPE_KEY.get().getKey().getValue();
     }
 
 }

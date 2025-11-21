@@ -6,6 +6,7 @@ import dev.tazer.clutternomore.client.ClientShapeTooltip;
 import dev.tazer.clutternomore.common.shape_map.ShapeMap;
 import dev.tazer.clutternomore.common.networking.ShapeTooltip;
 import net.minecraft.client.KeyMapping;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
@@ -51,27 +52,17 @@ public class ForgeClientEvents {
 
     @SubscribeEvent
     public static void onKeyInput(InputEvent.Key event) {
-        int action = event.getAction();
-        if (event.getKey() == SHAPE_KEY.get().getKey().getValue()) {
-            ClutterNoMoreClient.onKeyInput(action);
-        }
+        ClutterNoMoreClient.onKeyInput(event.getKey(), event.getAction());
     }
 
     @SubscribeEvent
     public static void onKeyInputPost(InputEvent.MouseButton.Post event) {
-        int action = event.getAction();
-        if (event.getButton() == SHAPE_KEY.get().getKey().getValue()) {
-            ClutterNoMoreClient.onKeyInput(action);
-        }
+        ClutterNoMoreClient.onKeyInput(event.getButton(), event.getAction());
     }
 
     @SubscribeEvent
     public static void onMouseScrolling(InputEvent.MouseScrollingEvent event) {
-        int direction = (int) event.getScrollDelta();
-        if (OVERLAY != null) {
-            OVERLAY.onMouseScrolled(direction);
-            event.setCanceled(true);
-        }
+        event.setCanceled(ClutterNoMoreClient.onMouseScrolling(event.getScrollDelta()));
     }
 
     @SubscribeEvent
@@ -92,30 +83,22 @@ public class ForgeClientEvents {
 
     @SubscribeEvent
     public static void onScreenKeyPressedPost(ScreenEvent.KeyPressed.Post event) {
-        if (event.getKeyCode() == SHAPE_KEY.get().getKey().getValue()) {
-            ClutterNoMoreClient.onKeyPress(event.getScreen());
-        }
+        ClutterNoMoreClient.onKeyPress(event.getScreen(), event.getKeyCode());
     }
 
     @SubscribeEvent
     public static void onScreenMouseButtonPressedPost(ScreenEvent.MouseButtonPressed.Post event) {
-        if (event.getButton() == SHAPE_KEY.get().getKey().getValue()) {
-            ClutterNoMoreClient.onKeyPress(event.getScreen());
-        }
+        ClutterNoMoreClient.onKeyPress(event.getScreen(), event.getButton());
     }
 
     @SubscribeEvent
     public static void onScreenKeyReleasedPost(ScreenEvent.KeyReleased.Post event) {
-        if (event.getKeyCode() == SHAPE_KEY.get().getKey().getValue()) {
-            ClutterNoMoreClient.onKeyRelease();
-        }
+        ClutterNoMoreClient.onKeyReleased(event.getKeyCode());
     }
 
     @SubscribeEvent
     public static void onScreenMouseButtonReleasedPost(ScreenEvent.MouseButtonReleased.Post event) {
-        if (event.getButton() == SHAPE_KEY.get().getKey().getValue()) {
-            ClutterNoMoreClient.onKeyRelease();
-        }
+        ClutterNoMoreClient.onKeyReleased(event.getButton());
     }
 
     @SubscribeEvent
@@ -127,9 +110,7 @@ public class ForgeClientEvents {
 
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
-        if (OVERLAY != null) {
-            if (!OVERLAY.shouldStayOpenThisTick()) OVERLAY = null;
-        }
+        ClutterNoMoreClient.onPlayerTick(Minecraft.getInstance());
     }
 }
 *///?}

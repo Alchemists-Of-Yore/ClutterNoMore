@@ -23,7 +23,7 @@ public class ItemMixin {
         if (ShapeMap.contains(item)) {
             Item originalItem = ShapeMap.getParent(item);
             List<Item> shapes = new ArrayList<>(ShapeMap.getShapes(originalItem));
-            shapes.addFirst(originalItem);
+            shapes.add(originalItem);
             cir.setReturnValue(Optional.of(new ShapeTooltip(shapes, shapes.indexOf(item))));
         }
     }
