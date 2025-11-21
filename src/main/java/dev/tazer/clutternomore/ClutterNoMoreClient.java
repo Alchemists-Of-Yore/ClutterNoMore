@@ -217,10 +217,10 @@ public class ClutterNoMoreClient {
     static boolean hasReloaded = false;
 
     public static void enablePack() {
-//        if (!hasReloaded) {
-//            LOGGER.info("Attempting to enable pack!");
-//            Minecraft.getInstance().reloadResourcePacks();
-//            hasReloaded = true;
-//        }
+        if (!hasReloaded) {
+            LOGGER.info("Attempting to enable pack!");
+            Minecraft.getInstance().reloadResourcePacks();
+            hasReloaded = true;
+        }
     }
 }
