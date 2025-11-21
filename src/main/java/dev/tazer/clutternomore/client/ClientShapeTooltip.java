@@ -7,8 +7,12 @@ import dev.tazer.clutternomore.common.networking.ShapeTooltip;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
-//? if >1.21.6
+//? if >1.21.6 {
 import net.minecraft.client.renderer.RenderPipelines;
+//?}
+//? if =1.21.5 {
+/*import net.minecraft.client.renderer.RenderType;
+*///?}
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.Item;
@@ -60,6 +64,8 @@ public class ClientShapeTooltip implements ClientTooltipComponent {
             guiGraphics.blit(
                     //? if >1.21.6
                     RenderPipelines.GUI_TEXTURED,
+                    //? =1.21.5
+                    /*RenderType::guiTextured,*/
                     selected, Mth.floor(startX + selectedIndex * spacing) - 3, mouseY - 3, 0, 0, 22, 22, 22, 22);
             //? if <1.21.2
             /*RenderSystem.disableBlend();*/

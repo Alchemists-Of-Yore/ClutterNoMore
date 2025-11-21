@@ -1,0 +1,15 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        " # ",
+        "# #",
+        " # "
+    ],
+    "key": {
+        "#": "minecraft:polished_blackstone"
+    },
+    "result": {
+        "id": "minecraft:chiseled_polished_blackstone",
+        "count": 4
+    }
+}

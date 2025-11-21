@@ -12,8 +12,12 @@ import dev.tazer.clutternomore.common.networking.ChangeStackPayload;
 *///?}
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-//? if >1.21.6
+//? if >1.21.6 {
 import net.minecraft.client.renderer.RenderPipelines;
+//?}
+//? if =1.21.5 {
+/*import net.minecraft.client.renderer.RenderType;
+*///?}
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
@@ -83,6 +87,8 @@ public class ShapeSwitcherOverlay {
             guiGraphics.blit(
                     //? if >1.21.6
                     RenderPipelines.GUI_TEXTURED,
+                    //? =1.21.5
+                    /*RenderType::guiTextured,*/
                     selected, centreX - 3, y - 3, 0, 0, 22, 22, 22, 22);
 
             for (int index = 0; index < shapes.size(); index++) {
@@ -92,6 +98,8 @@ public class ShapeSwitcherOverlay {
                 guiGraphics.blit(
                         //? if >1.21.6
                         RenderPipelines.GUI_TEXTURED,
+                        //? =1.21.5
+                        /*RenderType::guiTextured,*/
                         background, x, y, 0, 0, 16, 16, 16, 16);
 
                 guiGraphics.renderItem(shapes.get(index).getDefaultInstance(), x, y);
@@ -107,6 +115,8 @@ public class ShapeSwitcherOverlay {
                 guiGraphics.blit(
                         //? if >1.21.6
                         RenderPipelines.GUI_TEXTURED,
+                        //? =1.21.5
+                        /*RenderType::guiTextured,*/
                         background, x, y, 0, 0, 16, 16, 16, 16);
 
                 guiGraphics.renderItem(shapes.get(index).getDefaultInstance(), x, y);
@@ -116,6 +126,8 @@ public class ShapeSwitcherOverlay {
             guiGraphics.blit(
                     //? if >1.21.6
                     RenderPipelines.GUI_TEXTURED,
+                    //? =1.21.5
+                    /*RenderType::guiTextured,*/
                     selected, Mth.floor(startX + currentIndex * spacing) - 3, y - 3, 0, 0, 22, 22, 22, 22);
         }
         //? if <1.21.2

@@ -1,0 +1,16 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "###",
+        "PPP",
+        "###"
+    ],
+    "key": {
+        "#": "#minecraft:planks",
+        "P": "#minecraft:paper"
+    },
+    "result": {
+        "id": "minecraft:chiseled_bookshelf",
+        "count": 1
+    }
+}

@@ -1,0 +1,15 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        " # ",
+        "# #",
+        " # "
+    ],
+    "key": {
+        "#": "minecraft:tuff_bricks"
+    },
+    "result": {
+        "id": "minecraft:chiseled_tuff_bricks",
+        "count": 4
+    }
+}

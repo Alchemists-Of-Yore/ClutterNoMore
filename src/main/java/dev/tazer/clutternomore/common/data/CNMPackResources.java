@@ -43,7 +43,7 @@ public class CNMPackResources extends AbstractPackResources {
     //? if >1.21.9 {
     public static final InclusiveRange<PackFormat> resourcePackVersion = currentVersion.packVersion(PackType.CLIENT_RESOURCES).minorRange();
     public static final InclusiveRange<PackFormat> dataPackVersion = currentVersion.packVersion(PackType.SERVER_DATA).minorRange();
-    //?} else if >1.21.1 {
+    //?} else if >1.21.5 {
     /*public static final int resourcePackVersion = currentVersion.packVersion(PackType.CLIENT_RESOURCES);
     public static final int dataPackVersion = currentVersion.packVersion(PackType.SERVER_DATA);
     *///?} else {
