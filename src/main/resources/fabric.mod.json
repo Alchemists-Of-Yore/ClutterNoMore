@@ -28,7 +28,7 @@
   ],
   "accessWidener": "accesswideners/${aw_file}",
   "depends": {
-    "minecraft": ">=1.21.1",
+    "minecraft": "${minecraft}",
     "fabric-api": ">=0.88.1"
   }
 }
