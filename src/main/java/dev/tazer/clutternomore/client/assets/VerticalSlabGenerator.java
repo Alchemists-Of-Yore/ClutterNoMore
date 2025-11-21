@@ -19,17 +19,16 @@ import static dev.tazer.clutternomore.client.assets.AssetGenerator.write;
 public final class VerticalSlabGenerator {
     public static ArrayList<ResourceLocation> SLABS = new ArrayList<>();
 
-    public static void generate() {
+    public static void generate(ResourceManager manager) {
         for (ResourceLocation parent : SLABS) {
             String namespace = parent.getNamespace() + "/";
             if (parent.getNamespace().equals("minecraft")) namespace = "";
 
             ResourceLocation shape = ClutterNoMore.location(namespace + "vertical_" + parent.getPath());
-            ResourceManager resourceManager = Minecraft.getInstance().getResourceManager();
 
             try {
-                generateBlock(parent, shape, resourceManager);
-                AssetGenerator.generateItem(shape, resourceManager);
+                generateBlock(parent, shape, manager);
+                AssetGenerator.generateItem(shape, manager);
             } catch (IOException e) {
                 ClutterNoMore.LOGGER.catching(e);
                 throw new RuntimeException(e);

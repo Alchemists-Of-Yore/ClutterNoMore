@@ -19,17 +19,16 @@ import static dev.tazer.clutternomore.client.assets.AssetGenerator.write;
 public final class StepGenerator {
     public static ArrayList<ResourceLocation> STAIRS = new ArrayList<>();
 
-    public static void generate() {
+    public static void generate(ResourceManager manager) {
         for (ResourceLocation parent : STAIRS) {
             String namespace = parent.getNamespace() + "/";
             if (parent.getNamespace().equals("minecraft")) namespace = "";
 
             ResourceLocation shape = ClutterNoMore.location(namespace + parent.getPath().replace("stairs", "step"));
-            ResourceManager resourceManager = Minecraft.getInstance().getResourceManager();
 
             try {
-                generateBlock(parent, shape, resourceManager);
-                AssetGenerator.generateItem(shape, resourceManager);
+                generateBlock(parent, shape, manager);
+                AssetGenerator.generateItem(shape, manager);
             } catch (IOException e) {
                 ClutterNoMore.LOGGER.catching(e);
                 throw new RuntimeException(e);

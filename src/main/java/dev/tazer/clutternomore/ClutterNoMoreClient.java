@@ -38,13 +38,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static dev.tazer.clutternomore.ClutterNoMore.LOGGER;
 import static dev.tazer.clutternomore.ClutterNoMore.MODID;
 
 public class ClutterNoMoreClient {
     public static boolean showTooltip = false;
     public static ShapeSwitcherOverlay OVERLAY = null;
     public static final CNMConfig.ClientConfig CLIENT_CONFIG = CNMConfig.ClientConfig.createToml(Platform.INSTANCE.configPath(), MODID,  "client", CNMConfig.ClientConfig.class);
+    public static boolean requireReload = false;
 
     public static void init() {
     }
@@ -215,16 +215,12 @@ public class ClutterNoMoreClient {
     }
 
     private static void enablePack(Minecraft client) {
-        PackRepository m = client.getResourcePackRepository();
-        AtomicBoolean alreadyEnabled = new AtomicBoolean(false);
-        m.getSelectedPacks().forEach((pack)->{
-            if (pack.getId().equals("file/clutternomore")) alreadyEnabled.set(true);
-        });
-        if (!alreadyEnabled.get()) {
+        PackRepository repository = client.getResourcePackRepository();
+        if (requireReload) {
             Path resourcepackPath = client.getResourcePackDirectory().resolve("clutternomore");
             if (resourcepackPath.toFile().exists()) {
-                m.reload();
-                m.addPack("file/" + resourcepackPath.getFileName().toString());
+                repository.reload();
+                repository.addPack("file/" + resourcepackPath.getFileName().toString());
                 client.reloadResourcePacks();
             }
         }

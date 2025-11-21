@@ -7,6 +7,7 @@ import dev.tazer.clutternomore.Platform;
 //? if <1.21.9 {
 /*import dev.tazer.clutternomore.common.data.CNMPackResources;
 *///?}
+import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.Resource;
@@ -26,16 +27,31 @@ public class AssetGenerator {
     public static final Path pack = Platform.INSTANCE.getResourcePack().resolve("clutternomore");
 
     public static void generate() {
+        ResourceManager manager = Minecraft.getInstance().getResourceManager();
+
         //lang
         JsonObject lang = new JsonObject();
         keys.forEach((s)-> {
             lang.addProperty("block.clutternomore." + s.replace("/", "."), langName(s));
         });
-        write("lang/en_us.json", lang);
+        boolean writeLang = true;
+
+        try {
+            Optional<Resource> existingLang = manager.getResource(ClutterNoMore.location("lang/en_us.json"));
+            if (existingLang.isPresent()) {
+                JsonObject existingLangJson = JsonParser.parseReader(existingLang.get().openAsReader()).getAsJsonObject();
+                if (existingLangJson.equals(lang)) writeLang = false;
+            }
+        } catch (IOException e) {
+            ClutterNoMore.LOGGER.catching(e);
+            throw new RuntimeException(e);
+        }
+
+        if (writeLang) write("lang/en_us.json", lang);
 
         // block assets
-        VerticalSlabGenerator.generate();
-        StepGenerator.generate();
+        VerticalSlabGenerator.generate(manager);
+        StepGenerator.generate(manager);
 
         if (ClutterNoMoreClient.CLIENT_CONFIG.RUNTIME_ASSET_GENERATION.value()) {
             int minFormat = 15;
@@ -63,11 +79,11 @@ public class AssetGenerator {
     public static void write(String fileName, JsonElement contents) {
         ClutterNoMore.RESOURCES.addJson(PackType.CLIENT_RESOURCES, ClutterNoMore.location(fileName), contents);
         if (ClutterNoMoreClient.CLIENT_CONFIG.RUNTIME_ASSET_GENERATION.value()) {
+            ClutterNoMoreClient.requireReload = true;
             Path assets = pack.resolve("assets/clutternomore");
             writeFile(assets.resolve(fileName.substring(0, fileName.lastIndexOf("/"))), assets.resolve(fileName), contents.toString());
         }
     }
-
 
     public static void writeFile(Path path, Path filePath, String contents) {
         try {
