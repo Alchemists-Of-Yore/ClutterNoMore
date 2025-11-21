@@ -27,9 +27,9 @@ public class CNMConfig {
         @Comment("If the change block shape key should be held or toggled to open the menu")
         @SerializedName("hold")
         public final TrackedValue<InputType> HOLD = this.value(InputType.HOLD);
-        @Comment("Whether to generate a resource pack for vertical slabs and steps when the game is launched. Useful for anyone interested in making an intentional compatibility resource pack.")
+        @Comment("Whether to generate a resource pack for vertical slabs and steps when the game is launched.")
         @SerializedName("runtime_asset_generation")
-        public final TrackedValue<Boolean> RUNTIME_ASSET_GENERATION = this.value(false);
+        public final TrackedValue<Boolean> RUNTIME_ASSET_GENERATION = this.value(true);
     }
 
     public enum InputType implements StringRepresentable {

@@ -1,8 +1,9 @@
 package dev.tazer.clutternomore;
 
 import dev.tazer.clutternomore.client.ShapeSwitcherOverlay;
+import dev.tazer.clutternomore.client.assets.AssetGenerator;
 import dev.tazer.clutternomore.common.shape_map.ShapeMap;
-import dev.tazer.clutternomore.common.mixin.SlotAccessor;
+import dev.tazer.clutternomore.common.mixin.access.SlotAccessor;
 import dev.tazer.clutternomore.common.mixin.screen.ScreenAccessor;
 //? if !forge {
  import dev.tazer.clutternomore.common.networking.ChangeStackPayload;
@@ -12,7 +13,6 @@ import dev.tazer.clutternomore.common.mixin.screen.ScreenAccessor;
 import dev.tazer.clutternomore.forge.networking.ForgeNetworking;
 *///?}
 //? if fabric {
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 //?}
 import net.minecraft.ChatFormatting;
@@ -23,7 +23,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.packs.repository.PackRepository;
-import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
@@ -48,6 +47,11 @@ public class ClutterNoMoreClient {
     public static final CNMConfig.ClientConfig CLIENT_CONFIG = CNMConfig.ClientConfig.createToml(Platform.INSTANCE.configPath(), MODID,  "client", CNMConfig.ClientConfig.class);
 
     public static void init() {
+    }
+
+    public static void clientStarted(Minecraft client) {
+        AssetGenerator.generate();
+        ClutterNoMoreClient.enablePack(client);
     }
 
     public static void onItemTooltips(ItemStack stack,
@@ -173,7 +177,6 @@ public class ClutterNoMoreClient {
     }
 
     public static void onPlayerTick(Minecraft minecraft) {
-        ClutterNoMoreClient.enablePack();
         if (OVERLAY != null) {
             if (!OVERLAY.shouldStayOpenThisTick()) OVERLAY = null;
         }
@@ -214,13 +217,19 @@ public class ClutterNoMoreClient {
         return false;
     }
 
-    static boolean hasReloaded = false;
-
-    public static void enablePack() {
-        if (!hasReloaded) {
-            LOGGER.info("Attempting to enable pack!");
-            Minecraft.getInstance().reloadResourcePacks();
-            hasReloaded = true;
+    private static void enablePack(Minecraft client) {
+        PackRepository m = client.getResourcePackRepository();
+        AtomicBoolean alreadyEnabled = new AtomicBoolean(false);
+        m.getSelectedPacks().forEach((pack)->{
+            if (pack.getId().equals("file/clutternomore")) alreadyEnabled.set(true);
+        });
+        if (!alreadyEnabled.get()) {
+            Path resourcepackPath = client.getResourcePackDirectory().resolve("clutternomore");
+            if (resourcepackPath.toFile().exists()) {
+                m.reload();
+                m.addPack("file/" + resourcepackPath.getFileName().toString());
+                client.reloadResourcePacks();
+            }
         }
     }
 }

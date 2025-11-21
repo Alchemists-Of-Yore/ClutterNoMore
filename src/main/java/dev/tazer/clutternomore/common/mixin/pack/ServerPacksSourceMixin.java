@@ -1,6 +1,7 @@
-package dev.tazer.clutternomore.common.mixin;
+package dev.tazer.clutternomore.common.mixin.pack;
 
 import dev.tazer.clutternomore.ClutterNoMore;
+import dev.tazer.clutternomore.common.mixin.access.PackRepositoryAccessor;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.repository.*;
 import net.minecraft.world.level.validation.DirectoryValidator;

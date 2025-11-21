@@ -93,7 +93,7 @@ public class NeoForgeClientEvents {
 
     @SubscribeEvent
     private static void clientSetup(FMLClientSetupEvent event) {
-        AssetGenerator.generate();
+        ClutterNoMoreClient.clientStarted(Minecraft.getInstance());
     }
 }
 *///?}

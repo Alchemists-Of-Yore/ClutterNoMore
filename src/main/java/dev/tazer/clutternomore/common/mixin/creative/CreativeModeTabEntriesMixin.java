@@ -1,9 +1,8 @@
-package dev.tazer.clutternomore.common.mixin;
+package dev.tazer.clutternomore.common.mixin.creative;
 
 import dev.tazer.clutternomore.common.CHooks;
 import dev.tazer.clutternomore.common.shape_map.ShapeMap;
 //? neoforge {
-
 /*import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
  *///?} else if fabric {
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
@@ -22,7 +21,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 //? if neoforge || forge {
 /*@Mixin(BuildCreativeModeTabContentsEvent.class)
-*///?} else {
+ *///?} else {
 @Mixin(FabricItemGroupEntries.class)
 //?}
 public abstract class CreativeModeTabEntriesMixin {
@@ -61,7 +60,7 @@ public abstract class CreativeModeTabEntriesMixin {
         }
     }
     *///?} else {
-    
+
     @Inject(method = "accept", at = @At("HEAD"), cancellable = true)
     private void accept(ItemStack newEntry, CreativeModeTab.TabVisibility visibility, CallbackInfo ci) {
         if (CHooks.denyItem(newEntry.getItem())) ci.cancel();

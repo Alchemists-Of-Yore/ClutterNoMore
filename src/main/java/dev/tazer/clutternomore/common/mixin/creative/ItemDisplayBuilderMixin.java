@@ -1,4 +1,4 @@
-package dev.tazer.clutternomore.common.mixin;
+package dev.tazer.clutternomore.common.mixin.creative;
 
 import dev.tazer.clutternomore.common.CHooks;
 import net.minecraft.world.item.CreativeModeTab;

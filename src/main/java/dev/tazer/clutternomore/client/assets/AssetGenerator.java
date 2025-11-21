@@ -69,7 +69,9 @@ public class AssetGenerator {
             object.add("description", new JsonPrimitive("Clutter No More generated assets."));
             //? if <1.21.9 {
             /*object.add("pack_format", new JsonPrimitive(CNMPackResources.resourcePackVersion));
-            *///?}
+            *///?} else {
+            object.add("pack_format", new JsonPrimitive(15));
+            //?}
             object.add("min_format", new JsonPrimitive(minFormat));
             object.add("max_format", new JsonPrimitive(maxFormat));
             var supportedFormats = new JsonArray(2);

@@ -1,0 +1,27 @@
+{
+
+  "minecraft:podzol": [
+    "dirtyslabs:podzol_slab",
+    "dirtyslabs:podzol_stairs",
+    "clutternomore:dirtyslabs/vertical_podzol_slab",
+    "clutternomore:dirtyslabs/podzol_step"
+  ],
+  "minecraft:mycelium": [
+    "dirtyslabs:mycelium_slab",
+    "dirtyslabs:mycelium_stairs",
+    "clutternomore:dirtyslabs/vertical_mycelium_slab",
+    "clutternomore:dirtyslabs/mycelium_step"
+  ],
+  "minecraft:grass_block": [
+    "dirtyslabs:grass_slab",
+    "dirtyslabs:grass_stairs",
+    "clutternomore:dirtyslabs/grass_step",
+    "clutternomore:dirtyslabs/vertical_grass_slab"
+  ],
+  "minecraft:coarse_dirt": [
+    "dirtyslabs:coarse_dirt_slab",
+    "dirtyslabs:coarse_dirt_stairs",
+    "clutternomore:dirtyslabs/coarse_dirt_step",
+    "clutternomore:dirtyslabs/vertical_coarse_dirt_slab"
+  ]
+}

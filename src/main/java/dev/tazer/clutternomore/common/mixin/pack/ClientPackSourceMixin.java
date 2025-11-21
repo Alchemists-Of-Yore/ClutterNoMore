@@ -1,4 +1,4 @@
-package dev.tazer.clutternomore.common.mixin;
+package dev.tazer.clutternomore.common.mixin.pack;
 
 import dev.tazer.clutternomore.ClutterNoMore;
 import net.minecraft.client.resources.ClientPackSource;

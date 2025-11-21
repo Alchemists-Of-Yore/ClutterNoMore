@@ -12,7 +12,7 @@ import dev.tazer.clutternomore.common.blocks.StepBlock;
 import dev.tazer.clutternomore.common.blocks.VerticalSlabBlock;
 import dev.tazer.clutternomore.common.data.CNMPackResources;
 import dev.tazer.clutternomore.common.registry.CBlocks;
-import dev.tazer.clutternomore.common.mixin.BlockBehaviorAccessor;
+import dev.tazer.clutternomore.common.mixin.access.BlockBehaviorAccessor;
 //? if <1.21 {
 /*import net.minecraft.core.RegistryAccess;
 *///?} else {
@@ -43,9 +43,9 @@ import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.repository.PackSource;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
-//? if >1.21 {
-import net.minecraft.world.item.crafting.RecipeHolder;
-//?}
+//? if =1.21.1 {
+/*import net.minecraft.world.item.crafting.RecipeHolder;
+*///?}
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SlabBlock;
@@ -56,8 +56,6 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 /*import net.minecraftforge.registries.RegistryManager;
 *///?}
 //? if fabric {
-import net.fabricmc.loader.api.FabricLoader;
-import net.fabricmc.api.EnvType;
 //?} else if neoforge {
 //?}
 import org.apache.logging.log4j.LogManager;

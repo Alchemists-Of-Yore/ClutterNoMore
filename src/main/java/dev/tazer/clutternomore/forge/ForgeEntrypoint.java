@@ -5,7 +5,6 @@ package dev.tazer.clutternomore.forge;
 /*import dev.tazer.clutternomore.CNMConfig;
 import dev.tazer.clutternomore.ClutterNoMore;
 import dev.tazer.clutternomore.ClutterNoMoreClient;
-import dev.tazer.clutternomore.client.assets.AssetGenerator;
 import dev.tazer.clutternomore.common.shape_map.ShapeMapFileHandler;
 import dev.tazer.clutternomore.forge.networking.ForgeNetworking;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -42,7 +41,7 @@ public class ForgeEntrypoint {
 
         if (dist.isClient()) {
             ClutterNoMoreClient.init();
-            modEventBus.addListener(ForgeEntrypoint::clientSetup);
+            modEventBus.addListener(ForgeClientEvents::clientSetup);
         }
 
         MinecraftForge.EVENT_BUS.addListener(ForgeEntrypoint::addReloadListeners);
@@ -66,10 +65,6 @@ public class ForgeEntrypoint {
     public static void commonSetup(FMLCommonSetupEvent event) {
         BuiltInRegistries.BLOCK.freeze();
         BuiltInRegistries.ITEM.freeze();
-    }
-
-    public static void clientSetup(FMLClientSetupEvent event) {
-        AssetGenerator.generate();
     }
 
 

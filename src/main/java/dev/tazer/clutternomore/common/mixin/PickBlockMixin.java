@@ -22,7 +22,7 @@ import dev.tazer.clutternomore.common.shape_map.ShapeMap;
 import dev.tazer.clutternomore.common.networking.ChangeStackPayload;
 //?} else {
 /*import dev.tazer.clutternomore.forge.networking.ChangeStackPacket;
-*///?}
+ *///?}
 
 //? if fabric
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -40,10 +40,9 @@ import java.util.Objects;
 @Mixin(ServerGamePacketListenerImpl.class)
 //?} else {
 /*@Mixin(Minecraft.class)
-*///?}
-public abstract class MinecraftMixin {
+ *///?}
+public abstract class PickBlockMixin {
 
-    //FIXME
     //? if <1.21.2 {
     /*@Shadow
     @Nullable
@@ -64,7 +63,7 @@ public abstract class MinecraftMixin {
             if (ShapeMap.inSameShapeSet(targetStack.getItem(), slotStack.getItem())) {
                 ItemStack replaced = targetStack.copyWithCount(slotStack.getCount());
                 //? if fabric || neoforge {
-                
+
                 //? if neoforge {
                 /^Objects.requireNonNull(getConnection())
                 ^///?} else {
@@ -87,7 +86,7 @@ public abstract class MinecraftMixin {
 
         if (exactIndex != -1) {
             ItemStack slotStack = inventory.getNonEquipmentItems()
-            .get(exactIndex);
+                    .get(exactIndex);
 
             if (ShapeMap.inSameShapeSet(targetStack.getItem(), slotStack.getItem())) {
                 ItemStack replaced = targetStack.copyWithCount(slotStack.getCount());

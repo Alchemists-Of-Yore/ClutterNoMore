@@ -18,6 +18,7 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import org.lwjgl.glfw.GLFW;
 
 import static dev.tazer.clutternomore.ClutterNoMoreClient.*;
@@ -111,6 +112,10 @@ public class ForgeClientEvents {
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
         ClutterNoMoreClient.onPlayerTick(Minecraft.getInstance());
+    }
+
+    public static void clientSetup(FMLClientSetupEvent event) {
+        ClutterNoMoreClient.clientStarted(Minecraft.getInstance());
     }
 }
 *///?}

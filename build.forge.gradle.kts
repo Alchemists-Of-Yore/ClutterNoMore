@@ -148,6 +148,7 @@ dependencies {
     modRuntimeOnly("maven.modrinth:supplementaries:LAQ22yJj")
     modRuntimeOnly("maven.modrinth:would:2FZ421Oh")
 
+    annotationProcessor("org.spongepowered:mixin:0.8.5:processor")
     compileOnly("io.github.llamalad7:mixinextras-common:0.5.0")
     implementation("io.github.llamalad7:mixinextras-forge:0.5.0")
     jarJar("io.github.llamalad7:mixinextras-forge:0.5.0")
@@ -156,6 +157,14 @@ dependencies {
 mixin {
     add(sourceSets["main"], "clutternomore.mixin-refmap.json")
     config("clutternomore.mixins.json")
+}
+
+tasks.named<Jar>("jar") {
+    manifest {
+        attributes(
+            "MixinConfigs" to "clutternomore.mixins.json"
+        )
+    }
 }
 
 tasks {
