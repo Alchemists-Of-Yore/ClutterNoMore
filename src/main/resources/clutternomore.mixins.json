@@ -23,9 +23,9 @@
     "MouseHandlerMixin",
     "PickBlockMixin",
     "screen.AccessibilityScreenMixin",
-    "screen.OptionsSubScreenMixin",
-    "screen.ScreenAccessor",
-    "screen.ScreenMixin"
+    "screen.ContainerScreenAccessor",
+    "screen.OptionsSubScreenAccessor",
+    "screen.ScreenAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -44,10 +44,7 @@ import java.util.Objects;
 public abstract class PickBlockMixin {
 
     //? if <1.21.2 {
-    /*@Shadow
-    @Nullable
-    public abstract ClientPacketListener getConnection();
-    @Redirect(method = "pickBlock", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Inventory;findSlotMatchingItem(Lnet/minecraft/world/item/ItemStack;)I"))
+    /*@Redirect(method = "pickBlock", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Inventory;findSlotMatchingItem(Lnet/minecraft/world/item/ItemStack;)I"))
     private int pickBlock(Inventory inventory, ItemStack targetStack) {
         int exactIndex = inventory.findSlotMatchingItem(targetStack);
 
@@ -65,7 +62,7 @@ public abstract class PickBlockMixin {
                 //? if fabric || neoforge {
 
                 //? if neoforge {
-                /^Objects.requireNonNull(getConnection())
+                /^Objects.requireNonNull(((Minecraft) (Object) this).getConnection())
                 ^///?} else {
                 ClientPlayNetworking
                 //?}

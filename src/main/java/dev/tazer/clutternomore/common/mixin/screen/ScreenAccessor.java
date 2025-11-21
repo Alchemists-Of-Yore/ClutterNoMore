@@ -1,13 +1,25 @@
 package dev.tazer.clutternomore.common.mixin.screen;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.Renderable;
+import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.world.inventory.Slot;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
+import org.spongepowered.asm.mixin.gen.Invoker;
 
-@Mixin(AbstractContainerScreen.class)
+@Mixin(Screen.class)
 public interface ScreenAccessor {
-    @Accessor("hoveredSlot")
-    Slot getSlotUnderMouse();
+    @Invoker
+    <T extends GuiEventListener & Renderable & NarratableEntry> T invokeAddRenderableWidget(T widget);
+
+    @Accessor
+    int getWidth();
+
+    @Accessor
+    int getHeight();
+
+    @Accessor
+    Minecraft getMinecraft();
 }

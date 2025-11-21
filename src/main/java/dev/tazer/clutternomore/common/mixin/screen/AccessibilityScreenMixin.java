@@ -1,7 +1,6 @@
 package dev.tazer.clutternomore.common.mixin.screen;
 
 import dev.tazer.clutternomore.client.ShapeSwitcherOptionsScreen;
-import net.minecraft.client.OptionInstance;
 import net.minecraft.client.Options;
 import net.minecraft.client.gui.components.Button;
 //? if >1.21 {
@@ -9,24 +8,18 @@ import net.minecraft.client.gui.screens.options.AccessibilityOptionsScreen;
 //?} else {
 /*import net.minecraft.client.gui.screens.AccessibilityOptionsScreen;
 *///?}
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Arrays;
 import java.util.List;
 
 @Mixin(AccessibilityOptionsScreen.class)
-public abstract class AccessibilityScreenMixin extends OptionsSubScreenMixin {
-    protected AccessibilityScreenMixin(Component title) {
-        super(title);
-    }
-
+public abstract class AccessibilityScreenMixin {
     //? if >1.20.1 {
     @Inject(
             method = "addOptions",
@@ -36,9 +29,9 @@ public abstract class AccessibilityScreenMixin extends OptionsSubScreenMixin {
         Button shapeSwitcherButton = Button
                 .builder(
                         Component.translatable("key.clutternomore.shape_switcher"),
-                        button -> minecraft.setScreen(new ShapeSwitcherOptionsScreen(((AccessibilityOptionsScreen) (Object) this), options))
+                        button -> ((ScreenAccessor) this).getMinecraft().setScreen(new ShapeSwitcherOptionsScreen(((AccessibilityOptionsScreen) (Object) this), ((OptionsSubScreenAccessor) (this)).getOptions()))
                 ).bounds(0, 0, 150, 20).build();
-        list.addSmall(List.of(shapeSwitcherButton));
+        ((OptionsSubScreenAccessor) this).getList().addSmall(List.of(shapeSwitcherButton));
     }
     //?} else {
     /*@Redirect(
@@ -57,9 +50,9 @@ public abstract class AccessibilityScreenMixin extends OptionsSubScreenMixin {
         Button shapeSwitcherButton = Button
                 .builder(
                         Component.translatable("key.clutternomore.shape_switcher"),
-                        button -> minecraft.setScreen(new ShapeSwitcherOptionsScreen(((AccessibilityOptionsScreen) (Object) this), options))
-                ).bounds(this.width / 2 + 80, this.height - 27, 150, 20).build();
-        this.addRenderableWidget(shapeSwitcherButton);
+                        button -> ((ScreenAccessor) this).getMinecraft().setScreen(new ShapeSwitcherOptionsScreen(((AccessibilityOptionsScreen) (Object) this), ((OptionsSubScreenAccessor) (this)).getOptions()))
+                ).bounds(((ScreenAccessor) this).getWidth() / 2 + 80, ((ScreenAccessor) this).getHeight() - 27, 150, 20).build();
+        ((ScreenAccessor) this).invokeAddRenderableWidget(shapeSwitcherButton);
     }
     *///?}
 }

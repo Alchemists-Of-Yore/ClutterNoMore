@@ -4,7 +4,7 @@ import dev.tazer.clutternomore.client.ShapeSwitcherOverlay;
 import dev.tazer.clutternomore.client.assets.AssetGenerator;
 import dev.tazer.clutternomore.common.shape_map.ShapeMap;
 import dev.tazer.clutternomore.common.mixin.access.SlotAccessor;
-import dev.tazer.clutternomore.common.mixin.screen.ScreenAccessor;
+import dev.tazer.clutternomore.common.mixin.screen.ContainerScreenAccessor;
 //? if !forge {
  import dev.tazer.clutternomore.common.networking.ChangeStackPayload;
  import net.minecraft.client.DeltaTracker;
@@ -36,7 +36,6 @@ import net.minecraft.world.item.TooltipFlag;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import static dev.tazer.clutternomore.ClutterNoMore.MODID;
 
@@ -107,7 +106,7 @@ public class ClutterNoMoreClient {
 
     public static void onKeyPress(Screen screen, int button) {
         if (button == shapeKey() && screen instanceof AbstractContainerScreen<?> containerScreen) {
-            Slot slot = ((ScreenAccessor) screen).getSlotUnderMouse();
+            Slot slot = ((ContainerScreenAccessor) screen).getSlotUnderMouse();
             if (slot != null) {
                 ItemStack heldStack = slot.getItem();
                 Player player = Minecraft.getInstance().player;
@@ -190,7 +189,7 @@ public class ClutterNoMoreClient {
     public static boolean allowScreenScroll(Screen pScreen, double mouseX, double mouseY, double scrollX, double scrollY) {
         if (showTooltip) {
             if (pScreen instanceof AbstractContainerScreen<?> screen) {
-                Slot slot = ((ScreenAccessor) screen).getSlotUnderMouse();
+                Slot slot = ((ContainerScreenAccessor) screen).getSlotUnderMouse();
                 Player player = Minecraft.getInstance().player;
                 if (slot != null && slot.allowModification(player)) {
                     ItemStack heldStack = slot.getItem();
