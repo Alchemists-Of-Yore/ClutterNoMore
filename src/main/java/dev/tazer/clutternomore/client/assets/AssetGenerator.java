@@ -66,7 +66,7 @@ public class AssetGenerator {
             int maxFormat = 70;
 
             JsonObject object = new JsonObject();
-            object.add("description", new JsonPrimitive("Clutter No More generated assets."));
+            object.add("description", new JsonPrimitive("Generated resources for ClutterNoMore"));
             //? if <1.21.9 {
             /*object.add("pack_format", new JsonPrimitive(CNMPackResources.resourcePackVersion));
             *///?} else {

@@ -110,9 +110,6 @@ public class ClutterNoMoreClient {
             Slot slot = ((ScreenAccessor) screen).getSlotUnderMouse();
             if (slot != null) {
                 ItemStack heldStack = slot.getItem();
-                //? if neoforge
-                /*Player player = screen.getMinecraft().player;*/
-                //? if fabric || forge
                 Player player = Minecraft.getInstance().player;
 
                 if (slot.allowModification(player) && (ShapeMap.contains(heldStack.getItem()))) {

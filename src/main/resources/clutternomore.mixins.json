@@ -12,7 +12,6 @@
     "access.SlotAccessor",
     "creative.CreativeModeTabEntriesMixin",
     "creative.ItemDisplayBuilderMixin",
-    "pack.PackRepositoryMixin",
     "pack.ServerPacksSourceMixin",
     "recipe.ShapedRecipeMixin",
     "recipe.ShapelessRecipeMixin",
