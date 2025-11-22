@@ -45,7 +45,7 @@ public class ForgeEntrypoint {
         }
 
         MinecraftForge.EVENT_BUS.addListener(ForgeEntrypoint::addReloadListeners);
-        MinecraftForge.EVENT_BUS.addListener(ForgeEntrypoint::onServerStarted);
+//        MinecraftForge.EVENT_BUS.addListener(ForgeEntrypoint::onServerStarted);
         modEventBus.addListener(ForgeEntrypoint::commonSetup);
         modEventBus.addListener(ForgeEntrypoint::registerBlocks);
     }
