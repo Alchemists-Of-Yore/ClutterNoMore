@@ -1,0 +1,121 @@
+{
+    "minecraft:terracotta": [
+        "clayworks:terracotta_stairs",
+        "clayworks:terracotta_slab",
+        "clayworks:terracotta_wall",
+        "clutternomore:clayworks/vertical_terracotta_slab",
+        "clutternomore:clayworks/terracotta_step"
+    ],
+    "minecraft:white_terracotta": [
+        "clayworks:white_terracotta_stairs",
+        "clayworks:white_terracotta_slab",
+        "clayworks:white_terracotta_wall",
+        "clutternomore:clayworks/vertical_white_terracotta_slab",
+        "clutternomore:clayworks/white_terracotta_step"
+    ],
+    "minecraft:light_gray_terracotta": [
+        "clayworks:light_gray_terracotta_stairs",
+        "clayworks:light_gray_terracotta_slab",
+        "clayworks:light_gray_terracotta_wall",
+        "clutternomore:clayworks/vertical_light_gray_terracotta_slab",
+        "clutternomore:clayworks/light_gray_terracotta_step"
+    ],
+    "minecraft:gray_terracotta": [
+        "clayworks:gray_terracotta_stairs",
+        "clayworks:gray_terracotta_slab",
+        "clayworks:gray_terracotta_wall",
+        "clutternomore:clayworks/vertical_gray_terracotta_slab",
+        "clutternomore:clayworks/gray_terracotta_step"
+    ],
+    "minecraft:black_terracotta": [
+        "clayworks:black_terracotta_stairs",
+        "clayworks:black_terracotta_slab",
+        "clayworks:black_terracotta_wall",
+        "clutternomore:clayworks/vertical_black_terracotta_slab",
+        "clutternomore:clayworks/black_terracotta_step"
+    ],
+    "minecraft:brown_terracotta": [
+        "clayworks:brown_terracotta_stairs",
+        "clayworks:brown_terracotta_slab",
+        "clayworks:brown_terracotta_wall",
+        "clutternomore:clayworks/vertical_brown_terracotta_slab",
+        "clutternomore:clayworks/brown_terracotta_step"
+    ],
+    "minecraft:red_terracotta": [
+        "clayworks:red_terracotta_stairs",
+        "clayworks:red_terracotta_slab",
+        "clayworks:red_terracotta_wall",
+        "clutternomore:clayworks/vertical_red_terracotta_slab",
+        "clutternomore:clayworks/red_terracotta_step"
+    ],
+    "minecraft:orange_terracotta": [
+        "clayworks:orange_terracotta_stairs",
+        "clayworks:orange_terracotta_slab",
+        "clayworks:orange_terracotta_wall",
+        "clutternomore:clayworks/vertical_orange_terracotta_slab",
+        "clutternomore:clayworks/orange_terracotta_step"
+    ],
+    "minecraft:yellow_terracotta": [
+        "clayworks:yellow_terracotta_stairs",
+        "clayworks:yellow_terracotta_slab",
+        "clayworks:yellow_terracotta_wall",
+        "clutternomore:clayworks/vertical_yellow_terracotta_slab",
+        "clutternomore:clayworks/yellow_terracotta_step"
+    ],
+    "minecraft:lime_terracotta": [
+        "clayworks:lime_terracotta_stairs",
+        "clayworks:lime_terracotta_slab",
+        "clayworks:lime_terracotta_wall",
+        "clutternomore:clayworks/vertical_lime_terracotta_slab",
+        "clutternomore:clayworks/lime_terracotta_step"
+    ],
+    "minecraft:green_terracotta": [
+        "clayworks:green_terracotta_stairs",
+        "clayworks:green_terracotta_slab",
+        "clayworks:green_terracotta_wall",
+        "clutternomore:clayworks/vertical_green_terracotta_slab",
+        "clutternomore:clayworks/green_terracotta_step"
+    ],
+    "minecraft:cyan_terracotta": [
+        "clayworks:cyan_terracotta_stairs",
+        "clayworks:cyan_terracotta_slab",
+        "clayworks:cyan_terracotta_wall",
+        "clutternomore:clayworks/vertical_cyan_terracotta_slab",
+        "clutternomore:clayworks/cyan_terracotta_step"
+    ],
+    "minecraft:light_blue_terracotta": [
+        "clayworks:light_blue_terracotta_stairs",
+        "clayworks:light_blue_terracotta_slab",
+        "clayworks:light_blue_terracotta_wall",
+        "clutternomore:clayworks/vertical_light_blue_terracotta_slab",
+        "clutternomore:clayworks/light_blue_terracotta_step"
+    ],
+    "minecraft:blue_terracotta": [
+        "clayworks:blue_terracotta_stairs",
+        "clayworks:blue_terracotta_slab",
+        "clayworks:blue_terracotta_wall",
+        "clutternomore:clayworks/vertical_blue_terracotta_slab",
+        "clutternomore:clayworks/blue_terracotta_step"
+    ],
+    "minecraft:purple_terracotta": [
+        "clayworks:purple_terracotta_stairs",
+        "clayworks:purple_terracotta_slab",
+        "clayworks:purple_terracotta_wall",
+        "clutternomore:clayworks/vertical_purple_terracotta_slab",
+        "clutternomore:clayworks/purple_terracotta_step"
+    ],
+    "minecraft:magenta_terracotta": [
+        "clayworks:magenta_terracotta_stairs",
+        "clayworks:magenta_terracotta_slab",
+        "clayworks:magenta_terracotta_wall",
+        "clutternomore:clayworks/vertical_magenta_terracotta_slab",
+        "clutternomore:clayworks/magenta_terracotta_step"
+    ],
+    "minecraft:pink_terracotta": [
+        "clayworks:pink_terracotta_stairs",
+        "clayworks:pink_terracotta_slab",
+        "clayworks:pink_terracotta_wall",
+        "clutternomore:clayworks/vertical_pink_terracotta_slab",
+        "clutternomore:clayworks/pink_terracotta_step"
+    ]
+}
