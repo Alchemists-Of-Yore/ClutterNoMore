@@ -29,68 +29,62 @@ public class DataGenerator {
         array.add(path.toString());
     }
 
-
     public static void generate() {
-        JsonObject verticalSlabTag = new JsonObject();
-        verticalSlabTag.add("values", verticalSlabsArray);
-        blockAndItemTag("vertical_slabs", verticalSlabTag);
-
-        JsonObject woodenVerticalSlabTag = new JsonObject();
-        woodenVerticalSlabTag.add("values", woodenVerticalSlabsArray);
-        blockAndItemTag("wooden_vertical_slabs", woodenVerticalSlabTag);
-
-        JsonObject stepTag = new JsonObject();
-        stepTag.add("values", stepsArray);
-        blockAndItemTag("steps", stepTag);
-
-        JsonObject woodenStepTag = new JsonObject();
-        woodenStepTag.add("values", woodenStepsArray);
-        blockAndItemTag("wooden_steps", woodenStepTag);
-
-
-        JsonObject pickaxeMineableTag = new JsonObject();
-        pickaxeMineableTag.add("values", pickaxeMineableArray);
-        blockAndItemTag("minecraft","mineable/pickaxe", pickaxeMineableTag);
-
-        JsonObject shovelMineableTag = new JsonObject();
-        shovelMineableTag.add("values", shovelMineableArray);
-        blockAndItemTag("minecraft","mineable/shovel", shovelMineableTag);
+        blockAndItemTag("vertical_slabs", verticalSlabsArray);
+        blockAndItemTag("wooden_vertical_slabs", woodenVerticalSlabsArray);
+        blockAndItemTag("steps", stepsArray);
+        blockAndItemTag("wooden_steps", woodenStepsArray);
+        blockAndItemTag("minecraft","mineable/pickaxe", pickaxeMineableArray);
+        blockAndItemTag("minecraft","mineable/shovel", shovelMineableArray);
     }
 
-    private static void blockTag(String s, JsonElement verticalSlabTag) {
+    private static void blockTag(String s, JsonArray verticalSlabTag) {
         blockTag(ClutterNoMore.MODID, s, verticalSlabTag);
     }
 
-    private static void itemTag(String namespace, String s, JsonElement verticalSlabTag) {
+    private static void itemTag(String namespace, String s, JsonArray tagValues) {
         //? if >1.21 {
         var location = ClutterNoMore.location(namespace, "tags/item/" +s + ".json");
          //?} else {
         /*var location = ClutterNoMore.location(namespace, "tags/items/" +s + ".json");
         *///?}
-        writeServerData(location, verticalSlabTag);
+        writeServerData(location, generateTagFile(tagValues));
     }
 
-    private static void blockTag(String namespace, String s, JsonElement verticalSlabTag) {
+    private static void blockTag(String namespace, String s, JsonArray tagValues) {
         //? if >1.21 {
         var location = ClutterNoMore.location(namespace, "tags/block/" +s + ".json");
          //?} else {
         /*var location = ClutterNoMore.location(namespace, "tags/blocks/" +s + ".json");
         *///?}
-        writeServerData(location, verticalSlabTag);
+        writeServerData(location, generateTagFile(tagValues));
     }
 
-    private static void itemTag(String path, JsonObject verticalSlabTag) {
+    private static void itemTag(String path, JsonArray verticalSlabTag) {
         itemTag(ClutterNoMore.MODID, path, verticalSlabTag);
     }
 
-    private static void blockAndItemTag(String path, JsonObject verticalSlabTag) {
+    private static void blockAndItemTag(String path, JsonArray verticalSlabTag) {
         blockTag(path, verticalSlabTag);
         itemTag(path, verticalSlabTag);
     }
 
-    private static void blockAndItemTag(String namespace, String path, JsonObject verticalSlabTag) {
+    private static void blockAndItemTag(String namespace, String path, JsonArray verticalSlabTag) {
         blockTag(namespace, path, verticalSlabTag);
         itemTag(namespace, path, verticalSlabTag);
+    }
+
+    private static JsonObject generateTagFile(JsonArray tagValues) {
+        JsonObject tag = new JsonObject();
+        JsonArray values = new JsonArray();
+        tagValues.forEach((value)->{
+            var tagElement = new JsonObject();
+            tagElement.add("id", value);
+            tagElement.addProperty("required", false);
+            values.add(tagElement);
+        });
+        tag.add("values", values);
+        return tag;
     }
 
     public static void addLootTable(ResourceLocation block, ResourceLocation shape) {
