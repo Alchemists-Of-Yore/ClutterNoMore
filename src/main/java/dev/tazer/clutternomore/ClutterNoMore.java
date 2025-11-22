@@ -230,7 +230,7 @@ public class ClutterNoMore {
                     if (blockId.getNamespace().equals("minecraft")) {
                         blockNamespace = "";
                     }
-                    if (blockItem.getBlock() instanceof SlabBlock slabBlock && STARTUP_CONFIG.VERTICAL_SLABS.value()) {
+                    if (blockItem.getBlock() instanceof SlabBlock slabBlock && slabBlock.defaultBlockState().getValues().size() == 2 && STARTUP_CONFIG.VERTICAL_SLABS.value()) {
                         String shortPath = "vertical_" + blockId.getPath();
                         String path = blockNamespace + shortPath;
                         //? if =1.21.1 {
@@ -256,10 +256,9 @@ public class ClutterNoMore {
                             if (shovelSoundTypes.contains(soundType)) shovelMineableArray.add(ClutterNoMore.location(path).toString());
                             else pickaxeMineableArray.add(ClutterNoMore.location(path).toString());
                         }
-
-
                     }
-                    if (blockItem.getBlock() instanceof StairBlock stairBlock && STARTUP_CONFIG.STEPS.value()) {
+
+                    if (blockItem.getBlock() instanceof StairBlock stairBlock && stairBlock.defaultBlockState().getValues().size() == 4 && STARTUP_CONFIG.STEPS.value()) {
                         String shortPath = blockId.getPath().replace("stairs", "step");
                         String path = blockNamespace + shortPath;
                         //? if =1.21.1 {

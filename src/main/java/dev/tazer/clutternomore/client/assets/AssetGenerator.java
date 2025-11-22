@@ -137,7 +137,10 @@ public class AssetGenerator {
 
         if (model == null) return null;
 
-        Optional<Resource> parentModel = manager.getResource(ClutterNoMore.location(model.split(":")[0], "models/%s.json".formatted(model.split(":")[1])));
+        String[] modelParts = model.split(":");
+        if (modelParts.length != 2) return null;
+
+        Optional<Resource> parentModel = manager.getResource(ClutterNoMore.location(modelParts[0], "models/%s.json".formatted(modelParts[1])));
         if (parentModel.isEmpty()) return null;
 
         JsonObject textures = JsonParser.parseReader(parentModel.get().openAsReader()).getAsJsonObject().getAsJsonObject("textures");
