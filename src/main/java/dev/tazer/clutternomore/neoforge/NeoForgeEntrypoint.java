@@ -63,7 +63,9 @@ public class NeoForgeEntrypoint {
 
     @SubscribeEvent
     private static void onServerStarted(OnDatapackSyncEvent event) {
-        ShapeMap.sendShapeMap(event.getPlayer());
+        event.getRelevantPlayers().forEach((player -> {
+            ShapeMap.sendShapeMap(event.getPlayer());
+        }));
     }
 
     @SubscribeEvent
