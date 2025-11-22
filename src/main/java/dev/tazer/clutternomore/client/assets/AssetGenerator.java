@@ -29,6 +29,7 @@ public class AssetGenerator {
     public static Set<String> keys;
 
     public static void generate() {
+        if (keys == null) return;
         ResourceManager manager = Minecraft.getInstance().getResourceManager();
 
         //lang
