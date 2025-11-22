@@ -22,9 +22,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import static dev.tazer.clutternomore.ClutterNoMore.pack;
+import static dev.tazer.clutternomore.ClutterNoMore.writeFile;
+
 public class AssetGenerator {
     public static Set<String> keys;
-    public static final Path pack = Platform.INSTANCE.getResourcePack().resolve("clutternomore");
 
     public static void generate() {
         ResourceManager manager = Minecraft.getInstance().getResourceManager();
@@ -82,18 +84,6 @@ public class AssetGenerator {
             ClutterNoMoreClient.requireReload = true;
             Path assets = pack.resolve("assets/clutternomore");
             writeFile(assets.resolve(fileName.substring(0, fileName.lastIndexOf("/"))), assets.resolve(fileName), contents.toString());
-        }
-    }
-
-    public static void writeFile(Path path, Path filePath, String contents) {
-        try {
-            path.toFile().mkdirs();
-            FileWriter langWriter = new FileWriter(filePath.toFile());
-            langWriter.write(contents);
-            langWriter.close();  // must close manually
-            ClutterNoMore.LOGGER.debug("Successfully wrote to {}", filePath);
-        } catch (IOException e) {
-            ClutterNoMore.LOGGER.error("Failed to write dynamic data. %s".formatted(e));
         }
     }
 

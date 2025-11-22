@@ -1,23 +1,20 @@
 package dev.tazer.clutternomore;
 
-//import dev.tazer.clutternomore.common.data.DynamicServerResources;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 import dev.tazer.clutternomore.client.assets.AssetGenerator;
 import dev.tazer.clutternomore.client.assets.StepGenerator;
 import dev.tazer.clutternomore.client.assets.VerticalSlabGenerator;
 import dev.tazer.clutternomore.common.blocks.StepBlock;
 import dev.tazer.clutternomore.common.blocks.VerticalSlabBlock;
 import dev.tazer.clutternomore.common.data.CNMPackResources;
+import dev.tazer.clutternomore.common.data.DataGenerator;
 import dev.tazer.clutternomore.common.registry.CBlocks;
 import dev.tazer.clutternomore.common.mixin.access.BlockBehaviorAccessor;
 //? if <1.21 {
 /*import net.minecraft.core.RegistryAccess;
 *///?} else {
-
 import net.minecraft.core.HolderLookup;
+import net.minecraft.server.packs.PackLocationInfo;
+import net.minecraft.server.packs.PackSelectionConfig;
 //?}
 
 //? if <1.21.4 {
@@ -33,10 +30,6 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-//? if >1.21 {
-import net.minecraft.server.packs.PackLocationInfo;
-import net.minecraft.server.packs.PackSelectionConfig;
-//?}
 import net.minecraft.server.packs.PackResources;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.repository.Pack;
@@ -53,16 +46,19 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 //? if forge {
-/*import net.minecraftforge.registries.RegistryManager;
+/*import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryManager;
 *///?}
-//? if fabric {
-//?} else if neoforge {
-//?}
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.function.Supplier;
+
+import static dev.tazer.clutternomore.common.data.DataGenerator.*;
 
 public class ClutterNoMore {
     public static final String MODID = "clutternomore";
@@ -74,7 +70,6 @@ public class ClutterNoMore {
     /*private static final String PACK_INFO = ClutterNoMore.MODID+"-runtime";
     *///?}
     public static final CNMPackResources RESOURCES = new CNMPackResources(PACK_INFO);
-    public static final ArrayList<ResourceLocation> ALIASES = new ArrayList<>();
 
     public static void init() {
         LOGGER.info("Initializing {} on {}", MODID, Platform.INSTANCE.loader());
@@ -125,7 +120,7 @@ public class ClutterNoMore {
         /*return new ResourceLocation(id);*/
     }
 
-    public static void load(
+    public static void modifyRecipes(
             //? if >1.21 {
             HolderLookup.Provider
             //?} else {
@@ -204,13 +199,6 @@ public class ClutterNoMore {
             ArrayList<ResourceLocation> slabs = new ArrayList<>();
             ArrayList<ResourceLocation> stairs = new ArrayList<>();
 
-            JsonArray verticalSlabsArray = new JsonArray();
-            JsonArray stepsArray = new JsonArray();
-            JsonArray woodenVerticalSlabsArray = new JsonArray();
-            JsonArray woodenStepsArray = new JsonArray();
-            JsonArray pickaxeMineableArray = new JsonArray();
-            JsonArray shovelMineableArray = new JsonArray();
-
             List<SoundType> woodenSoundTypes = List.of(
                     SoundType.WOOD,
                     SoundType.BAMBOO_WOOD,
@@ -244,7 +232,7 @@ public class ClutterNoMore {
                         slabs.add(blockId);
 
                         ResourceLocation shapeId = ClutterNoMore.location(path);
-                        addLootTable(blockId, shapeId);
+                        DataGenerator.addLootTable(blockId, shapeId);
 
                         
                         var soundType = ((BlockBehaviorAccessor) slabBlock).getSoundType();
@@ -252,9 +240,9 @@ public class ClutterNoMore {
                         if (woodenSoundTypes.contains(soundType)) {
                             woodenVerticalSlabsArray.add(ClutterNoMore.location(path).toString());
                         } else {
-                            verticalSlabsArray.add(ClutterNoMore.location(path).toString());
-                            if (shovelSoundTypes.contains(soundType)) shovelMineableArray.add(ClutterNoMore.location(path).toString());
-                            else pickaxeMineableArray.add(ClutterNoMore.location(path).toString());
+                            DataGenerator.addToTag(path, verticalSlabsArray);
+                            if (shovelSoundTypes.contains(soundType)) DataGenerator.addToTag(path, shovelMineableArray);
+                            else DataGenerator.addToTag(path, pickaxeMineableArray);
                         }
                     }
 
@@ -272,16 +260,16 @@ public class ClutterNoMore {
                         stairs.add(blockId);
 
                         ResourceLocation shapeId = ClutterNoMore.location(path);
-                        addLootTable(blockId, shapeId);
+                        DataGenerator.addLootTable(blockId, shapeId);
 
                         var soundType = ((BlockBehaviorAccessor) stairBlock).getSoundType();
 
                         if (woodenSoundTypes.contains(soundType)) {
-                            woodenStepsArray.add(shapeId.toString());
+                            DataGenerator.addToTag(shapeId, woodenStepsArray);
                         } else {
-                            stepsArray.add(shapeId.toString());
-                            if (shovelSoundTypes.contains(soundType)) shovelMineableArray.add(shapeId.toString());
-                            else pickaxeMineableArray.add(shapeId.toString());
+                            DataGenerator.addToTag(shapeId, stepsArray);
+                            if (shovelSoundTypes.contains(soundType)) DataGenerator.addToTag(path, shovelMineableArray);
+                            else DataGenerator.addToTag(path, pickaxeMineableArray);
                         }
                     }
                 }
@@ -290,72 +278,13 @@ public class ClutterNoMore {
             AssetGenerator.keys = toRegister.keySet();
             VerticalSlabGenerator.SLABS = slabs;
             StepGenerator.STAIRS = stairs;
-
-            JsonObject verticalSlabTag = new JsonObject();
-            verticalSlabTag.add("values", verticalSlabsArray);
-            ClutterNoMore.blockAndItemTag("vertical_slabs", verticalSlabTag);
-
-            JsonObject woodenVerticalSlabTag = new JsonObject();
-            woodenVerticalSlabTag.add("values", woodenVerticalSlabsArray);
-            ClutterNoMore.blockAndItemTag("wooden_vertical_slabs", woodenVerticalSlabTag);
-
-            JsonObject stepTag = new JsonObject();
-            stepTag.add("values", stepsArray);
-            ClutterNoMore.blockAndItemTag("steps", stepTag);
-
-            JsonObject woodenStepTag = new JsonObject();
-            woodenStepTag.add("values", woodenStepsArray);
-            ClutterNoMore.blockAndItemTag("wooden_steps", woodenStepTag);
-
-
-            JsonObject pickaxeMineableTag = new JsonObject();
-            pickaxeMineableTag.add("values", pickaxeMineableArray);
-            ClutterNoMore.blockAndItemTag("minecraft","mineable/pickaxe", pickaxeMineableTag);
-
-            JsonObject shovelMineableTag = new JsonObject();
-            shovelMineableTag.add("values", shovelMineableArray);
-            ClutterNoMore.blockAndItemTag("minecraft","mineable/shovel", shovelMineableTag);
+            DataGenerator.generate();
         }
     }
 
-    private static void blockTag(String s, JsonElement verticalSlabTag) {
-        blockTag(ClutterNoMore.MODID, s, verticalSlabTag);
-    }
-
-    private static void itemTag(String namespace, String s, JsonElement verticalSlabTag) {
-        //? if >1.21 {
-        var location = ClutterNoMore.location(namespace, "tags/item/" +s + ".json");
-        //?} else {
-        /*var location = ClutterNoMore.location(namespace, "tags/items/" +s + ".json");
-        *///?}
-        RESOURCES.addJson(PackType.SERVER_DATA, location, verticalSlabTag);
-    }
-
-    private static void blockTag(String namespace, String s, JsonElement verticalSlabTag) {
-        //? if >1.21 {
-        var location = ClutterNoMore.location(namespace, "tags/block/" +s + ".json");
-         //?} else {
-        /*var location = ClutterNoMore.location(namespace, "tags/blocks/" +s + ".json");
-        *///?}
-        RESOURCES.addJson(PackType.SERVER_DATA, location, verticalSlabTag);
-    }
-
-    private static void itemTag(String path, JsonElement verticalSlabTag) {
-        itemTag(ClutterNoMore.MODID, path, verticalSlabTag);
-    }
-
-    private static void blockAndItemTag(String path, JsonElement verticalSlabTag) {
-        blockTag(path, verticalSlabTag);
-        itemTag(path, verticalSlabTag);
-    }
-
-    private static void blockAndItemTag(String namespace, String path, JsonElement verticalSlabTag) {
-        blockTag(namespace, path, verticalSlabTag);
-        itemTag(namespace, path, verticalSlabTag);
-    }
-
     //? if =1.21.1 {
-    /*private static void addAlias(String blockNamespace, String shortPath, String path) {
+    /*public static final ArrayList<ResourceLocation> ALIASES = new ArrayList<>();
+    private static void addAlias(String blockNamespace, String shortPath, String path) {
         ResourceLocation shortNamespace = ClutterNoMore.location(shortPath);
         if (!blockNamespace.isEmpty() && !ALIASES.contains(shortNamespace)) {
             ResourceLocation id = ClutterNoMore.location(path);
@@ -366,26 +295,18 @@ public class ClutterNoMore {
     }
     *///?}
 
-    public static void addLootTable(ResourceLocation block, ResourceLocation shape) {
-        JsonObject lootTable = new JsonObject();
-        lootTable.add("type", new JsonPrimitive("block"));
-        JsonArray pools = new JsonArray();
-        JsonObject pool = new JsonObject();
-        pool.add("rolls", new JsonPrimitive(1));
-        JsonArray entries = new JsonArray();
-        JsonObject entry = new JsonObject();
-        entry.add("type", new JsonPrimitive("loot_table"));
-        entry.add("value", new JsonPrimitive(block.withPrefix("blocks/").toString()));
-        entries.add(entry);
-        pool.add("entries", entries);
-        pools.add(pool);
-        lootTable.add("pools", pools);
-        //? if >1.21 {
-        var path = "loot_table";
-        //?} else {
-        /*var path = "loot_tables";
-        *///?}
-        RESOURCES.addJson(PackType.SERVER_DATA, ClutterNoMore.location("%s/blocks/%s.json".formatted(path, shape.getPath())), lootTable);
+    public static final Path pack = Platform.INSTANCE.getResourcePack().resolve("clutternomore");
+
+    public static void writeFile(Path path, Path filePath, String contents) {
+        try {
+            path.toFile().mkdirs();
+            FileWriter langWriter = new FileWriter(filePath.toFile());
+            langWriter.write(contents);
+            langWriter.close();  // must close manually
+            ClutterNoMore.LOGGER.debug("Successfully wrote to {}", filePath);
+        } catch (IOException e) {
+            ClutterNoMore.LOGGER.error("Failed to write dynamic data. %s".formatted(e));
+        }
     }
 
     public static BlockBehaviour.Properties copy(Block block) {

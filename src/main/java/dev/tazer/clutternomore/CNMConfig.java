@@ -15,6 +15,9 @@ public class CNMConfig {
         @Comment("If steps should be added to all existing stairs")
         @SerializedName("steps")
         public final TrackedValue<Boolean> STEPS = this.value(true);
+        @Comment("Whether to generate a copy of the runtime datapack.")
+        @SerializedName("runtime_data_generation")
+        public final TrackedValue<Boolean> RUNTIME_DATA_GENERATION = this.value(true);
     }
 
     public static class ClientConfig extends ReflectiveConfig {

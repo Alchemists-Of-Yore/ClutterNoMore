@@ -33,7 +33,7 @@ public class FabricEntrypoint implements ModInitializer {
 //            ClutterNoMore.load(minecraftServer.registryAccess(), minecraftServer.getRecipeManager());
 //        }));
         ServerLifecycleEvents.SERVER_STARTED.register(minecraftServer -> {
-            ClutterNoMore.load(minecraftServer.registryAccess(), minecraftServer.getRecipeManager());
+            ClutterNoMore.modifyRecipes(minecraftServer.registryAccess(), minecraftServer.getRecipeManager());
         });
         ServerLifecycleEvents.SYNC_DATA_PACK_CONTENTS.register((serverPlayer, b) -> {
             ShapeMap.sendShapeMap(serverPlayer);
