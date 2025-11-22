@@ -1,0 +1,4 @@
+- Fixed crash on dedicated servers on NeoForge 1.21.1
+- Fixed crash from asset generator running when it shouldn't.
+- Potential fix for tags breaking.
+- A copy of the runtime datapack is now generated for debugging purposes.
