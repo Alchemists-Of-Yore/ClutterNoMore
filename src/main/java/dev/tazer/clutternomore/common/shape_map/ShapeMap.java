@@ -142,6 +142,7 @@ public class ShapeMap {
     }
 
     public static void sendShapeMap(ServerPlayer serverPlayer) {
+        if (serverPlayer == null) return;
         final Map<ItemStack, List<ItemStack>> shapes = new HashMap<>();
         SHAPES_DATAMAP.forEach(((item, items) -> {
             ArrayList<ItemStack> objects = new ArrayList<>();
