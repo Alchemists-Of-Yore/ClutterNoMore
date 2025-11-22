@@ -82,8 +82,10 @@ public class AssetGenerator {
     public static void write(String fileName, JsonElement contents) {
         ClutterNoMore.RESOURCES.addJson(PackType.CLIENT_RESOURCES, ClutterNoMore.location(fileName), contents);
         if (ClutterNoMoreClient.CLIENT_CONFIG.RUNTIME_ASSET_GENERATION.value()) {
-            ClutterNoMoreClient.requireReload = true;
             Path assets = pack.resolve("assets/clutternomore");
+            if (!assets.resolve(fileName).toFile().exists()) {
+                ClutterNoMoreClient.requireReload = true;
+            }
             writeFile(assets.resolve(fileName.substring(0, fileName.lastIndexOf("/"))), assets.resolve(fileName), contents.toString());
         }
     }
@@ -135,6 +137,8 @@ public class AssetGenerator {
         if (parentModel.isEmpty()) return null;
 
         JsonObject textures = JsonParser.parseReader(parentModel.get().openAsReader()).getAsJsonObject().getAsJsonObject("textures");
+
+        if (textures == null) return null;
 
         if (textures.get("top") == null) {
             if (textures.get("side") != null) {
