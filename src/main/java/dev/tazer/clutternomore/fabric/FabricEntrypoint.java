@@ -29,9 +29,9 @@ public class FabricEntrypoint implements ModInitializer {
         //?} else {
         /*ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(new ShapeMapFileHandler());
         *///?}
-        ServerLifecycleEvents.START_DATA_PACK_RELOAD.register(((minecraftServer, closeableResourceManager) -> {
-            ClutterNoMore.load(minecraftServer.registryAccess(), minecraftServer.getRecipeManager());
-        }));
+//        ServerLifecycleEvents.START_DATA_PACK_RELOAD.register(((minecraftServer, closeableResourceManager) -> {
+//            ClutterNoMore.load(minecraftServer.registryAccess(), minecraftServer.getRecipeManager());
+//        }));
         ServerLifecycleEvents.SERVER_STARTED.register(minecraftServer -> {
             ClutterNoMore.load(minecraftServer.registryAccess(), minecraftServer.getRecipeManager());
         });

@@ -13,9 +13,13 @@
     "creative.CreativeModeTabEntriesMixin",
     "creative.ItemDisplayBuilderMixin",
     "pack.ServerPacksSourceMixin",
+    "recipe.ShapedRecipeAccessor",
     "recipe.ShapedRecipeMixin",
+    "recipe.ShapelessRecipeAccessor",
     "recipe.ShapelessRecipeMixin",
-    "recipe.SingleItemRecipeMixin"
+    "recipe.SingleItemRecipeAccessor",
+    "recipe.SingleItemRecipeMixin",
+    "recipe.StonecutterRecipeMixin"
   ],
   "client": [
     "HotbarMixin",

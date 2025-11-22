@@ -14,23 +14,18 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(SingleItemRecipe.class)
 public class SingleItemRecipeMixin {
     //? if >1.21.1 {
-    @Shadow
-    @Final
-    private ItemStack result;
-
-    @Inject(method = "matches(Lnet/minecraft/world/item/crafting/SingleRecipeInput;Lnet/minecraft/world/level/Level;)Z", at = @At(value = "RETURN"), cancellable = true)
+    @Inject(method = "matches(Lnet/minecraft/world/item/crafting/SingleRecipeInput;Lnet/minecraft/world/level/Level;)Z", at = @At("RETURN"), cancellable = true)
     private void noMatches(CallbackInfoReturnable<ItemStack> cir) {
-        if (ShapeMap.isShape(result.getItem())) {
+        if (ShapeMap.isShape(((SingleItemRecipeAccessor) (this)).getResult().getItem())) {
             cir.setReturnValue(ItemStack.EMPTY);
         }
     }
 
-    @Inject(method = "matches(Lnet/minecraft/world/item/crafting/RecipeInput;Lnet/minecraft/world/level/Level;)Z", at = @At(value = "RETURN"), cancellable = true)
+    @Inject(method = "matches(Lnet/minecraft/world/item/crafting/RecipeInput;Lnet/minecraft/world/level/Level;)Z", at = @At("RETURN"), cancellable = true)
     private void noMatches2(CallbackInfoReturnable<ItemStack> cir) {
-        if (ShapeMap.isShape(result.getItem())) {
+        if (ShapeMap.isShape(((SingleItemRecipeAccessor) (this)).getResult().getItem())) {
             cir.setReturnValue(ItemStack.EMPTY);
         }
     }
     //?}
-
 }

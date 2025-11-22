@@ -55,11 +55,11 @@ public class NeoForgeEntrypoint {
         );
     }
 
-    @SubscribeEvent
-    private static void onServerStarted(ServerStartedEvent event) {
-        MinecraftServer server = event.getServer();
-        ClutterNoMore.load(server.registryAccess(), server.getRecipeManager());
-    }
+//    @SubscribeEvent
+//    private static void onServerStarted(ServerStartedEvent event) {
+//        MinecraftServer server = event.getServer();
+//        ClutterNoMore.load(server.registryAccess(), server.getRecipeManager());
+//    }
 
     @SubscribeEvent
     private static void onServerStarted(OnDatapackSyncEvent event) {
@@ -68,7 +68,6 @@ public class NeoForgeEntrypoint {
 
     @SubscribeEvent
     private static void addReloadListeners(AddReloadListenerEvent event) {
-        event.addListener(new CReloadListener(event.getServerResources()));
         event.addListener(new ShapeMapFileHandler());
     }
 

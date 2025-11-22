@@ -50,13 +50,12 @@ public class ForgeEntrypoint {
         modEventBus.addListener(ForgeEntrypoint::registerBlocks);
     }
 
-    private static void onServerStarted(ServerStartedEvent event) {
-        MinecraftServer server = event.getServer();
-        ClutterNoMore.load(server.registryAccess(), server.getRecipeManager());
-    }
+//    private static void onServerStarted(ServerStartedEvent event) {
+//        MinecraftServer server = event.getServer();
+//        ClutterNoMore.load(server.registryAccess(), server.getRecipeManager());
+//    }
 
     private static void addReloadListeners(AddReloadListenerEvent event) {
-        event.addListener(new CReloadListener(event.getServerResources(), event.getRegistryAccess()));
         event.addListener(new ShapeMapFileHandler());
 
     }
