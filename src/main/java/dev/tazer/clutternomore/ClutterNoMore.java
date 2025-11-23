@@ -78,13 +78,13 @@ public class ClutterNoMore {
     public static Pack createPack(PackType type) {
         //? if >1.21 {
         return Pack.readMetaAndCreate(
-                ClutterNoMore.PACK_INFO,
+                PACK_INFO,
                 new PackResourcesSupplier(),
                 type,
                 new PackSelectionConfig(
                         true,
-                        Pack.Position.TOP,
-                        false
+                        Pack.Position.BOTTOM,
+                        true
                 )
         );
         //?} else {
@@ -94,7 +94,7 @@ public class ClutterNoMore {
                 true,
                 new PackResourcesSupplier(),
                 type,
-                Pack.Position.TOP,
+                Pack.Position.BOTTOM,
                 PackSource.BUILT_IN
         );
         *///?}

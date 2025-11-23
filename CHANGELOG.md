@@ -1,5 +1,2 @@
-- Support for Clayworks.
-- Fixed NPE in asset generator.
-- Fixed required asset reload if no assets have changed.
-- Another fix for breaking vanilla tags.
-- Shape items are now hidden from EMI.
+- Fixed inconsistent pack reloads on game launch
+- Fixed incorrect vertical slab model

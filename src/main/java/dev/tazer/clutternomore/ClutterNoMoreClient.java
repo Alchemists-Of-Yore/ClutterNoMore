@@ -215,11 +215,11 @@ public class ClutterNoMoreClient {
 
     private static void enablePack(Minecraft client) {
         PackRepository repository = client.getResourcePackRepository();
-        if (requireReload) {
-            Path resourcepackPath = client.getResourcePackDirectory().resolve("clutternomore");
-            if (resourcepackPath.toFile().exists()) {
-                repository.reload();
-                repository.addPack("file/" + resourcepackPath.getFileName().toString());
+        Path packPath = client.getResourcePackDirectory().resolve("clutternomore");
+        String packId = "file/" + packPath.getFileName().toString();
+        if (requireReload || !repository.getSelectedIds().contains(packId)) {
+            if (repository.getPack(packId) != null) {
+                repository.addPack(packId);
                 client.reloadResourcePacks();
             }
         }
