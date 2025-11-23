@@ -21,6 +21,9 @@
     ],
     "client": [
       "dev.tazer.clutternomore.fabric.FabricClientEntrypoint"
+    ],
+    "emi": [
+      "dev.tazer.clutternomore.common.compat.EMICompat"
     ]
   },
   "mixins": [

@@ -2,3 +2,4 @@
 - Fixed NPE in asset generator.
 - Fixed required asset reload if no assets have changed.
 - Another fix for breaking vanilla tags.
+- Shape items are now hidden from EMI.

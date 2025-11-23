@@ -141,6 +141,11 @@ dependencies {
     compileOnly("mezz.jei:jei-${property("deps.minecraft")}-neoforge-api:19.21.0.247")
     runtimeOnly("mezz.jei:jei-${property("deps.minecraft")}-neoforge:19.21.0.247")
 
+    if (hasProperty("deps.emi")) {
+        compileOnly("dev.emi:emi-neoforge:${property("deps.emi")}:api")
+        runtimeOnly("dev.emi:emi-neoforge:${property("deps.emi")}")
+    }
+
     implementation("folk.sisby:kaleido-config:${property("deps.kaleido")}")
     jarJar("folk.sisby:kaleido-config:${property("deps.kaleido")}")
     "additionalRuntimeClasspath"("folk.sisby:kaleido-config:${property("deps.kaleido")}")
