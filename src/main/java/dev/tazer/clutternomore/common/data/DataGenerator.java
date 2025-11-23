@@ -34,8 +34,8 @@ public class DataGenerator {
         blockAndItemTag("wooden_vertical_slabs", woodenVerticalSlabsArray);
         blockAndItemTag("steps", stepsArray);
         blockAndItemTag("wooden_steps", woodenStepsArray);
-        blockAndItemTag("minecraft","mineable/pickaxe", pickaxeMineableArray);
-        blockAndItemTag("minecraft","mineable/shovel", shovelMineableArray);
+        blockAndItemTag("pickaxeable", pickaxeMineableArray);
+        blockAndItemTag("shovelable", shovelMineableArray);
     }
 
     private static void blockTag(String s, JsonArray verticalSlabTag) {
@@ -112,7 +112,7 @@ public class DataGenerator {
     public static void writeServerData(ResourceLocation fileName, JsonElement contents) {
         ClutterNoMore.RESOURCES.addJson(PackType.SERVER_DATA, fileName, contents);
         if (ClutterNoMore.STARTUP_CONFIG.RUNTIME_DATA_GENERATION.value()) {
-            Path data = pack.resolve("data/clutternomore");
+            Path data = pack.resolve("data/"+fileName.getNamespace());
             ClutterNoMore.writeFile(data.resolve(fileName.getPath().substring(0, fileName.getPath().lastIndexOf("/"))), data.resolve(fileName.getPath()), contents.toString());
         }
     }
