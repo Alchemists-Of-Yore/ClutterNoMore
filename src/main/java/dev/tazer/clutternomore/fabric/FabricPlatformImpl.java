@@ -16,6 +16,7 @@ import net.minecraft.world.level.block.Block;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.nio.file.Path;
+import java.util.Optional;
 
 import static dev.tazer.clutternomore.fabric.FabricClientEvents.SHAPE_KEY;
 
@@ -72,6 +73,13 @@ public class FabricPlatformImpl implements Platform {
             Block moreBlock = BuiltInRegistries.BLOCK.get(more);
             *///?}
             OxidizableBlocksRegistry.registerOxidizableBlockPair(lessBlock, moreBlock);
+        });
+        ClutterNoMore.WAXED_COPPER_BLOCKS.forEach(resourceLocation -> {
+            Optional<Block> waxedBlock = BuiltInRegistries.BLOCK.getOptional(resourceLocation);
+            Optional<Block> unwaxedBlock = BuiltInRegistries.BLOCK.getOptional(ClutterNoMore.location(resourceLocation.getNamespace(), resourceLocation.getPath().replace("waxed_", "")));
+            if (waxedBlock.isPresent() && unwaxedBlock.isPresent()) {
+               OxidizableBlocksRegistry.registerWaxableBlockPair(unwaxedBlock.get(), waxedBlock.get());
+            }
         });
     }
 

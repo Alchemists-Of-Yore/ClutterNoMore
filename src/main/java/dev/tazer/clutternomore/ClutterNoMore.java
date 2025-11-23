@@ -72,6 +72,7 @@ public class ClutterNoMore {
     *///?}
     public static final CNMPackResources RESOURCES = new CNMPackResources(PACK_INFO);
     public static LinkedHashMap<ResourceLocation, ResourceLocation> COPPER_BLOCKS = new LinkedHashMap<>();
+    public static ArrayList<ResourceLocation> WAXED_COPPER_BLOCKS = new ArrayList<>();
 
     public static void init() {
         LOGGER.info("Initializing {} on {}", MODID, Platform.INSTANCE.loader());
@@ -240,6 +241,9 @@ public class ClutterNoMore {
                                     //? if >1.21.2
                                     .setId(CBlocks.registryKey(path))
                             ));
+                            if (path.contains("waxed")) {
+                                WAXED_COPPER_BLOCKS.add(ClutterNoMore.location(path));
+                            }
                         }
 
                         slabs.add(blockId);
@@ -278,6 +282,9 @@ public class ClutterNoMore {
                                     //? if >1.21.2
                                     .setId(CBlocks.registryKey(path))
                             ));
+                            if (path.contains("waxed")) {
+                                WAXED_COPPER_BLOCKS.add(ClutterNoMore.location(path));
+                            }
                         }
 
 

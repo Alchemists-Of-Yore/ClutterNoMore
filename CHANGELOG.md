@@ -1,2 +1,3 @@
+- Vertical Slabs and Steps now oxidize and can be waxed.
 - Fixed inconsistent pack reloads on game launch
 - Fixed incorrect vertical slab model
