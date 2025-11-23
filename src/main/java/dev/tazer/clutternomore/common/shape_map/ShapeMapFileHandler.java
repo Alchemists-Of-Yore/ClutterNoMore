@@ -6,9 +6,9 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import dev.tazer.clutternomore.ClutterNoMore;
-//? if fabric {
-import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
-//?}
+//? if fabric && <1.21.9 {
+/*import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
+*///?}
 import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -21,9 +21,9 @@ import java.util.*;
 public class ShapeMapFileHandler extends SimpleJsonResourceReloadListener
 //? >1.21.2
 <JsonElement>
-//? if fabric {
-    implements IdentifiableResourceReloadListener
-//?}
+//? if fabric && <1.21.9 {
+    /*implements IdentifiableResourceReloadListener
+*///?}
 {
 
     //? if >1.21.2 {
@@ -40,12 +40,12 @@ public class ShapeMapFileHandler extends SimpleJsonResourceReloadListener
     }
     *///?}
     
-    //? if fabric {
-    @Override
+    //? if fabric && <1.21.9 {
+    /*@Override
     public ResourceLocation getFabricId() {
         return ClutterNoMore.location("shape_map");
     }
-    //?}
+    *///?}
 
     @Override
     protected void apply(Map<ResourceLocation, JsonElement> file, ResourceManager resourceManager, ProfilerFiller profilerFiller) {

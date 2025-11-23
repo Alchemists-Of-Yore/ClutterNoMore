@@ -12,13 +12,24 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 //? if >=1.21.9 {
+import net.fabricmc.fabric.api.registry.OxidizableBlocksRegistry;
 import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
 //?} else {
 /*import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 *///?}
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
+import net.minecraft.world.level.block.Block;
+
+import java.nio.file.Path;
+import java.util.LinkedHashMap;
+import java.util.function.Supplier;
 
 public class FabricEntrypoint implements ModInitializer {
+
+
 
     @Override
     public void onInitialize() {

@@ -1,9 +1,14 @@
 package dev.tazer.clutternomore.neoforge;
 
 //? neoforge {
-/*import com.google.gson.JsonObject;
+/*import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import dev.tazer.clutternomore.ClutterNoMore;
 import dev.tazer.clutternomore.Platform;
+import dev.tazer.clutternomore.common.data.DataGenerator;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.loading.FMLEnvironment;
@@ -54,6 +59,19 @@ public class NeoForgePlatformImpl implements Platform {
     @Override
     public int shapeKey() {
         return SHAPE_KEY.get().getKey().getValue();
+    }
+
+    @Override
+    public void finalizeCopperBlockRegistration() {
+        JsonObject map = new JsonObject();
+        JsonObject values = new JsonObject();
+        ClutterNoMore.COPPER_BLOCKS.forEach((less, more) -> {
+            JsonObject next_stage = new JsonObject();
+            next_stage.addProperty("next_oxidation_stage", more.toString());
+            values.add(less.toString(), next_stage);
+        });
+        map.add("values", values);
+        DataGenerator.writeServerData(ResourceLocation.fromNamespaceAndPath("neoforge", "data_maps/block/oxidizables.json"), map);
     }
 
 }

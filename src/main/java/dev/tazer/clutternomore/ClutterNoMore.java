@@ -5,6 +5,8 @@ import dev.tazer.clutternomore.client.assets.StepGenerator;
 import dev.tazer.clutternomore.client.assets.VerticalSlabGenerator;
 import dev.tazer.clutternomore.common.blocks.StepBlock;
 import dev.tazer.clutternomore.common.blocks.VerticalSlabBlock;
+import dev.tazer.clutternomore.common.blocks.WeatheringStepBlock;
+import dev.tazer.clutternomore.common.blocks.WeatheringVerticalSlabBlock;
 import dev.tazer.clutternomore.common.data.CNMPackResources;
 import dev.tazer.clutternomore.common.data.DataGenerator;
 import dev.tazer.clutternomore.common.registry.CBlocks;
@@ -40,15 +42,14 @@ import net.minecraft.world.item.Item;
 /*import net.minecraft.world.item.crafting.RecipeHolder;
 *///?}
 import net.minecraft.world.item.crafting.RecipeManager;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.SlabBlock;
-import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.block.StairBlock;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 //? if forge {
 /*import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryManager;
-*///?}
+*///?} else if fabric {
+import dev.tazer.clutternomore.fabric.FabricEntrypoint;
+//?}
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -70,6 +71,7 @@ public class ClutterNoMore {
     /*private static final String PACK_INFO = ClutterNoMore.MODID+"-runtime";
     *///?}
     public static final CNMPackResources RESOURCES = new CNMPackResources(PACK_INFO);
+    public static LinkedHashMap<ResourceLocation, ResourceLocation> COPPER_BLOCKS = new LinkedHashMap<>();
 
     public static void init() {
         LOGGER.info("Initializing {} on {}", MODID, Platform.INSTANCE.loader());
@@ -224,10 +226,21 @@ public class ClutterNoMore {
                         //? if =1.21.1 {
                         /*addAlias(blockNamespace, shortPath, path);
                         *///?}
-                        toRegister.put(path, ()->new VerticalSlabBlock(copy(slabBlock)
-                                //? if >1.21.2
-                                .setId(CBlocks.registryKey(path))
-                        ));
+
+                        if (slabBlock instanceof WeatheringCopperSlabBlock weatheringSlabBlock) {
+                            Supplier<Block> block = ()->new WeatheringVerticalSlabBlock(copy(slabBlock)
+                                    //? if >1.21.2
+                                    .setId(CBlocks.registryKey(path))
+                                    , weatheringSlabBlock.getAge()
+                            );
+                            toRegister.put(path, block);
+                            matchCopperBlock(ClutterNoMore.location(path));
+                        } else {
+                            toRegister.put(path, ()->new VerticalSlabBlock(copy(slabBlock)
+                                    //? if >1.21.2
+                                    .setId(CBlocks.registryKey(path))
+                            ));
+                        }
 
                         slabs.add(blockId);
 
@@ -252,10 +265,21 @@ public class ClutterNoMore {
                         //? if =1.21.1 {
                         /*addAlias(blockNamespace, shortPath, path);
                         *///?}
-                        toRegister.put(path, ()->new StepBlock(copy(stairBlock)
-                                //? if >1.21.2
-                                .setId(CBlocks.registryKey(path))
-                        ));
+                        if (stairBlock instanceof WeatheringCopperStairBlock weatheringCopperStairBlock) {
+                            Supplier<Block> block = ()->new WeatheringStepBlock(copy(stairBlock)
+                                    //? if >1.21.2
+                                    .setId(CBlocks.registryKey(path))
+                                    , weatheringCopperStairBlock.getAge()
+                            );
+                            toRegister.put(path, block);
+                            matchCopperBlock(ClutterNoMore.location(path));
+                        } else {
+                            toRegister.put(path, ()->new StepBlock(copy(stairBlock)
+                                    //? if >1.21.2
+                                    .setId(CBlocks.registryKey(path))
+                            ));
+                        }
+
 
                         stairs.add(blockId);
 
@@ -279,6 +303,22 @@ public class ClutterNoMore {
             VerticalSlabGenerator.SLABS = slabs;
             StepGenerator.STAIRS = stairs;
             DataGenerator.generate();
+            Platform.INSTANCE.finalizeCopperBlockRegistration();
+        }
+    }
+
+    private static void matchCopperBlock(ResourceLocation id) {
+        if (id.getPath().contains("oxidized")) {
+            var weatheredPath = ClutterNoMore.location(id.getNamespace(), id.getPath().replace("oxidized", "weathered"));
+            COPPER_BLOCKS.put(weatheredPath, id);
+        }
+        if (id.getPath().contains("weathered")) {
+            var exposed = ClutterNoMore.location(id.getNamespace(), id.getPath().replace("weathered", "exposed"));
+            COPPER_BLOCKS.put(exposed, id);
+        }
+        if (id.getPath().contains("exposed")) {
+            var unaffected = ClutterNoMore.location(id.getNamespace(), id.getPath().replace("exposed_", ""));
+            COPPER_BLOCKS.put(unaffected, id);
         }
     }
 

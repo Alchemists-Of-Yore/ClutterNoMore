@@ -3,12 +3,15 @@ package dev.tazer.clutternomore.fabric;
 //? fabric {
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import dev.tazer.clutternomore.ClutterNoMore;
 import dev.tazer.clutternomore.Platform;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.registry.OxidizableBlocksRegistry;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.Minecraft;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.Block;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -17,6 +20,7 @@ import java.nio.file.Path;
 import static dev.tazer.clutternomore.fabric.FabricClientEvents.SHAPE_KEY;
 
 public class FabricPlatformImpl implements Platform {
+
 
     @Override
     public boolean isModLoaded(String modid) {
@@ -55,6 +59,20 @@ public class FabricPlatformImpl implements Platform {
     @Override
     public int shapeKey() {
         return KeyBindingHelper.getBoundKeyOf(SHAPE_KEY).getValue();
+    }
+
+    @Override
+    public void finalizeCopperBlockRegistration() {
+        ClutterNoMore.COPPER_BLOCKS.forEach((less, more) -> {
+            //? if >1.21.2 {
+            Block lessBlock = BuiltInRegistries.BLOCK.getValue(less);
+            Block moreBlock = BuiltInRegistries.BLOCK.getValue(more);
+            //?} else {
+            /*Block lessBlock = BuiltInRegistries.BLOCK.get(less);
+            Block moreBlock = BuiltInRegistries.BLOCK.get(more);
+            *///?}
+            OxidizableBlocksRegistry.registerOxidizableBlockPair(lessBlock, moreBlock);
+        });
     }
 
 }
