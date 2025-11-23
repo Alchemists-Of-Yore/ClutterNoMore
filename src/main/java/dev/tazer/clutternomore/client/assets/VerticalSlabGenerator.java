@@ -57,18 +57,20 @@ public final class VerticalSlabGenerator {
                 String modelString = "clutternomore:block/"+shape.getPath();
                 modelString = modelString.replace("waxed_", "");
 
+                model.addProperty("uvlock", true);
+
                 if (doubleState.value()) {
                     model.addProperty("model", modelString+"_double");
                 } else {
                     model.addProperty("model", modelString);
-                }
 
-                if (directionValue.value().equals(Direction.EAST)) {
-                    model.addProperty("y", 90);
-                } else if (directionValue.value().equals(Direction.SOUTH)) {
-                    model.addProperty("y", 180);
-                } else if (directionValue.value().equals(Direction.WEST)) {
-                    model.addProperty("y", 270);
+                    if (directionValue.value().equals(Direction.EAST)) {
+                        model.addProperty("y", 90);
+                    } else if (directionValue.value().equals(Direction.SOUTH)) {
+                        model.addProperty("y", 180);
+                    } else if (directionValue.value().equals(Direction.WEST)) {
+                        model.addProperty("y", 270);
+                    }
                 }
 
                 variants.add(directionValue+","+doubleState, model);
