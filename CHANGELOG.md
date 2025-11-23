@@ -1,3 +1,5 @@
 - Vertical Slabs and Steps now oxidize and can be waxed.
-- Fixed inconsistent pack reloads on game launch
-- Fixed incorrect vertical slab model
+- Fixed the shape switcher overlay staying open when the screen changes.
+- Fixed a crash from removing items from the creative tab on NeoForge.
+- Fixed inconsistent pack reloads on game launch.
+- Fixed incorrect vertical slab model.

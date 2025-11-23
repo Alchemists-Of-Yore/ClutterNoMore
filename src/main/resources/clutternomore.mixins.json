@@ -27,6 +27,7 @@
     "MouseHandlerMixin",
     "PickBlockMixin",
     "screen.AccessibilityScreenMixin",
+    "screen.CloseScreenMixin",
     "screen.ContainerScreenAccessor",
     "screen.OptionsSubScreenAccessor",
     "screen.ScreenAccessor"

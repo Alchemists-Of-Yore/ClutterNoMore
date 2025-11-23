@@ -3,7 +3,8 @@ package dev.tazer.clutternomore.common.mixin.creative;
 import dev.tazer.clutternomore.common.CHooks;
 import dev.tazer.clutternomore.common.shape_map.ShapeMap;
 //? neoforge {
-/*import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
+/*import net.neoforged.neoforge.common.util.InsertableLinkedOpenCustomHashSet;
+import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
  *///?} else if fabric {
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
 //?} else {
@@ -58,6 +59,10 @@ public abstract class CreativeModeTabEntriesMixin {
             insertBefore(ShapeMap.getParent(existingEntry.getItem()).getDefaultInstance(), newEntry, visibility);
             ci.cancel();
         }
+    }
+    @Inject(method = "assertTargetExists", at = @At("HEAD"), cancellable = true)
+    private void insertBefore(InsertableLinkedOpenCustomHashSet<ItemStack> setToCheck, ItemStack existingEntry, CallbackInfo ci) {
+        ci.cancel();
     }
     *///?} else {
 
