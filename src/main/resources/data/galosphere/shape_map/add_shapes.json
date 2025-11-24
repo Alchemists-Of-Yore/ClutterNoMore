@@ -1,0 +1,10 @@
+{
+  "minecraft:amethyst_block": [
+    "galosphere:amethyst_stairs",
+    "galosphere:amethyst_slab",
+    "galosphere:amethyst_wall",
+    "clutternomore:galosphere/vertical_amethyst_slab",
+    "clutternomore:galosphere/amethyst_step"
+
+  ]
+}

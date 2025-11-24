@@ -1,0 +1,19 @@
+{
+  "minecraft:end_stone": [
+    "enderscape:end_stone_stairs",
+    "enderscape:end_stone_slab",
+    "enderscape:end_stone_wall",
+    "clutternomore:enderscape/vertical_end_stone_slab",
+    "clutternomore:enderscape/end_stone_step"
+  ],
+  "minecraft:pupur_block": [
+    "enderscape:purpur_wall"
+  ],
+  "enderscape:shadoline_block": [
+    "enderscape:shadoline_block_stairs",
+    "enderscape:shadoline_block_slab",
+    "enderscape:shadoline_block_wall",
+    "clutternomore:enderscape/vertical_shadoline_block_slab",
+    "clutternomore:enderscape/shadoline_block_step"
+  ]
+}
