@@ -1,0 +1,12 @@
+{
+  "values": [
+    {
+      "id": "#clutternomore:wooden_vertical_slabs",
+      "required": false
+    },
+    {
+      "id": "#clutternomore:wooden_steps",
+      "required": false
+    }
+  ]
+}

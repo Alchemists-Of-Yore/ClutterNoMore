@@ -56,5 +56,10 @@ public class ForgePlatformImpl implements Platform {
         return SHAPE_KEY.get().getKey().getValue();
     }
 
+    @Override
+    public void finalizeCopperBlockRegistration() {
+
+    }
+
 }
 *///?}

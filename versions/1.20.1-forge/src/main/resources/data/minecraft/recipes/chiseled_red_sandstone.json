@@ -11,7 +11,7 @@
         }
     },
     "result": {
-        "id": "minecraft:chiseled_red_sandstone",
+        "item": "minecraft:chiseled_red_sandstone",
         "count": 4
     }
 }

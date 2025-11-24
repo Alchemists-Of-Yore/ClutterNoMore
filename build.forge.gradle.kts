@@ -144,6 +144,9 @@ dependencies {
     jarJar("folk.sisby:kaleido-config:${property("deps.kaleido")}")
     "additionalRuntimeClasspath"("folk.sisby:kaleido-config:${property("deps.kaleido")}")
 
+    modCompileOnly("dev.emi:emi-forge:${property("deps.emi")}:api")
+    modRuntimeOnly("dev.emi:emi-forge:${property("deps.emi")}")
+
     modRuntimeOnly("maven.modrinth:moonlight:${property("deps.moonlight")}")
     modRuntimeOnly("maven.modrinth:supplementaries:LAQ22yJj")
     modRuntimeOnly("maven.modrinth:would:2FZ421Oh")
@@ -157,13 +160,13 @@ dependencies {
 
 mixin {
     add(sourceSets["main"], "clutternomore.refmap.json")
-    config("clutternomore.mixins.json")
+    config("clutternomore-forge.mixins.json")
 }
 
 tasks.named<Jar>("jar") {
     manifest {
         attributes(
-            "MixinConfigs" to "clutternomore.mixins.json"
+            "MixinConfigs" to "clutternomore-forge.mixins.json"
         )
     }
 }

@@ -15,7 +15,7 @@
         }
     },
     "result": {
-        "id": "minecraft:barrel",
+        "item": "minecraft:barrel",
         "count": 1
     }
 }

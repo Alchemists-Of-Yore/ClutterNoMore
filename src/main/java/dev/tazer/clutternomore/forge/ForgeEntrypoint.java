@@ -41,23 +41,21 @@ public class ForgeEntrypoint {
 
         if (dist.isClient()) {
             ClutterNoMoreClient.init();
-            modEventBus.addListener(ForgeClientEvents::clientSetup);
         }
 
         MinecraftForge.EVENT_BUS.addListener(ForgeEntrypoint::addReloadListeners);
-//        MinecraftForge.EVENT_BUS.addListener(ForgeEntrypoint::onServerStarted);
+        MinecraftForge.EVENT_BUS.addListener(ForgeEntrypoint::onServerStarted);
         modEventBus.addListener(ForgeEntrypoint::commonSetup);
         modEventBus.addListener(ForgeEntrypoint::registerBlocks);
     }
 
-//    private static void onServerStarted(ServerStartedEvent event) {
-//        MinecraftServer server = event.getServer();
-//        ClutterNoMore.load(server.registryAccess(), server.getRecipeManager());
-//    }
+    private static void onServerStarted(ServerStartedEvent event) {
+        MinecraftServer server = event.getServer();
+        ClutterNoMore.modifyRecipes(server.registryAccess(), server.getRecipeManager());
+    }
 
     private static void addReloadListeners(AddReloadListenerEvent event) {
         event.addListener(new ShapeMapFileHandler());
-
     }
 
     @SuppressWarnings("deprecation")

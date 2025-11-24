@@ -11,8 +11,10 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(Screen.class)
 public interface ScreenAccessor {
+    //? if >1.21 {
     @Invoker
     <T extends GuiEventListener & Renderable & NarratableEntry> T invokeAddRenderableWidget(T widget);
+    //?}
 
     @Accessor
     int getWidth();

@@ -11,7 +11,7 @@
         }
     },
     "result": {
-        "id": "minecraft:chiseled_deepslate",
+        "item": "minecraft:chiseled_deepslate",
         "count": 4
     }
 }

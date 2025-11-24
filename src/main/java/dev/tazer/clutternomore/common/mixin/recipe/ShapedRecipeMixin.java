@@ -45,11 +45,12 @@ public class ShapedRecipeMixin {
         }
     }
 
-    @Inject(method = "matches(Lnet/minecraft/world/Container;Lnet/minecraft/world/level/Level;)Z", at = @At("RETURN"), cancellable = true)
-    private void noMatches3(Container par1, Level par2, CallbackInfoReturnable<Boolean> cir) {
-        if (ShapeMap.isShape(((ShapedRecipeAccessor) (this)).getResult().getItem())) {
-            cir.setReturnValue(false);
-        }
-    }
+    //FIXME 1.20.1
+//    @Inject(method = "matches(Lnet/minecraft/world/Container;Lnet/minecraft/world/level/Level;)Z", at = @At("RETURN"), cancellable = true)
+//    private void noMatches3(Container par1, Level par2, CallbackInfoReturnable<Boolean> cir) {
+//        if (ShapeMap.isShape(((ShapedRecipeAccessor) (this)).getResult().getItem())) {
+//            cir.setReturnValue(false);
+//        }
+//    }
     *///?}
 }

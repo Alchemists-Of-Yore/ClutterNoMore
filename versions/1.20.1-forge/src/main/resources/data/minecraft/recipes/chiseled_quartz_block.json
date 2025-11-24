@@ -11,7 +11,7 @@
         }
     },
     "result": {
-        "id": "minecraft:chiseled_quartz_block",
+        "item": "minecraft:chiseled_quartz_block",
         "count": 4
     }
 }

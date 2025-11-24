@@ -1,0 +1,40 @@
+{
+  "required": true,
+  "package": "dev.tazer.clutternomore.common.mixin",
+  "refmap": "clutternomore.refmap.json",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "BlockItemMixin",
+    "BuiltInRegistriesMixin",
+    "ItemMixin",
+    "ItemStackMixin",
+    "access.BlockBehaviorAccessor",
+    "access.PackRepositoryAccessor",
+    "access.SlotAccessor",
+    "creative.CreativeModeTabEntriesMixin",
+    "creative.ItemDisplayBuilderMixin",
+    "pack.ServerPacksSourceMixin",
+    "recipe.ShapedRecipeAccessor",
+    "recipe.ShapedRecipeMixin",
+    "recipe.ShapelessRecipeAccessor",
+    "recipe.ShapelessRecipeMixin",
+    "recipe.SingleItemRecipeAccessor",
+    "recipe.SingleItemRecipeMixin",
+    "recipe.StonecutterRecipeMixin"
+  ],
+  "client": [
+    "HotbarMixin",
+    "KeyboardHandlerMixin",
+    "MouseHandlerMixin",
+    "PickBlockMixin",
+    "screen.AccessibilityScreenMixin",
+    "screen.CloseScreenMixin",
+    "screen.ContainerScreenAccessor",
+    "screen.OptionsSubScreenAccessor",
+    "screen.ScreenAccessor"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8"
+}

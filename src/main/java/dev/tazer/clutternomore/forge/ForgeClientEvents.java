@@ -37,6 +37,10 @@ public class ForgeClientEvents {
             ClutterNoMore.LOGGER.info("Registering tooltip component factory");
             event.register(ShapeTooltip.class, ClientShapeTooltip::new);
         }
+        @SubscribeEvent
+        public static void clientSetup(FMLClientSetupEvent event) {
+            ClutterNoMoreClient.clientStarted(Minecraft.getInstance());
+        }
     }
 
     public static final Lazy<KeyMapping> SHAPE_KEY = Lazy.of(() ->
@@ -112,10 +116,6 @@ public class ForgeClientEvents {
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
         ClutterNoMoreClient.onPlayerTick(Minecraft.getInstance());
-    }
-
-    public static void clientSetup(FMLClientSetupEvent event) {
-        ClutterNoMoreClient.clientStarted(Minecraft.getInstance());
     }
 }
 *///?}

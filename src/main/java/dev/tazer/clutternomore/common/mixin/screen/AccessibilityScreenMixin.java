@@ -52,7 +52,12 @@ public abstract class AccessibilityScreenMixin {
                         Component.translatable("key.clutternomore.shape_switcher"),
                         button -> ((ScreenAccessor) this).getMinecraft().setScreen(new ShapeSwitcherOptionsScreen(((AccessibilityOptionsScreen) (Object) this), ((OptionsSubScreenAccessor) (this)).getOptions()))
                 ).bounds(((ScreenAccessor) this).getWidth() / 2 + 80, ((ScreenAccessor) this).getHeight() - 27, 150, 20).build();
+        //? if >1.21 {
         ((ScreenAccessor) this).invokeAddRenderableWidget(shapeSwitcherButton);
+        //?} else {
+        /^((AccessibilityOptionsScreen) (Object) this).addRenderableWidget(shapeSwitcherButton);
+        ^///?}
+
     }
     *///?}
 }
