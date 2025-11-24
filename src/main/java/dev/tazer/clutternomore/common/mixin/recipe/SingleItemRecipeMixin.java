@@ -1,6 +1,8 @@
 package dev.tazer.clutternomore.common.mixin.recipe;
 
 import dev.tazer.clutternomore.common.shape_map.ShapeMap;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
@@ -27,5 +29,12 @@ public class SingleItemRecipeMixin {
             cir.setReturnValue(ItemStack.EMPTY);
         }
     }
-    //?}
+    //?} else if =1.21.1 {
+    /*@Inject(method = "getResultItem", at = @At("RETURN"), cancellable = true)
+    private void noResult(HolderLookup.Provider registries, CallbackInfoReturnable<ItemStack> cir) {
+        if (ShapeMap.isShape(cir.getReturnValue().getItem())) {
+            cir.setReturnValue(ItemStack.EMPTY);
+        }
+    }
+    *///?}
 }

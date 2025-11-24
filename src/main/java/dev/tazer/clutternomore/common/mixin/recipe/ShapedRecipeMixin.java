@@ -1,12 +1,15 @@
 package dev.tazer.clutternomore.common.mixin.recipe;
 
 import dev.tazer.clutternomore.common.shape_map.ShapeMap;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.Container;
 import net.minecraft.world.inventory.CraftingContainer;
 //? >1.20.1 {
 import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.RecipeInput;
 //?}
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
@@ -49,6 +52,22 @@ public class ShapedRecipeMixin {
     private void noMatches3(Container par1, Level par2, CallbackInfoReturnable<Boolean> cir) {
         if (ShapeMap.isShape(((ShapedRecipeAccessor) (this)).getResult().getItem())) {
             cir.setReturnValue(false);
+        }
+    }
+
+    @Inject(method = "getResultItem", at = @At("RETURN"), cancellable = true)
+    private void noResult(RegistryAccess registryAccess, CallbackInfoReturnable<ItemStack> cir) {
+        if (ShapeMap.isShape(cir.getReturnValue().getItem())) {
+            cir.setReturnValue(ItemStack.EMPTY);
+        }
+    }
+    *///?}
+
+    //? =1.21.1 {
+    /*@Inject(method = "getResultItem", at = @At("RETURN"), cancellable = true)
+    private void noResult(HolderLookup.Provider registries, CallbackInfoReturnable<ItemStack> cir) {
+        if (ShapeMap.isShape(cir.getReturnValue().getItem())) {
+            cir.setReturnValue(ItemStack.EMPTY);
         }
     }
     *///?}
