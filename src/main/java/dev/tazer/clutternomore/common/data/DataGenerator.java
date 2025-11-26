@@ -96,7 +96,12 @@ public class DataGenerator {
         JsonArray entries = new JsonArray();
         JsonObject entry = new JsonObject();
         entry.add("type", new JsonPrimitive("loot_table"));
-        entry.add("value", new JsonPrimitive(block.withPrefix("blocks/").toString()));
+        //? if >1.21 {
+        var value = "value";
+        //?} else {
+        /*var value = "name";
+         *///?}
+        entry.add(value, new JsonPrimitive(block.withPrefix("blocks/").toString()));
         entries.add(entry);
         pool.add("entries", entries);
         pools.add(pool);

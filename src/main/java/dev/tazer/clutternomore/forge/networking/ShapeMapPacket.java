@@ -1,7 +1,8 @@
 package dev.tazer.clutternomore.forge.networking;
 
 //? if forge {
-/*import dev.tazer.clutternomore.common.shape_map.ShapeMap;
+/*import dev.tazer.clutternomore.ClutterNoMore;
+import dev.tazer.clutternomore.common.shape_map.ShapeMap;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -32,6 +33,7 @@ public record ShapeMapPacket(Map<ItemStack, List<ItemStack>> shapes, Map<ItemSta
     }
 
     public static void handle(ShapeMapPacket packet, Supplier<NetworkEvent.Context> contextSupplier) {
+        ClutterNoMore.LOGGER.info("Recieved shape map!");
         NetworkEvent.Context context = contextSupplier.get();
         context.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
             final Map<Item, List<Item>> SHAPES_DATAMAP = new HashMap<>();
