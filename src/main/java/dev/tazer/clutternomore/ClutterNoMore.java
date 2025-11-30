@@ -332,12 +332,14 @@ public class ClutterNoMore {
     //? if =1.21.1 {
     /*public static final ArrayList<ResourceLocation> ALIASES = new ArrayList<>();
     private static void addAlias(String blockNamespace, String shortPath, String path) {
-        ResourceLocation shortNamespace = ClutterNoMore.location(shortPath);
-        if (!blockNamespace.isEmpty() && !ALIASES.contains(shortNamespace)) {
-            ResourceLocation id = ClutterNoMore.location(path);
-            BuiltInRegistries.BLOCK.addAlias(shortNamespace, id);
-            BuiltInRegistries.ITEM.addAlias(shortNamespace, id);
-            ALIASES.add(shortNamespace);
+        if (ClutterNoMore.STARTUP_CONFIG.ALIASES.value()) {
+            ResourceLocation shortNamespace = ClutterNoMore.location(shortPath);
+            if (!blockNamespace.isEmpty() && !ALIASES.contains(shortNamespace)) {
+                ResourceLocation id = ClutterNoMore.location(path);
+                BuiltInRegistries.BLOCK.addAlias(shortNamespace, id);
+                BuiltInRegistries.ITEM.addAlias(shortNamespace, id);
+                ALIASES.add(shortNamespace);
+            }
         }
     }
     *///?}

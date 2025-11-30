@@ -18,6 +18,9 @@ public class CNMConfig {
         @Comment("Whether to generate a copy of the runtime datapack.")
         @SerializedName("runtime_data_generation")
         public final TrackedValue<Boolean> RUNTIME_DATA_GENERATION = this.value(true);
+        @Comment("Whether to generate aliases to safely upgrade worlds with blocks generated before 1.1.")
+        @SerializedName("aliases")
+        public final TrackedValue<Boolean> ALIASES = this.value(true);
     }
 
     public static class ClientConfig extends ReflectiveConfig {
