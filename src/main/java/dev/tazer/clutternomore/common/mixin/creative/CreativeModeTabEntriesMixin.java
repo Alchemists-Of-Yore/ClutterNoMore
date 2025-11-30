@@ -64,16 +64,5 @@ public abstract class CreativeModeTabEntriesMixin {
     private void insertBefore(InsertableLinkedOpenCustomHashSet<ItemStack> setToCheck, ItemStack existingEntry, CallbackInfo ci) {
         ci.cancel();
     }
-    *///?} else {
-
-    @Inject(method = "accept", at = @At("HEAD"), cancellable = true)
-    private void accept(ItemStack newEntry, CreativeModeTab.TabVisibility visibility, CallbackInfo ci) {
-        if (CHooks.denyItem(newEntry.getItem())) ci.cancel();
-    }
-
-    @Inject(method = "isEnabled", at = @At("RETURN"), cancellable = true)
-    private void accept(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
-        if (CHooks.denyItem(stack.getItem())) cir.setReturnValue(false);
-    }
-    //?}
+    *///?}
 }

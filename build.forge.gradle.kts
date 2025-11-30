@@ -134,6 +134,14 @@ repositories {
             includeGroupAndSubgroups("org.quiltmc.parsers")
         }
     }
+    maven {
+        name = "Sinytra Maven"
+        url = uri("https://maven.su5ed.dev/releases")
+        content {
+            includeGroupAndSubgroups("org.sinytra")
+            includeGroupAndSubgroups("dev.su5ed")
+        }
+    }
 }
 
 dependencies {
@@ -150,6 +158,10 @@ dependencies {
     modRuntimeOnly("maven.modrinth:moonlight:${property("deps.moonlight")}")
     modRuntimeOnly("maven.modrinth:supplementaries:LAQ22yJj")
     modRuntimeOnly("maven.modrinth:would:2FZ421Oh")
+
+    modImplementation("dev.su5ed.sinytra:fabric-loader:2.7.11+0.16.5+1.20.1")
+    modImplementation("dev.su5ed.sinytra.fabric-api:fabric-api-base:0.4.32+ef105b4977")
+    modImplementation("dev.su5ed.sinytra.fabric-api:fabric-item-group-api-v1:4.0.14+c9161c2d77")
 
     annotationProcessor("org.spongepowered:mixin:0.8.5:processor")
     annotationProcessor("io.github.llamalad7:mixinextras-common:0.5.0")

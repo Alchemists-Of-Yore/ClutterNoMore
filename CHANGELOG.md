@@ -1,2 +1,1 @@
-- Fixed shape map synchronization on 1.20.1 Forge
-- Fixed generated loot tables on 1.20.1 forge
+- Fixed crash with Forgified Fabric API on 1.20.1 Forge

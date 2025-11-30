@@ -134,6 +134,14 @@ repositories {
             includeGroupAndSubgroups("org.quiltmc.parsers")
         }
     }
+    maven {
+        name = "Sinytra Maven"
+        url = uri("https://maven.su5ed.dev/releases")
+        content {
+            includeGroupAndSubgroups("org.sinytra")
+            includeGroupAndSubgroups("dev.su5ed")
+        }
+    }
 }
 
 dependencies {
@@ -149,6 +157,8 @@ dependencies {
     implementation("folk.sisby:kaleido-config:${property("deps.kaleido")}")
     jarJar("folk.sisby:kaleido-config:${property("deps.kaleido")}")
     "additionalRuntimeClasspath"("folk.sisby:kaleido-config:${property("deps.kaleido")}")
+
+    compileOnly("org.sinytra.forgified-fabric-api:fabric-item-group-api-v1:4.1.7+e324903319")
 
     runtimeOnly("me.djtheredstoner:DevAuth-neoforge:1.2.1")
 
@@ -169,7 +179,6 @@ dependencies {
         implementation("umpaz.brewinandchewin:BrewinAndChewin-neoforge:${property("deps.brewin_and_chewin")}+${property("deps.minecraft")}") { isTransitive = false }
         implementation("house.greenhouse:greenhouseconfig:${property("deps.greenhouse_config")}+${property("deps.minecraft")}-neoforge")
         implementation("house.greenhouse:greenhouseconfig_toml:${property("deps.greenhouse_config_toml")}")
-
     }
     if (hasProperty("deps.farmers_delight")) {
         implementation("maven.modrinth:farmers-delight:${property("deps.farmers_delight")}")

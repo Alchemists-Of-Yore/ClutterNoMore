@@ -11,6 +11,7 @@
     "access.PackRepositoryAccessor",
     "access.SlotAccessor",
     "creative.CreativeModeTabEntriesMixin",
+    "creative.FabricItemGroupEntriesMixin",
     "creative.ItemDisplayBuilderMixin",
     "pack.ServerPacksSourceMixin",
     "recipe.ShapedRecipeAccessor",
