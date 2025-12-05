@@ -142,6 +142,13 @@ repositories {
             includeGroupAndSubgroups("dev.su5ed")
         }
     }
+    maven {
+        name = "JEI"
+        url = uri("https://maven.blamejared.com/")
+        content {
+            includeGroup("mezz.jei")
+        }
+    }
 }
 
 dependencies {
@@ -153,6 +160,12 @@ dependencies {
         compileOnly("dev.emi:emi-neoforge:${property("deps.emi")}:api")
         runtimeOnly("dev.emi:emi-neoforge:${property("deps.emi")}")
     }
+
+    // compile against the JEI API but do not include it at runtime
+    compileOnly("mezz.jei:jei-${property("deps.minecraft")}-neoforge-api:${property("deps.jei")}")
+    // at runtime, use the full JEI jar for NeoForge
+    runtimeOnly("mezz.jei:jei-${property("deps.minecraft")}-neoforge:${property("deps.jei")}")
+
 
     implementation("folk.sisby:kaleido-config:${property("deps.kaleido")}")
     jarJar("folk.sisby:kaleido-config:${property("deps.kaleido")}")

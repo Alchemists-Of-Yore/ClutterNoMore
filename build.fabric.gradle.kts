@@ -116,6 +116,13 @@ repositories {
             includeGroupAndSubgroups("org.quiltmc.parsers")
         }
     }
+    maven {
+        name = "JEI"
+        url = uri("https://maven.blamejared.com/")
+        content {
+            includeGroup("mezz.jei")
+        }
+    }
 }
 
 dependencies {
@@ -144,12 +151,17 @@ dependencies {
     }
     if (hasProperty("deps.eiv")) {
         modCompileOnly("maven.modrinth:eiv:${property("deps.eiv")}")
-        modLocalRuntime("maven.modrinth:eiv:${property("deps.eiv")}")
+//        modLocalRuntime("maven.modrinth:eiv:${property("deps.eiv")}")
     }
     if (hasProperty("deps.pyrite")) {
         modLocalRuntime("maven.modrinth:pyrite:${property("deps.pyrite")}")
     }
 
+    // JEI's API does not currently remap properly, so the full jar is used
+    if (hasProperty("deps.jei")) {
+        modCompileOnly("mezz.jei:jei-${minecraft}-fabric:${property("deps.jei")}")
+        modLocalRuntime("mezz.jei:jei-${minecraft}-fabric:${property("deps.jei")}")
+    }
 
     implementation("folk.sisby:kaleido-config:${property("deps.kaleido")}")
     include("folk.sisby:kaleido-config:${property("deps.kaleido")}")

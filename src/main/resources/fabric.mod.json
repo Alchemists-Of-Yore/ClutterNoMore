@@ -24,6 +24,9 @@
     ],
     "emi": [
       "dev.tazer.clutternomore.common.compat.EMICompat"
+    ],
+    "jei_mod_plugin": [
+      "dev.tazer.clutternomore.common.compat.JEICompat"
     ]
   },
   "mixins": [

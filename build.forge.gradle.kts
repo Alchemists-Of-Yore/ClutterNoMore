@@ -142,22 +142,32 @@ repositories {
             includeGroupAndSubgroups("dev.su5ed")
         }
     }
+    maven {
+        name = "JEI"
+        url = uri("https://maven.blamejared.com/")
+        content {
+            includeGroup("mezz.jei")
+        }
+    }
 }
 
 dependencies {
-    modImplementation("mezz.jei:jei-${property("deps.minecraft")}-forge-api:${property("deps.jei")}")
-    modImplementation("mezz.jei:jei-${property("deps.minecraft")}-forge:${property("deps.jei")}")
 
     implementation("folk.sisby:kaleido-config:${property("deps.kaleido")}")
     jarJar("folk.sisby:kaleido-config:${property("deps.kaleido")}")
     "additionalRuntimeClasspath"("folk.sisby:kaleido-config:${property("deps.kaleido")}")
 
     modCompileOnly("dev.emi:emi-forge:${property("deps.emi")}:api")
-    modRuntimeOnly("dev.emi:emi-forge:${property("deps.emi")}")
+//    modRuntimeOnly("dev.emi:emi-forge:${property("deps.emi")}")
 
     modRuntimeOnly("maven.modrinth:moonlight:${property("deps.moonlight")}")
     modRuntimeOnly("maven.modrinth:supplementaries:LAQ22yJj")
     modRuntimeOnly("maven.modrinth:would:2FZ421Oh")
+
+    // compile against the JEI API but do not include it at runtime
+    compileOnly("mezz.jei:jei-${property("deps.minecraft")}-forge-api:${property("deps.jei")}")
+    // at runtime, use the full JEI jar for Forge
+    modRuntimeOnly("mezz.jei:jei-${property("deps.minecraft")}-forge:${property("deps.jei")}")
 
     modImplementation("dev.su5ed.sinytra:fabric-loader:2.7.11+0.16.5+1.20.1")
     modImplementation("dev.su5ed.sinytra.fabric-api:fabric-api-base:0.4.32+ef105b4977")

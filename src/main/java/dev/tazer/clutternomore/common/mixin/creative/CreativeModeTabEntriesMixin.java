@@ -27,7 +27,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 //?}
 public abstract class CreativeModeTabEntriesMixin {
     //? if forge {
-    /*@Inject(method = "accept", at = @At("HEAD"), cancellable = true)
+    /*@Inject(method = "accept*", at = @At("HEAD"), cancellable = true)
     private void accept(ItemStack newEntry, CreativeModeTab.TabVisibility visibility, CallbackInfo ci) {
         if (CHooks.denyItem(newEntry.getItem())) ci.cancel();
     }
