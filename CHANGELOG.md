@@ -1,3 +1,4 @@
 - Added a config to disable aliases.
 - Added compatibility for JEI - it should no longer show blocks in the shape map.
 - Fixed crash with Forgified Fabric API on 1.20.1 Forge
+- Fix 1.21.11 pack format.

@@ -1,5 +1,5 @@
 package dev.tazer.clutternomore.common.compat;
-
+//? if <1.21.11 {
 import dev.tazer.clutternomore.ClutterNoMore;
 import dev.tazer.clutternomore.common.shape_map.ShapeMap;
 import mezz.jei.api.IModPlugin;
@@ -30,3 +30,4 @@ public class JEICompat implements IModPlugin {
         return ClutterNoMore.location("jei");
     }
 }
+//?}

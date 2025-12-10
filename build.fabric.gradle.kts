@@ -161,6 +161,8 @@ dependencies {
     if (hasProperty("deps.jei")) {
         modCompileOnly("mezz.jei:jei-${minecraft}-fabric:${property("deps.jei")}")
         modLocalRuntime("mezz.jei:jei-${minecraft}-fabric:${property("deps.jei")}")
+    } else {
+        modCompileOnly("mezz.jei:jei-1.21.10-fabric:26.2.0.27")
     }
 
     implementation("folk.sisby:kaleido-config:${property("deps.kaleido")}")
@@ -176,6 +178,17 @@ dependencies {
 //        client = true
 //    }
 //}
+
+stonecutter {
+    replacements.string {
+        direction = eval(current.version, ">1.21.10")
+        replace("ResourceLocation", "Identifier")
+    }
+    replacements.string {
+        direction = eval(current.version, ">1.21.10")
+        replace("getKey().location()", "getKey().identifier()")
+    }
+}
 
 tasks {
     processResources {

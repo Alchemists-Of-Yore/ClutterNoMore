@@ -58,7 +58,7 @@ public class AssetGenerator {
 
         if (ClutterNoMoreClient.CLIENT_CONFIG.RUNTIME_ASSET_GENERATION.value()) {
             int minFormat = 15;
-            int maxFormat = 70;
+            int maxFormat = 75;
 
             JsonObject object = new JsonObject();
             object.add("description", new JsonPrimitive("Generated resources for ClutterNoMore"));

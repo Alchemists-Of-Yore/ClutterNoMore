@@ -201,6 +201,17 @@ dependencies {
 
 }
 
+stonecutter {
+    replacements.string {
+        direction = eval(current.version, ">1.21.10")
+        replace("ResourceLocation", "Identifier")
+    }
+    replacements.string {
+        direction = eval(current.version, ">1.21.10")
+        replace("getKey().location()", "getKey().identifier()")
+    }
+}
+
 tasks {
     processResources {
         exclude("**/fabric.mod.json", "**/*.accesswidener", "**/mods.toml")
