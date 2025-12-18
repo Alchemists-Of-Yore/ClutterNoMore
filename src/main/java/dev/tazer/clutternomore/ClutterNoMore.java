@@ -248,14 +248,11 @@ public class ClutterNoMore {
 
                         slabs.add(blockId);
 
-                        ResourceLocation shapeId = ClutterNoMore.location(path);
-                        DataGenerator.addLootTable(blockId, shapeId);
+//                        DataGenerator.addLootTable(blockId, shapeId);
 
-                        
                         var soundType = ((BlockBehaviorAccessor) slabBlock).getSoundType();
-
                         if (woodenSoundTypes.contains(soundType)) {
-                            woodenVerticalSlabsArray.add(ClutterNoMore.location(path).toString());
+                            DataGenerator.addToTag(path, woodenVerticalSlabsArray);
                         } else {
                             DataGenerator.addToTag(path, verticalSlabsArray);
                             if (shovelSoundTypes.contains(soundType)) DataGenerator.addToTag(path, shovelMineableArray);
@@ -290,15 +287,13 @@ public class ClutterNoMore {
 
                         stairs.add(blockId);
 
-                        ResourceLocation shapeId = ClutterNoMore.location(path);
-                        DataGenerator.addLootTable(blockId, shapeId);
+//                        DataGenerator.addLootTable(blockId, shapeId);
 
                         var soundType = ((BlockBehaviorAccessor) stairBlock).getSoundType();
-
                         if (woodenSoundTypes.contains(soundType)) {
-                            DataGenerator.addToTag(shapeId, woodenStepsArray);
+                            DataGenerator.addToTag(path, woodenStepsArray);
                         } else {
-                            DataGenerator.addToTag(shapeId, stepsArray);
+                            DataGenerator.addToTag(path, stepsArray);
                             if (shovelSoundTypes.contains(soundType)) DataGenerator.addToTag(path, shovelMineableArray);
                             else DataGenerator.addToTag(path, pickaxeMineableArray);
                         }

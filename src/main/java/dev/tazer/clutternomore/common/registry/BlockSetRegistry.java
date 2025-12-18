@@ -125,7 +125,6 @@ public class BlockSetRegistry {
             this.type = id.getPath().replace("_block", "").replace("_planks", "");
             initializeChildrenBlocks();
             ShapeSetRegistry.register(block.asItem(), this);
-
         }
 
         protected void initializeChildrenBlocks() {
