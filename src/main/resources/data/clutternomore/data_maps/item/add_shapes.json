@@ -43,6 +43,102 @@
         "supplementaries:daub_brace",
         "supplementaries:daub_cross_brace"
       ]
+    },
+    "malum:runewood_planks": {
+      "neoforge:conditions": [
+        {
+          "type": "neoforge:mod_loaded",
+          "modid": "malum"
+        }
+      ],
+      "shapes": [
+        "malum:runewood_slab",
+        "malum:runewood_stairs"
+      ]
+    },
+    "malum:vertical_runewood_planks": {
+      "neoforge:conditions": [
+        {
+          "type": "neoforge:mod_loaded",
+          "modid": "malum"
+        }
+      ],
+      "shapes": [
+        "malum:vertical_runewood_slab",
+        "malum:vertical_runewood_stairs"
+      ]
+    },
+    "malum:rustic_runewood_planks": {
+      "neoforge:conditions": [
+        {
+          "type": "neoforge:mod_loaded",
+          "modid": "malum"
+        }
+      ],
+      "shapes": [
+        "malum:rustic_runewood_slab",
+        "malum:rustic_runewood_stairs"
+      ]
+    },
+    "malum:vertical_rustic_runewood_planks": {
+      "neoforge:conditions": [
+        {
+          "type": "neoforge:mod_loaded",
+          "modid": "malum"
+        }
+      ],
+      "shapes": [
+        "malum:vertical_rustic_runewood_slab",
+        "malum:vertical_rustic_runewood_stairs"
+      ]
+    },
+    "malum:soulwood_planks": {
+      "neoforge:conditions": [
+        {
+          "type": "neoforge:mod_loaded",
+          "modid": "malum"
+        }
+      ],
+      "shapes": [
+        "malum:soulwood_slab",
+        "malum:soulwood_stairs"
+      ]
+    },
+    "malum:vertical_soulwood_planks": {
+      "neoforge:conditions": [
+        {
+          "type": "neoforge:mod_loaded",
+          "modid": "malum"
+        }
+      ],
+      "shapes": [
+        "malum:vertical_soulwood_slab",
+        "malum:vertical_soulwood_stairs"
+      ]
+    },
+    "malum:rustic_soulwood_planks": {
+      "neoforge:conditions": [
+        {
+          "type": "neoforge:mod_loaded",
+          "modid": "malum"
+        }
+      ],
+      "shapes": [
+        "malum:rustic_soulwood_slab",
+        "malum:rustic_soulwood_stairs"
+      ]
+    },
+    "malum:vertical_rustic_soulwood_planks": {
+      "neoforge:conditions": [
+        {
+          "type": "neoforge:mod_loaded",
+          "modid": "malum"
+        }
+      ],
+      "shapes": [
+        "malum:vertical_rustic_soulwood_slab",
+        "malum:vertical_rustic_soulwood_stairs"
+      ]
     }
   }
 }
