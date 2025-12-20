@@ -1,0 +1,34 @@
+{
+  "malum:runewood_planks": [
+    "malum:runewood_slab",
+    "malum:runewood_stairs"
+  ],
+  "malum:vertical_runewood_planks": [
+    "malum:vertical_runewood_slab",
+    "malum:vertical_runewood_stairs"
+  ],
+  "malum:rustic_runewood_planks": [
+    "malum:rustic_runewood_slab",
+    "malum:rustic_runewood_stairs"
+  ],
+  "malum:vertical_rustic_runewood_planks": [
+    "malum:vertical_rustic_runewood_slab",
+    "malum:vertical_rustic_runewood_stairs"
+  ],
+  "malum:soulwood_planks": [
+    "malum:soulwood_slab",
+    "malum:soulwood_stairs"
+  ],
+  "malum:vertical_soulwood_planks": [
+    "malum:vertical_soulwood_slab",
+    "malum:vertical_soulwood_stairs"
+  ],
+  "malum:rustic_soulwood_planks": [
+    "malum:rustic_soulwood_slab",
+    "malum:rustic_soulwood_stairs"
+  ],
+  "malum:vertical_rustic_soulwood_planks": [
+    "malum:vertical_rustic_soulwood_slab",
+    "malum:vertical_rustic_soulwood_stairs"
+  ]
+}

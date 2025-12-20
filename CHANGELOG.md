@@ -1,1 +1,2 @@
 - Fixed slabs dropping two items
+- Added compat with malum
