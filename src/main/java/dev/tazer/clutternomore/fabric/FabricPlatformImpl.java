@@ -6,13 +6,11 @@ import com.google.gson.JsonParser;
 import dev.tazer.clutternomore.ClutterNoMore;
 import dev.tazer.clutternomore.Platform;
 import net.fabricmc.api.EnvType;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.registry.OxidizableBlocksRegistry;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
-
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.nio.file.Path;
@@ -59,7 +57,13 @@ public class FabricPlatformImpl implements Platform {
 
     @Override
     public int shapeKey() {
-        return KeyBindingHelper.getBoundKeyOf(SHAPE_KEY).getValue();
+        return
+        //? if >26 {
+        /*net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper
+        *///?} else {
+        net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper
+        //?}
+        .getBoundKeyOf(SHAPE_KEY).getValue();
     }
 
     @Override
@@ -72,13 +76,25 @@ public class FabricPlatformImpl implements Platform {
             /*Block lessBlock = BuiltInRegistries.BLOCK.get(less);
             Block moreBlock = BuiltInRegistries.BLOCK.get(more);
             *///?}
-            OxidizableBlocksRegistry.registerOxidizableBlockPair(lessBlock, moreBlock);
+            OxidizableBlocksRegistry.
+            //? if >26 {
+            /*registerNextStage
+            *///?} else {
+            registerOxidizableBlockPair
+             //?}
+            (lessBlock, moreBlock);
         });
         ClutterNoMore.WAXED_COPPER_BLOCKS.forEach(resourceLocation -> {
             Optional<Block> waxedBlock = BuiltInRegistries.BLOCK.getOptional(resourceLocation);
             Optional<Block> unwaxedBlock = BuiltInRegistries.BLOCK.getOptional(ClutterNoMore.location(resourceLocation.getNamespace(), resourceLocation.getPath().replace("waxed_", "")));
             if (waxedBlock.isPresent() && unwaxedBlock.isPresent()) {
-               OxidizableBlocksRegistry.registerWaxableBlockPair(unwaxedBlock.get(), waxedBlock.get());
+                OxidizableBlocksRegistry.
+                //? if >26 {
+                /*registerWaxable
+                *///?} else {
+                registerWaxableBlockPair
+                //?}
+                (unwaxedBlock.get(), waxedBlock.get());
             }
         });
     }

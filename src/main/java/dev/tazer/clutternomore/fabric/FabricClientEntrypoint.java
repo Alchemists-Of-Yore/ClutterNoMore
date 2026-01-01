@@ -10,14 +10,10 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.client.rendering.v1.TooltipComponentCallback;
 //? if >1.21.6 {
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
-//?} else {
-/*import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
-*///?}
+//?}
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenKeyboardEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenMouseEvents;
@@ -31,14 +27,31 @@ public class FabricClientEntrypoint implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         ClutterNoMoreClient.init();
-        KeyBindingHelper.registerKeyBinding(SHAPE_KEY);
-        TooltipComponentCallback.EVENT.register(FabricClientEvents::registerTooltipComponent);
+
+        net.fabricmc.fabric.api.client.
+        //? if >26 {
+        /*keymapping.v1.KeyMappingHelper.registerKeyMapping
+        *///?} else {
+        keybinding.v1.KeyBindingHelper.registerKeyBinding
+         //?}
+        (SHAPE_KEY);
+
+        net.fabricmc.fabric.api.client.rendering.v1
+        //? if >26 {
+        /*.ClientTooltipComponentCallback
+        *///?} else {
+        .TooltipComponentCallback
+        //?}
+        .EVENT.register(FabricClientEvents::registerTooltipComponent);
+
         ItemTooltipCallback.EVENT.register(ClutterNoMoreClient::onItemTooltips);
+
         //? if >1.21.6 {
         HudElementRegistry.addLast(ClutterNoMore.location("overlay"), ClutterNoMoreClient::onRenderGui);
         //?} else {
-        /*HudRenderCallback.EVENT.register(ClutterNoMoreClient::onRenderGui);
+        /*net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback.EVENT.register(ClutterNoMoreClient::onRenderGui);
         *///?}
+
         ClientTickEvents.START_CLIENT_TICK.register(ClutterNoMoreClient::onPlayerTick);
         ScreenEvents.AFTER_INIT.register(this::afterInitScreen);
         ClientLifecycleEvents.CLIENT_STARTED.register(ClutterNoMoreClient::clientStarted);

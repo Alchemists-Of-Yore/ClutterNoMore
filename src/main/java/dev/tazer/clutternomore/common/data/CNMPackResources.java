@@ -43,10 +43,7 @@ public class CNMPackResources extends AbstractPackResources {
     //? if >1.21.9 {
     public static final InclusiveRange<PackFormat> resourcePackVersion = currentVersion.packVersion(PackType.CLIENT_RESOURCES).minorRange();
     public static final InclusiveRange<PackFormat> dataPackVersion = currentVersion.packVersion(PackType.SERVER_DATA).minorRange();
-    //?} else if >1.21.5 {
-    /*public static final int resourcePackVersion = currentVersion.packVersion(PackType.CLIENT_RESOURCES);
-    public static final int dataPackVersion = currentVersion.packVersion(PackType.SERVER_DATA);
-    *///?} else {
+    //?} else {
     /*public static final int resourcePackVersion = currentVersion.getPackVersion(PackType.CLIENT_RESOURCES);
     public static final int dataPackVersion = currentVersion.getPackVersion(PackType.SERVER_DATA);
     *///?}
@@ -87,18 +84,7 @@ public class CNMPackResources extends AbstractPackResources {
     public @Nullable <T> T getMetadataSection(MetadataSectionType<T> type) {
         return type == PackMetadataSection.CLIENT_TYPE ? (T) clientMetadata : type == PackMetadataSection.SERVER_TYPE ? (T) serverMetadata : null;
     }
-    //?} else if >1.21.1 {
-    
-    /*@Override
-    public @Nullable <T> T getMetadataSection(MetadataSectionType<T> type) throws IOException {
-        try {
-            return (T) (type == PackMetadataSection.TYPE ? clientMetadata : null);
-        } catch (Exception var3) {
-            return null;
-        }
-    }
-
-    *///?} else {
+    //?} else {
     /*@Nullable
     public <T> T getMetadataSection(MetadataSectionSerializer<T> deserializer) throws IOException {
         try {

@@ -152,9 +152,6 @@ repositories {
 }
 
 dependencies {
-    compileOnly("mezz.jei:jei-${property("deps.minecraft")}-common-api:19.21.0.247")
-    compileOnly("mezz.jei:jei-${property("deps.minecraft")}-neoforge-api:19.21.0.247")
-    runtimeOnly("mezz.jei:jei-${property("deps.minecraft")}-neoforge:19.21.0.247")
 
     if (hasProperty("deps.emi")) {
         compileOnly("dev.emi:emi-neoforge:${property("deps.emi")}:api")
@@ -231,10 +228,10 @@ tasks {
 
 java {
     withSourcesJar()
-    val javaCompat = if (stonecutter.eval(stonecutter.current.version, ">=1.20.5")) {
-        JavaVersion.VERSION_21
+    val javaCompat = if (stonecutter.eval(stonecutter.current.version, ">26")) {
+        JavaVersion.VERSION_25
     } else {
-        JavaVersion.VERSION_17
+        JavaVersion.VERSION_21
     }
     sourceCompatibility = javaCompat
     targetCompatibility = javaCompat

@@ -5,9 +5,7 @@ import dev.tazer.clutternomore.common.shape_map.ShapeMap;
 //? neoforge {
 /*import net.neoforged.neoforge.common.util.InsertableLinkedOpenCustomHashSet;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
- *///?} else if fabric {
-import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
-//?} else {
+*///?} else if forge {
 /*import dev.tazer.clutternomore.common.shape_map.ShapeMap;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 *///?}
@@ -23,7 +21,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 //? if neoforge || forge {
 /*@Mixin(BuildCreativeModeTabContentsEvent.class)
  *///?} else {
-@Mixin(FabricItemGroupEntries.class)
+@Mixin(CreativeModeTab.class)
 //?}
 public abstract class CreativeModeTabEntriesMixin {
     //? if forge {

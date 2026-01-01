@@ -5,7 +5,6 @@ package dev.tazer.clutternomore.fabric;
 import dev.tazer.clutternomore.ClutterNoMoreClient;
 import dev.tazer.clutternomore.client.ClientShapeTooltip;
 import dev.tazer.clutternomore.common.networking.ShapeTooltip;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.screens.Screen;
 //? if >1.21.8 {

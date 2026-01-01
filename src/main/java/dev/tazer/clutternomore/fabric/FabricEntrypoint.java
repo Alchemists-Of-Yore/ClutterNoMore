@@ -35,7 +35,9 @@ public class FabricEntrypoint implements ModInitializer {
     public void onInitialize() {
         ClutterNoMore.init();
         registerPayloadHandlers();
-        //? if >=1.21.9 {
+        //? if >26 {
+        /*ResourceLoader.get(PackType.SERVER_DATA).registerReloadListener(ClutterNoMore.location("shape_map"), new ShapeMapFileHandler());
+        *///?} else if >=1.21.9 {
         ResourceLoader.get(PackType.SERVER_DATA).registerReloader(ClutterNoMore.location("shape_map"), new ShapeMapFileHandler());
         //?} else {
         /*ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(new ShapeMapFileHandler());
@@ -52,9 +54,14 @@ public class FabricEntrypoint implements ModInitializer {
     }
 
     public void registerPayloadHandlers() {
+        //? if >26 {
+        /*PayloadTypeRegistry.serverboundPlay().register(ChangeStackPayload.TYPE, ChangeStackPayload.STREAM_CODEC);
+        PayloadTypeRegistry.clientboundPlay().register(ShapeMapPayload.TYPE, ShapeMapPayload.STREAM_CODEC);
+        *///?} else {
         PayloadTypeRegistry.playC2S().register(ChangeStackPayload.TYPE, ChangeStackPayload.STREAM_CODEC);
-        ServerPlayNetworking.registerGlobalReceiver(ChangeStackPayload.TYPE, ChangeStackPayload::handleDataOnServer);
         PayloadTypeRegistry.playS2C().register(ShapeMapPayload.TYPE, ShapeMapPayload.STREAM_CODEC);
+        //?}
+        ServerPlayNetworking.registerGlobalReceiver(ChangeStackPayload.TYPE, ChangeStackPayload::handleDataOnServer);
     }
 }
 //?}

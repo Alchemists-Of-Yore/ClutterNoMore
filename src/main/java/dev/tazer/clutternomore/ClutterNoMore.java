@@ -224,9 +224,6 @@ public class ClutterNoMore {
                     if (blockItem.getBlock() instanceof SlabBlock slabBlock && slabBlock.defaultBlockState().getValues().size() == 2 && STARTUP_CONFIG.VERTICAL_SLABS.value()) {
                         String shortPath = "vertical_" + blockId.getPath();
                         String path = blockNamespace + shortPath;
-                        //? if =1.21.1 {
-                        /*addAlias(blockNamespace, shortPath, path);
-                        *///?}
 
                         if (slabBlock instanceof WeatheringCopperSlabBlock weatheringSlabBlock) {
                             Supplier<Block> block = ()->new WeatheringVerticalSlabBlock(copy(slabBlock)
@@ -263,9 +260,6 @@ public class ClutterNoMore {
                     if (blockItem.getBlock() instanceof StairBlock stairBlock && stairBlock.defaultBlockState().getValues().size() == 4 && STARTUP_CONFIG.STEPS.value()) {
                         String shortPath = blockId.getPath().replace("stairs", "step");
                         String path = blockNamespace + shortPath;
-                        //? if =1.21.1 {
-                        /*addAlias(blockNamespace, shortPath, path);
-                        *///?}
                         if (stairBlock instanceof WeatheringCopperStairBlock weatheringCopperStairBlock) {
                             Supplier<Block> block = ()->new WeatheringStepBlock(copy(stairBlock)
                                     //? if >1.21.2
@@ -323,21 +317,6 @@ public class ClutterNoMore {
             COPPER_BLOCKS.put(unaffected, id);
         }
     }
-
-    //? if =1.21.1 {
-    /*public static final ArrayList<ResourceLocation> ALIASES = new ArrayList<>();
-    private static void addAlias(String blockNamespace, String shortPath, String path) {
-        if (ClutterNoMore.STARTUP_CONFIG.ALIASES.value()) {
-            ResourceLocation shortNamespace = ClutterNoMore.location(shortPath);
-            if (!blockNamespace.isEmpty() && !ALIASES.contains(shortNamespace)) {
-                ResourceLocation id = ClutterNoMore.location(path);
-                BuiltInRegistries.BLOCK.addAlias(shortNamespace, id);
-                BuiltInRegistries.ITEM.addAlias(shortNamespace, id);
-                ALIASES.add(shortNamespace);
-            }
-        }
-    }
-    *///?}
 
     public static final Path pack = Platform.INSTANCE.getResourcePack().resolve("clutternomore");
 

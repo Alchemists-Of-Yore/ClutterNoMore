@@ -1,20 +1,18 @@
 @file:Suppress("UnstableApiUsage")
 
 plugins {
-    id("net.fabricmc.fabric-loom-remap")
+    id("net.fabricmc.fabric-loom")
     id("dev.kikugie.postprocess.jsonlang")
     id("me.modmuss50.mod-publish-plugin")
+    id("maven-publish")
 }
 
 val minecraft = stonecutter.current.version
-val accesswidener = when {
-    stonecutter.eval(minecraft, ">1.21.1") -> "1.21.10.accesswidener"
-    else -> "1.21.1.accesswidener"
-}
+val mcVersion = stonecutter.current.project.substringBeforeLast('-')
 
+val accesswidener = "26.1.accesswidener"
 
 tasks.named<ProcessResources>("processResources") {
-    dependsOn("stonecutterGenerate") // Ensure the generate task runs first
     fun prop(name: String) = project.property(name) as String
 
     val props = HashMap<String, String>().apply {
@@ -28,19 +26,23 @@ tasks.named<ProcessResources>("processResources") {
         this["mod_authors"] = prop("mod.authors")
         this["minecraft_version_range"] = prop("deps.minecraft_version_range")
         this["aw_file"] = accesswidener
-
     }
 
     filesMatching(listOf("fabric.mod.json", "META-INF/neoforge.mods.toml", "META-INF/mods.toml")) {
         expand(props)
     }
+
+}
+
+tasks.named("processResources") {
+    dependsOn(":${stonecutter.current.project}:stonecutterGenerate")
 }
 
 version = "${property("mod.version")}+${property("deps.minecraft")}-fabric"
 base.archivesName = property("mod.id") as String
 
 loom {
-    accessWidenerPath = rootProject.file("src/main/resources/accesswideners/$accesswidener")
+    accessWidenerPath = rootProject.file("src/main/resources/accesswideners/${accesswidener}")
 }
 
 jsonlang {
@@ -51,32 +53,10 @@ jsonlang {
 repositories {
     mavenLocal()
     maven {
-        name = "DevAuth"
-        url = uri("https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1")
+        name = "shedaniel (Cloth Config)"
+        url = uri("https://maven.shedaniel.me/")
         content {
-            includeGroup("me.djtheredstoner")
-        }
-    }
-    maven {
-        name = "Curse Maven"
-        url = uri("https://cursemaven.com")
-        content {
-            includeGroupAndSubgroups("curse.maven")
-        }
-    }
-    maven {
-        name = "Kotlin for Forge"
-        url = uri("https://thedarkcolour.github.io/KotlinForForge/")
-        content {
-            includeGroupAndSubgroups("thedarkcolour")
-        }
-    }
-    maven {
-        name = "Greenhouse Maven"
-        url = uri("https://maven.greenhouse.lgbt/releases/")
-        content {
-            includeGroup("house.greenhouse")
-            includeGroup("umpaz.brewinandchewin")
+            includeGroupAndSubgroups("me.shedaniel")
         }
     }
     maven {
@@ -84,7 +64,6 @@ repositories {
         url = uri("https://maven.terraformersmc.com/releases/")
         content {
             includeGroupAndSubgroups("com.terraformersmc")
-            includeGroupAndSubgroups("dev.emi")
         }
     }
     maven {
@@ -99,13 +78,6 @@ repositories {
         url = uri("https://repo.sleeping.town/")
         content {
             includeGroupAndSubgroups("folk.sisby")
-        }
-    }
-    maven {
-        name = "Parchment Mappings"
-        url = uri("https://maven.parchmentmc.org")
-        content {
-            includeGroupAndSubgroups("org.parchmentmc")
         }
     }
     maven {
@@ -127,57 +99,23 @@ repositories {
 
 dependencies {
     minecraft("com.mojang:minecraft:${property("deps.minecraft")}")
-    mappings(loom.layered {
-        officialMojangMappings()
-        if (hasProperty("deps.parchment"))
-            parchment("org.parchmentmc.data:parchment-${property("deps.parchment")}@zip")
-    })
-    modImplementation("net.fabricmc:fabric-loader:${property("deps.fabric-loader")}")
-    modImplementation("net.fabricmc.fabric-api:fabric-api:${property("deps.fabric-api")}")
+    implementation("net.fabricmc:fabric-loader:${property("deps.fabric-loader")}")
 
-    if (hasProperty("deps.modmenu")) {
-        modLocalRuntime("com.terraformersmc:modmenu:${property("deps.modmenu")}")
-    }
-
-    // YACL - required by McQoy
-    if (hasProperty("deps.yacl")) {
-        modLocalRuntime("dev.isxander:yet-another-config-lib:${property("deps.yacl")}-fabric")
-    }
-    modLocalRuntime("maven.modrinth:mcqoy:${property("deps.mcqoy")}")
-
-    if (hasProperty("deps.emi")) {
-        modCompileOnly("dev.emi:emi-fabric:${property("deps.emi")}:api")
-        modLocalRuntime("dev.emi:emi-fabric:${property("deps.emi")}")
-    }
-    if (hasProperty("deps.eiv")) {
-        modCompileOnly("maven.modrinth:eiv:${property("deps.eiv")}")
-//        modLocalRuntime("maven.modrinth:eiv:${property("deps.eiv")}")
-    }
-    if (hasProperty("deps.pyrite")) {
-        modLocalRuntime("maven.modrinth:pyrite:${property("deps.pyrite")}")
-    }
-
-    // JEI's API does not currently remap properly, so the full jar is used
-    if (hasProperty("deps.jei")) {
-        modCompileOnly("mezz.jei:jei-${minecraft}-fabric:${property("deps.jei")}")
-        modLocalRuntime("mezz.jei:jei-${minecraft}-fabric:${property("deps.jei")}")
-    } else {
-        modCompileOnly("mezz.jei:jei-1.21.10-fabric:26.2.0.27")
-    }
+    implementation("net.fabricmc.fabric-api:fabric-api:${property("deps.fabric-api")}")
 
     implementation("folk.sisby:kaleido-config:${property("deps.kaleido")}")
     include("folk.sisby:kaleido-config:${property("deps.kaleido")}")
+    compileOnly("maven.modrinth:eiv:${property("deps.eiv")}")
+    compileOnly("mezz.jei:jei-1.21.11-neoforge-api:${property("deps.jei")}")
 
-    val modules = listOf("transitive-access-wideners-v1", "registry-sync-v0", "resource-loader-v0")
-    for (it in modules) modImplementation(fabricApi.module("fabric-$it", property("deps.fabric-api") as String))
+
 }
 
-//fabricApi {
-//    configureDataGeneration() {
-//        outputDirectory = file("$rootDir/src/main/generated")
-//        client = true
-//    }
-//}
+configurations.all {
+    resolutionStrategy {
+        force("net.fabricmc:fabric-loader:${property("deps.fabric-loader")}")
+    }
+}
 
 stonecutter {
     replacements.string {
@@ -197,21 +135,20 @@ tasks {
 
     register<Copy>("buildAndCollect") {
         group = "build"
-        from(remapJar.map { it.archiveFile })
+        from(jar.map { it.archiveFile })
         into(rootProject.layout.buildDirectory.file("libs/${project.property("mod.version")}"))
         dependsOn("build")
     }
 }
 
+loom.runs.named("server") {
+    isIdeConfigGenerated = false
+}
+
 java {
     withSourcesJar()
-    val javaCompat = if (stonecutter.eval(stonecutter.current.version, ">=1.21")) {
-        JavaVersion.VERSION_21
-    } else {
-        JavaVersion.VERSION_17
-    }
-    sourceCompatibility = javaCompat
-    targetCompatibility = javaCompat
+    sourceCompatibility = JavaVersion.VERSION_25
+    targetCompatibility = JavaVersion.VERSION_25
 }
 
 val additionalVersionsStr = findProperty("publish.additionalVersions") as String?
@@ -222,19 +159,19 @@ val additionalVersions: List<String> = additionalVersionsStr
     ?: emptyList()
 
 publishMods {
-    file = tasks.remapJar.map { it.archiveFile.get() }
-    additionalFiles.from(tasks.remapSourcesJar.map { it.archiveFile.get() })
+    file = tasks.jar.map { it.archiveFile.get() }
 
+    // one of BETA, ALPHA, STABLE
     type = STABLE
     displayName = "${property("mod.name")} ${property("mod.version")} for ${stonecutter.current.version} Fabric"
     version = "${property("mod.version")}+${property("deps.minecraft")}-fabric"
-    changelog = provider { rootProject.file("CHANGELOG.md").readText() }
+    changelog = provider { rootProject.file("CHANGELOG-LATEST.md").readText() }
     modLoaders.add("fabric")
 
     modrinth {
         projectId = property("publish.modrinth") as String
         accessToken = env.MODRINTH_API_KEY.orNull()
-        minecraftVersions.add(stonecutter.current.version)
+        minecraftVersions.add(property("deps.minecraft").toString())
         minecraftVersions.addAll(additionalVersions)
         requires("fabric-api")
     }
