@@ -123,6 +123,17 @@ repositories {
             includeGroup("mezz.jei")
         }
     }
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = "Cassian's Maven"
+                url = uri("https://maven.cassian.cc")
+            }
+        }
+        filter {
+            includeGroupAndSubgroups("cc.cassian")
+        }
+    }
 }
 
 dependencies {
@@ -149,9 +160,8 @@ dependencies {
         modCompileOnly("dev.emi:emi-fabric:${property("deps.emi")}:api")
         modLocalRuntime("dev.emi:emi-fabric:${property("deps.emi")}")
     }
-    if (hasProperty("deps.eiv")) {
-        modCompileOnly("maven.modrinth:eiv:${property("deps.eiv")}")
-//        modLocalRuntime("maven.modrinth:eiv:${property("deps.eiv")}")
+    if (hasProperty("deps.rrv")) {
+        modImplementation("cc.cassian.rrv:reliable-recipe-viewer-fabric:${property("deps.rrv")}+${property("deps.minecraft")}")
     }
     if (hasProperty("deps.pyrite")) {
         modLocalRuntime("maven.modrinth:pyrite:${property("deps.pyrite")}")

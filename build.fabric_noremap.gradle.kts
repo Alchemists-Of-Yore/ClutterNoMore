@@ -105,8 +105,8 @@ dependencies {
 
     implementation("folk.sisby:kaleido-config:${property("deps.kaleido")}")
     include("folk.sisby:kaleido-config:${property("deps.kaleido")}")
-    compileOnly("maven.modrinth:eiv:${property("deps.eiv")}")
     compileOnly("mezz.jei:jei-1.21.11-neoforge-api:${property("deps.jei")}")
+    implementation("cc.cassian.rrv:reliable-recipe-viewer-fabric:${property("deps.rrv")}+${property("deps.minecraft")}")
 
 
 }

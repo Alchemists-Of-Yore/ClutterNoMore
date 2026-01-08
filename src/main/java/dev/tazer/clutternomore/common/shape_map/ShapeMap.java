@@ -2,7 +2,7 @@ package dev.tazer.clutternomore.common.shape_map;
 
 //? if >1.21.4 {
 import dev.tazer.clutternomore.Platform;
-import dev.tazer.clutternomore.common.compat.EIVCompat;
+import dev.tazer.clutternomore.common.compat.RRVCompat;
 //?}
 //? if fabric || neoforge {
 import dev.tazer.clutternomore.common.networking.ShapeMapPayload;
@@ -108,9 +108,9 @@ public class ShapeMap {
                     shapeSet.getChildren().forEach(child -> {
                         if (child != mainChild && child instanceof Item shape) {
                             shapes.add(shape);
-                            //? if >1.21.4 {
-                            if (Platform.INSTANCE.isModLoaded("eiv"))
-                                EIVCompat.hide(shape);
+                            //? if >1.21.9 {
+                            if (Platform.INSTANCE.isModLoaded("rrv"))
+                                RRVCompat.hide(shape);
                             //?}
                         }
                     });
@@ -127,9 +127,9 @@ public class ShapeMap {
 
             for (Item shape : shapes) {
                 INVERSE_SHAPES_DATAMAP.put(shape, item);
-                //? if >1.21.4 {
-                if (Platform.INSTANCE.isModLoaded("eiv"))
-                    EIVCompat.hide(shape);
+                //? if >1.21.9 {
+                if (Platform.INSTANCE.isModLoaded("rrv"))
+                    RRVCompat.hide(shape);
                 //?}
             }
         }

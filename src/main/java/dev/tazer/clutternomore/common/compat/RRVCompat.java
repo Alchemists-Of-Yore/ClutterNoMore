@@ -1,12 +1,11 @@
 package dev.tazer.clutternomore.common.compat;
 
-//? if >1.21.4 {
-import de.crafty.eiv.common.api.recipe.ItemView;
+//? if >1.21.9 {
 
-import net.minecraft.core.registries.Registries;
+import cc.cassian.rrv.api.recipe.ItemView;
 import net.minecraft.world.item.Item;
 
-public class EIVCompat {
+public class RRVCompat {
 
     public static void hide(Item item) {
         ItemView.excludeItem(item);

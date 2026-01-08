@@ -79,7 +79,7 @@ repositories {
         name = "Curse Maven"
         url = uri("https://cursemaven.com")
         content {
-            includeGroupAndSubgroups("curse.maven")
+            includeGroup("curse.maven")
         }
     }
     maven {
@@ -101,29 +101,28 @@ repositories {
         name = "Terraformers (Mod Menu)"
         url = uri("https://maven.terraformersmc.com/releases/")
         content {
-            includeGroupAndSubgroups("com.terraformersmc")
-            includeGroupAndSubgroups("dev.emi")
+            includeGroup("dev.emi")
         }
     }
     maven {
         name = "Modrinth"
         url = uri("https://api.modrinth.com/maven")
         content {
-            includeGroupAndSubgroups("maven.modrinth")
+            includeGroup("maven.modrinth")
         }
     }
     maven {
         name = "Sisby Maven"
         url = uri("https://repo.sleeping.town/")
         content {
-            includeGroupAndSubgroups("folk.sisby")
+            includeGroup("folk.sisby")
         }
     }
     maven {
         name = "Parchment Mappings"
         url = uri("https://maven.parchmentmc.org")
         content {
-            includeGroupAndSubgroups("org.parchmentmc")
+            includeGroup("org.parchmentmc.data")
         }
     }
     maven {
@@ -138,8 +137,7 @@ repositories {
         name = "Sinytra Maven"
         url = uri("https://maven.su5ed.dev/releases")
         content {
-            includeGroupAndSubgroups("org.sinytra")
-            includeGroupAndSubgroups("dev.su5ed")
+            includeGroupAndSubgroups("dev.su5ed.sinytra")
         }
     }
     maven {
@@ -223,11 +221,7 @@ tasks {
 
 java {
     withSourcesJar()
-    val javaCompat = if (stonecutter.eval(stonecutter.current.version, ">=1.20.5")) {
-        JavaVersion.VERSION_21
-    } else {
-        JavaVersion.VERSION_17
-    }
+    val javaCompat = JavaVersion.VERSION_17
     sourceCompatibility = javaCompat
     targetCompatibility = javaCompat
 }
@@ -240,7 +234,7 @@ val additionalVersions: List<String> = additionalVersionsStr
     ?: emptyList()
 
 publishMods {
-    file = tasks.jar.map { it.archiveFile.get() }
+    file = (tasks.named<org.gradle.jvm.tasks.Jar>("reobfJar").map { it.archiveFile.get() })
     additionalFiles.from(tasks.named<org.gradle.jvm.tasks.Jar>("sourcesJar").map { it.archiveFile.get() })
 
     type = BETA
