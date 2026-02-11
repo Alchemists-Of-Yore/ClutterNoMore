@@ -17,6 +17,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 //? if neoforge {
 /*import net.neoforged.neoforge.network.PacketDistributor;
 *///?}
@@ -41,6 +42,15 @@ public class ShapeMap {
 
     public static boolean hasShapes(Item item) {
         return SHAPES_DATAMAP.containsKey(item);
+    }
+
+    //? if >26 {
+    /*public static boolean isShape(ItemStackTemplate item) {
+        return INVERSE_SHAPES_DATAMAP.containsKey(item.item().value());
+    }
+    *///?}
+    public static boolean isShape(ItemStack item) {
+        return INVERSE_SHAPES_DATAMAP.containsKey(item.getItem());
     }
 
     public static boolean isShape(Item item) {

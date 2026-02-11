@@ -22,14 +22,14 @@ public class ShapedRecipeMixin {
     //? >1.20.1 {
     @Inject(method = "matches(Lnet/minecraft/world/item/crafting/CraftingInput;Lnet/minecraft/world/level/Level;)Z", at=@At(value = "RETURN"), cancellable = true)
     private void noMatches(CraftingInput input, Level level, CallbackInfoReturnable<Boolean> cir) {
-        if (ShapeMap.isShape(((ShapedRecipeAccessor) (this)).getResult().getItem())) {
+        if (ShapeMap.isShape(((ShapedRecipeAccessor) (this)).getResult())) {
             cir.setReturnValue(false);
         }
     }
 
     @Inject(method = "matches(Lnet/minecraft/world/item/crafting/RecipeInput;Lnet/minecraft/world/level/Level;)Z", at=@At(value = "RETURN"), cancellable = true)
     private void noMatches2(RecipeInput input, Level level, CallbackInfoReturnable<Boolean> cir) {
-        if (ShapeMap.isShape(((ShapedRecipeAccessor) (this)).getResult().getItem())) {
+        if (ShapeMap.isShape(((ShapedRecipeAccessor) (this)).getResult())) {
             cir.setReturnValue(false);
         }
     }

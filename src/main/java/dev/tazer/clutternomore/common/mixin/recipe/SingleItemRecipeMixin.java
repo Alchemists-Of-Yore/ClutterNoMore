@@ -18,14 +18,14 @@ public class SingleItemRecipeMixin {
     //? if >1.21.1 {
     @Inject(method = "matches(Lnet/minecraft/world/item/crafting/SingleRecipeInput;Lnet/minecraft/world/level/Level;)Z", at = @At("RETURN"), cancellable = true)
     private void noMatches(CallbackInfoReturnable<ItemStack> cir) {
-        if (ShapeMap.isShape(((SingleItemRecipeAccessor) (this)).getResult().getItem())) {
+        if (ShapeMap.isShape(((SingleItemRecipeAccessor) (this)).getResult())) {
             cir.setReturnValue(ItemStack.EMPTY);
         }
     }
 
     @Inject(method = "matches(Lnet/minecraft/world/item/crafting/RecipeInput;Lnet/minecraft/world/level/Level;)Z", at = @At("RETURN"), cancellable = true)
     private void noMatches2(CallbackInfoReturnable<ItemStack> cir) {
-        if (ShapeMap.isShape(((SingleItemRecipeAccessor) (this)).getResult().getItem())) {
+        if (ShapeMap.isShape(((SingleItemRecipeAccessor) (this)).getResult())) {
             cir.setReturnValue(ItemStack.EMPTY);
         }
     }
