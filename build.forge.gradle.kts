@@ -180,13 +180,13 @@ dependencies {
 
 mixin {
     add(sourceSets["main"], "clutternomore.refmap.json")
-    config("clutternomore-forge.mixins.json")
+    config("clutternomore.mixins.json")
 }
 
 tasks.named<Jar>("jar") {
     manifest {
         attributes(
-            "MixinConfigs" to "clutternomore-forge.mixins.json"
+            "MixinConfigs" to "clutternomore.mixins.json"
         )
     }
 }

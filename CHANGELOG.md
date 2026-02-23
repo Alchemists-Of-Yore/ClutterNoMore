@@ -1,3 +1,2 @@
-- Removed registry aliasing used to migrate worlds from versions before 1.1.
-- Ported to 26.1, removed support for 1.21.5-1.21.8.
-- Replaced EIV compatibility with RRV.
+- Glass Panes and other bar blocks now connect to vertical slabs.
+- Fixed crash with Forgified Fabric API on 1.20.1.

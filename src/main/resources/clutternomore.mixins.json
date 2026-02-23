@@ -1,11 +1,13 @@
 {
   "required": true,
   "package": "dev.tazer.clutternomore.common.mixin",
+  "refmap": "clutternomore.refmap.json",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "BlockItemMixin",
     "BlockMixin",
     "BuiltInRegistriesMixin",
+    "IronBarsBlockMixin",
     "ItemMixin",
     "ItemStackMixin",
     "access.BlockBehaviorAccessor",
