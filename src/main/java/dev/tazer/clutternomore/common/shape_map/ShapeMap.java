@@ -17,7 +17,8 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ItemStackTemplate;
+//? if >26
+/*import net.minecraft.world.item.ItemStackTemplate;*/
 //? if neoforge {
 /*import net.neoforged.neoforge.network.PacketDistributor;
 *///?}

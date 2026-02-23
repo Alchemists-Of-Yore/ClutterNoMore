@@ -5,7 +5,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemInstance;
+//? if >26
+/*import net.minecraft.world.item.ItemInstance;*/
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SlabBlock;
