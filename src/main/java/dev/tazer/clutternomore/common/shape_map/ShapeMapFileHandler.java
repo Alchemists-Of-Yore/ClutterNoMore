@@ -10,7 +10,7 @@ import dev.tazer.clutternomore.ClutterNoMore;
 /*import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 *///?}
 import net.minecraft.resources.FileToIdConverter;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.ExtraCodecs;
@@ -42,27 +42,27 @@ public class ShapeMapFileHandler extends SimpleJsonResourceReloadListener
     
     //? if fabric && <1.21.9 {
     /*@Override
-    public ResourceLocation getFabricId() {
+    public Identifier getFabricId() {
         return ClutterNoMore.location("shape_map");
     }
     *///?}
 
     @Override
-    protected void apply(Map<ResourceLocation, JsonElement> file, ResourceManager resourceManager, ProfilerFiller profilerFiller) {
-        Map<ResourceLocation, List<ResourceLocation>> result = new HashMap<>();
+    protected void apply(Map<Identifier, JsonElement> file, ResourceManager resourceManager, ProfilerFiller profilerFiller) {
+        Map<Identifier, List<Identifier>> result = new HashMap<>();
         Map<String, ShapeMapFile> namespaceMap = new HashMap<>();
 
-        for (Map.Entry<ResourceLocation, JsonElement> fileEntry : file.entrySet()) {
-            ResourceLocation fileName = fileEntry.getKey();
+        for (Map.Entry<Identifier, JsonElement> fileEntry : file.entrySet()) {
+            Identifier fileName = fileEntry.getKey();
             String path = fileName.getPath();
             if (!path.equals("add_shapes") && !path.equals("remove_shapes")) continue;
 
-            Map<ResourceLocation, List<ResourceLocation>> fileShapeMap = new HashMap<>();
+            Map<Identifier, List<Identifier>> fileShapeMap = new HashMap<>();
 
             JsonObject content = fileEntry.getValue().getAsJsonObject();
             for (Map.Entry<String, JsonElement> contentEntry : content.entrySet()) {
-                ResourceLocation key = ClutterNoMore.parse(contentEntry.getKey());
-                List<ResourceLocation> values = new ArrayList<>();
+                Identifier key = ClutterNoMore.parse(contentEntry.getKey());
+                List<Identifier> values = new ArrayList<>();
 
                 for (JsonElement element : contentEntry.getValue().getAsJsonArray()) {
                     values.add(ClutterNoMore.parse(element.getAsString()));
@@ -88,13 +88,13 @@ public class ShapeMapFileHandler extends SimpleJsonResourceReloadListener
         ShapeMap.set(result);
     }
 
-    private record ShapeMapFile(Map<ResourceLocation, List<ResourceLocation>> addMap, Map<ResourceLocation, List<ResourceLocation>> removeMap) {
-        public Map<ResourceLocation, List<ResourceLocation>> getResultingMap() {
-            for (Map.Entry<ResourceLocation, List<ResourceLocation>> entry : new HashSet<>(removeMap.entrySet())) {
-                ResourceLocation key = entry.getKey();
-                List<ResourceLocation> removeList = entry.getValue();
+    private record ShapeMapFile(Map<Identifier, List<Identifier>> addMap, Map<Identifier, List<Identifier>> removeMap) {
+        public Map<Identifier, List<Identifier>> getResultingMap() {
+            for (Map.Entry<Identifier, List<Identifier>> entry : new HashSet<>(removeMap.entrySet())) {
+                Identifier key = entry.getKey();
+                List<Identifier> removeList = entry.getValue();
 
-                List<ResourceLocation> list = addMap.get(key);
+                List<Identifier> list = addMap.get(key);
                 if (list != null) {
                     if (list.removeAll(removeList)) {
                         if (list.isEmpty()) addMap.remove(key);

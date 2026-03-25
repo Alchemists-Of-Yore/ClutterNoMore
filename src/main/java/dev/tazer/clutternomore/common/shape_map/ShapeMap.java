@@ -12,13 +12,13 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 //?}
 import dev.tazer.clutternomore.common.registry.BlockSetRegistry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 //? if >26
-/*import net.minecraft.world.item.ItemStackTemplate;*/
+import net.minecraft.world.item.ItemStackTemplate;
 //? if neoforge {
 /*import net.neoforged.neoforge.network.PacketDistributor;
 *///?}
@@ -46,10 +46,10 @@ public class ShapeMap {
     }
 
     //? if >26 {
-    /*public static boolean isShape(ItemStackTemplate item) {
+    public static boolean isShape(ItemStackTemplate item) {
         return INVERSE_SHAPES_DATAMAP.containsKey(item.item().value());
     }
-    *///?}
+    //?}
     public static boolean isShape(ItemStack item) {
         return INVERSE_SHAPES_DATAMAP.containsKey(item.getItem());
     }
@@ -80,18 +80,18 @@ public class ShapeMap {
         return SHAPES_DATAMAP.getOrDefault(getParent(item), List.of());
     }
 
-    public static void set(Map<ResourceLocation, List<ResourceLocation>> idMap) {
+    public static void set(Map<Identifier, List<Identifier>> idMap) {
         SHAPES_DATAMAP.clear();
         INVERSE_SHAPES_DATAMAP.clear();
 
-        for (Map.Entry<ResourceLocation, List<ResourceLocation>> entry : idMap.entrySet()) {
-            ResourceLocation key = entry.getKey();
+        for (Map.Entry<Identifier, List<Identifier>> entry : idMap.entrySet()) {
+            Identifier key = entry.getKey();
             Item newKey = BuiltInRegistries.ITEM.getOptional(key).orElse(null);
             if (newKey != null) {
-                List<ResourceLocation> value = entry.getValue();
+                List<Identifier> value = entry.getValue();
                 List<Item> newValue = new ArrayList<>();
 
-                for (ResourceLocation location : value) {
+                for (Identifier location : value) {
                     BuiltInRegistries.ITEM.getOptional(location).map(newValue::add);
                 }
 
@@ -100,7 +100,7 @@ public class ShapeMap {
         }
 
         BuiltInRegistries.ITEM.entrySet().forEach((key -> {
-            var id = key.getKey().location();
+            var id = key.getKey().identifier();
             var item = key.getValue();
             if (item instanceof BlockItem blockItem) {
                 var block = blockItem.getBlock();

@@ -12,7 +12,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 //? if neoforge
@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 public record ShapeMapPayload(Map<ItemStack, List<ItemStack>> shapes, Map<ItemStack, ItemStack> inverseShapes) implements CustomPacketPayload {
-    public static final Type<ShapeMapPayload> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(ClutterNoMore.MODID, "shapes"));
+    public static final Type<ShapeMapPayload> TYPE = new Type<>(Identifier.fromNamespaceAndPath(ClutterNoMore.MODID, "shapes"));
 
     private static final StreamCodec<RegistryFriendlyByteBuf, Map<ItemStack, List<ItemStack>>> SHAPE_MAP_CODEC = ByteBufCodecs.map(
             HashMap::new, ItemStack.STREAM_CODEC, ItemStack.OPTIONAL_LIST_STREAM_CODEC, BuiltInRegistries.ITEM.size()

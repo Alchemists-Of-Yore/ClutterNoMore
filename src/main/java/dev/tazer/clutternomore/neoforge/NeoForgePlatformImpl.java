@@ -8,7 +8,7 @@ import dev.tazer.clutternomore.ClutterNoMore;
 import dev.tazer.clutternomore.Platform;
 import dev.tazer.clutternomore.common.data.DataGenerator;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.ModLoadingContext;
@@ -74,19 +74,19 @@ public class NeoForgePlatformImpl implements Platform {
             oxidizableValues.add(less.toString(), next_stage);
         });
         oxidizableMap.add("values", oxidizableValues);
-        DataGenerator.writeServerData(ResourceLocation.fromNamespaceAndPath("neoforge", "data_maps/block/oxidizables.json"), oxidizableMap);
+        DataGenerator.writeServerData(Identifier.fromNamespaceAndPath("neoforge", "data_maps/block/oxidizables.json"), oxidizableMap);
 
         // waxables
         JsonObject waxableMap = new JsonObject();
         JsonObject waxableValues = new JsonObject();
         ClutterNoMore.WAXED_COPPER_BLOCKS.forEach(waxedId -> {
-            ResourceLocation unwaxedId = ClutterNoMore.location(waxedId.getNamespace(), waxedId.getPath().replace("waxed_", ""));
+            Identifier unwaxedId = ClutterNoMore.location(waxedId.getNamespace(), waxedId.getPath().replace("waxed_", ""));
             JsonObject next_stage = new JsonObject();
             next_stage.addProperty("waxed", waxedId.toString());
             waxableValues.add(unwaxedId.toString(), next_stage);
         });
         waxableMap.add("values", waxableValues);
-        DataGenerator.writeServerData(ResourceLocation.fromNamespaceAndPath("neoforge", "data_maps/block/waxables.json"), waxableMap);
+        DataGenerator.writeServerData(Identifier.fromNamespaceAndPath("neoforge", "data_maps/block/waxables.json"), waxableMap);
 
     }
 

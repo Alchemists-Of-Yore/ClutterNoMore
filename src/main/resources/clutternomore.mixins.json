@@ -23,6 +23,7 @@
     "recipe.ShapelessRecipeMixin",
     "recipe.SingleItemRecipeAccessor",
     "recipe.SingleItemRecipeMixin",
+    "recipe.ReloadableServerResourcesMixin",
     "recipe.StonecutterRecipeMixin"
   ],
   "client": [

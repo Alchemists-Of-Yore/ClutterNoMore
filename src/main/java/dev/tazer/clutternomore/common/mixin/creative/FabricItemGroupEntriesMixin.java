@@ -12,10 +12,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Pseudo
 //? if >26 {
-/*@Mixin(net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTabOutput.class)
-*///?} else {
-@Mixin(net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries.class)
-//?}
+@Mixin(net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTabOutput.class)
+//?} else {
+/*@Mixin(net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries.class)
+*///?}
 public abstract class FabricItemGroupEntriesMixin {
 
     @Inject(method = "accept", at = @At("HEAD"), cancellable = true)

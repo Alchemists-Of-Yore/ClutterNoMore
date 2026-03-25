@@ -5,7 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import dev.tazer.clutternomore.ClutterNoMore;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackType;
 
 import java.nio.file.Path;
@@ -25,7 +25,7 @@ public class DataGenerator {
         addToTag(ClutterNoMore.location(path), array);
     }
 
-    public static void addToTag(ResourceLocation path, JsonArray array) {
+    public static void addToTag(Identifier path, JsonArray array) {
         array.add(path.toString());
     }
 
@@ -87,7 +87,7 @@ public class DataGenerator {
         return tag;
     }
 
-    public static void addLootTable(ResourceLocation block, ResourceLocation shape) {
+    public static void addLootTable(Identifier block, Identifier shape) {
         JsonObject lootTable = new JsonObject();
         lootTable.add("type", new JsonPrimitive("block"));
         JsonArray pools = new JsonArray();
@@ -114,7 +114,7 @@ public class DataGenerator {
         writeServerData(("%s/blocks/%s.json".formatted(path, shape.getPath())), lootTable);
     }
 
-    public static void writeServerData(ResourceLocation fileName, JsonElement contents) {
+    public static void writeServerData(Identifier fileName, JsonElement contents) {
         ClutterNoMore.RESOURCES.addJson(PackType.SERVER_DATA, fileName, contents);
         if (ClutterNoMore.STARTUP_CONFIG.RUNTIME_DATA_GENERATION.value()) {
             Path data = pack.resolve("data/"+fileName.getNamespace());

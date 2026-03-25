@@ -2,7 +2,7 @@ package dev.tazer.clutternomore.common.registry;
 
 import dev.tazer.clutternomore.ClutterNoMore;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
@@ -26,7 +26,7 @@ public class BlockSetRegistry {
             items.put(block, shapeSet);
         }
 
-        public static void detectTypeFromBlock(Block block, ResourceLocation blockId) {
+        public static void detectTypeFromBlock(Block block, Identifier blockId) {
             if (block.asItem() != Items.AIR) {
                 if (isParentBlock(blockId)) {
                     new ShapeSet(blockId, block);
@@ -35,11 +35,11 @@ public class BlockSetRegistry {
 
         }
 
-        private static boolean has(ResourceLocation block) {
+        private static boolean has(Identifier block) {
             return BuiltInRegistries.BLOCK.containsKey(block);
         }
 
-        private static boolean isParentBlock(ResourceLocation block) {
+        private static boolean isParentBlock(Identifier block) {
             List<String> namespaces = List.of(block.getNamespace(), "minecraft");
             String path = block.getPath();
 
@@ -51,7 +51,7 @@ public class BlockSetRegistry {
             List<String> suffixes = List.of("stairs", "slab", "wall");
 
             for (String namespace : namespaces) {
-                ResourceLocation base = ClutterNoMore.location(namespace, path);
+                Identifier base = ClutterNoMore.location(namespace, path);
 
                 String suffixBase = path;
                 for (String ignored : ignoredSuffixes) {
@@ -61,7 +61,7 @@ public class BlockSetRegistry {
                 for (String parent : parentSuffixes) {
                     String suffixed = suffixBase + "_" + parent;
                     if (!suffixed.equals(path)) {
-                        ResourceLocation candidate = base.withPath(p -> suffixed);
+                        Identifier candidate = base.withPath(p -> suffixed);
                         if (has(candidate)) return false;
                     }
                 }
@@ -69,7 +69,7 @@ public class BlockSetRegistry {
                 for (Map.Entry<String, String> replacement : replacements.entrySet()) {
                     String replaced = path.replace(replacement.getKey(), replacement.getValue());
                     if (!replaced.equals(path)) {
-                        ResourceLocation candidate = base.withPath(p -> replaced);
+                        Identifier candidate = base.withPath(p -> replaced);
                         if (has(candidate)) return true;
                     }
                 }
@@ -82,7 +82,7 @@ public class BlockSetRegistry {
                 for (String prefix : prefixes) {
                     String prefixed = prefix + "_" + prefixBase;
                     if (!prefixed.equals(path)) {
-                        ResourceLocation candidate = base.withPath(p -> prefixed);
+                        Identifier candidate = base.withPath(p -> prefixed);
                         if (has(candidate)) return true;
                     }
                 }
@@ -96,14 +96,14 @@ public class BlockSetRegistry {
                         String trimmed  = suffixBase.substring(0, suffixBase.length() - 1);
                         String suffixed = trimmed + "_" + suffix;
                         if (!suffixed.equals(path)) {
-                            ResourceLocation candidate = base.withPath(p -> suffixed);
+                            Identifier candidate = base.withPath(p -> suffixed);
                             if (has(candidate)) return true;
                         }
                     }
 
                     String suffixed = suffixBase + "_" + suffix;
                     if (!suffixed.equals(path)) {
-                        ResourceLocation candidate = base.withPath(p -> suffixed);
+                        Identifier candidate = base.withPath(p -> suffixed);
                         if (has(candidate)) return true;
                     }
                 }
@@ -114,12 +114,12 @@ public class BlockSetRegistry {
     }
 
     public static class ShapeSet {
-        private final ResourceLocation id;
+        private final Identifier id;
         private final String type;
         private final Block block;
         private final Map<String, ItemLike> items = new LinkedHashMap<>();
 
-        ShapeSet(ResourceLocation id, Block block) {
+        ShapeSet(Identifier id, Block block) {
             this.id = id;
             this.block = block;
             this.type = id.getPath().replace("_block", "").replace("_planks", "");
@@ -154,7 +154,7 @@ public class BlockSetRegistry {
                 items.put(block, block1);
         }
 
-        private void addChild(String block, ResourceLocation id) {
+        private void addChild(String block, Identifier id) {
             BuiltInRegistries.ITEM.getOptional(id).ifPresent(block1 -> items.put(block, block1));
         }
 
@@ -213,7 +213,7 @@ public class BlockSetRegistry {
 
             for (String stem : candidates) {
                 String candidatePath = reapplyPrefix + prefixPart + stem + postfixPart;
-                ResourceLocation candidateId = ClutterNoMore.location(namespace, candidatePath);
+                Identifier candidateId = ClutterNoMore.location(namespace, candidatePath);
                 Optional<Item> found = BuiltInRegistries.ITEM.getOptional(candidateId);
                 if (found.isPresent()) return found.get();
             }
@@ -229,7 +229,7 @@ public class BlockSetRegistry {
             String path = id.getPath();
             if (path.endsWith("log")) {
                 String stem = path.substring(0, path.length() - 3);
-                ResourceLocation woodId = id.withPath(p -> stem + "wood");
+                Identifier woodId = id.withPath(p -> stem + "wood");
                 return BuiltInRegistries.ITEM.getOptional(woodId).orElse(null);
             }
 

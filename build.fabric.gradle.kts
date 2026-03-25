@@ -7,11 +7,7 @@ plugins {
 }
 
 val minecraft = stonecutter.current.version
-val accesswidener = when {
-    stonecutter.eval(minecraft, ">1.21.1") -> "1.21.10.accesswidener"
-    else -> "1.21.1.accesswidener"
-}
-
+val accesswidener = "1.21.1.accesswidener"
 
 tasks.named<ProcessResources>("processResources") {
     dependsOn("stonecutterGenerate") // Ensure the generate task runs first
@@ -215,7 +211,9 @@ tasks {
 
 java {
     withSourcesJar()
-    val javaCompat = if (stonecutter.eval(stonecutter.current.version, ">=1.21")) {
+    val javaCompat = if (stonecutter.eval(stonecutter.current.version, ">26")) {
+        JavaVersion.toVersion(25)
+    } else if (stonecutter.eval(stonecutter.current.version, ">=1.21")) {
         JavaVersion.VERSION_21
     } else {
         JavaVersion.VERSION_17

@@ -18,7 +18,7 @@ import net.minecraft.client.renderer.RenderPipelines;
 //? if =1.21.5 {
 /*import net.minecraft.client.renderer.RenderType;
 *///?}
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
@@ -68,8 +68,8 @@ public class ShapeSwitcherOverlay {
     }
 
     public void render(GuiGraphics guiGraphics, float partialTick) {
-        ResourceLocation background = ClutterNoMore.location("textures/gui/shape_background.png");
-        ResourceLocation selected = ClutterNoMore.location("textures/gui/selected_shape.png");
+        Identifier background = ClutterNoMore.location("textures/gui/shape_background.png");
+        Identifier selected = ClutterNoMore.location("textures/gui/selected_shape.png");
 
         int y = guiGraphics.guiHeight() / 2 + 20;
         int centreX = guiGraphics.guiWidth() / 2 - 8;

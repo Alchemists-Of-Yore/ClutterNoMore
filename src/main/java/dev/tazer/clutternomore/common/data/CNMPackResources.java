@@ -10,7 +10,7 @@ import dev.tazer.clutternomore.ClutterNoMore;
 import net.minecraft.SharedConstants;
 import net.minecraft.WorldVersion;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.*;
 //? if =1.21.1 || 1.20.1 {
 /*import net.minecraft.server.packs.metadata.MetadataSectionSerializer;
@@ -32,8 +32,8 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class CNMPackResources extends AbstractPackResources {
-    protected final Map<ResourceLocation, byte[]> clientResources;
-    protected final Map<ResourceLocation, byte[]> serverData;
+    protected final Map<Identifier, byte[]> clientResources;
+    protected final Map<Identifier, byte[]> serverData;
     protected final Map<String, byte[]> rootResources;
     protected final PackMetadataSection clientMetadata;
     protected final PackMetadataSection serverMetadata;
@@ -95,12 +95,12 @@ public class CNMPackResources extends AbstractPackResources {
     }
     *///?}
 
-    public void addResource(PackType packType, ResourceLocation id, byte[] bytes) {
-        Map<ResourceLocation, byte[]> resources = packType == PackType.CLIENT_RESOURCES ? clientResources : serverData;
+    public void addResource(PackType packType, Identifier id, byte[] bytes) {
+        Map<Identifier, byte[]> resources = packType == PackType.CLIENT_RESOURCES ? clientResources : serverData;
         resources.put(id, bytes);
     }
 
-    public void addJson(PackType packType, ResourceLocation path, JsonElement json) {
+    public void addJson(PackType packType, Identifier path, JsonElement json) {
         try {
             addResource(packType, path, serializeJson(json).getBytes());
         } catch (IOException e) {
@@ -113,16 +113,16 @@ public class CNMPackResources extends AbstractPackResources {
         return resource != null ? () -> new ByteArrayInputStream(resource) : null;    }
 
     @Override
-    public IoSupplier<InputStream> getResource(PackType packType, ResourceLocation id) {
-        Map<ResourceLocation, byte[]> resources = packType == PackType.CLIENT_RESOURCES ? clientResources : serverData;
+    public IoSupplier<InputStream> getResource(PackType packType, Identifier id) {
+        Map<Identifier, byte[]> resources = packType == PackType.CLIENT_RESOURCES ? clientResources : serverData;
         byte[] resource = resources.get(id);
         return resource != null ? () -> new ByteArrayInputStream(resource) : null;
     }
 
     @Override
     public void listResources(PackType packType, String namespace, String path, PackResources.ResourceOutput output) {
-        Map<ResourceLocation, byte[]> resources = packType == PackType.CLIENT_RESOURCES ? clientResources : serverData;
-        for (ResourceLocation location : resources.keySet()) {
+        Map<Identifier, byte[]> resources = packType == PackType.CLIENT_RESOURCES ? clientResources : serverData;
+        for (Identifier location : resources.keySet()) {
             if (location.getPath().startsWith(path)) {
                 byte[] resource = resources.get(location);
                 output.accept(location, () -> new ByteArrayInputStream(resource));

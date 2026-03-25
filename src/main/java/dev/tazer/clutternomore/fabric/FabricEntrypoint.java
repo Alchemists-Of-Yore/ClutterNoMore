@@ -19,7 +19,7 @@ import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
 *///?}
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.world.level.block.Block;
 
@@ -36,10 +36,10 @@ public class FabricEntrypoint implements ModInitializer {
         ClutterNoMore.init();
         registerPayloadHandlers();
         //? if >26 {
-        /*ResourceLoader.get(PackType.SERVER_DATA).registerReloadListener(ClutterNoMore.location("shape_map"), new ShapeMapFileHandler());
-        *///?} else if >=1.21.9 {
-        ResourceLoader.get(PackType.SERVER_DATA).registerReloader(ClutterNoMore.location("shape_map"), new ShapeMapFileHandler());
-        //?} else {
+        ResourceLoader.get(PackType.SERVER_DATA).registerReloadListener(ClutterNoMore.location("shape_map"), new ShapeMapFileHandler());
+        //?} else if >=1.21.9 {
+        /*ResourceLoader.get(PackType.SERVER_DATA).registerReloader(ClutterNoMore.location("shape_map"), new ShapeMapFileHandler());
+        *///?} else {
         /*ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(new ShapeMapFileHandler());
         *///?}
 //        ServerLifecycleEvents.START_DATA_PACK_RELOAD.register(((minecraftServer, closeableResourceManager) -> {
@@ -55,12 +55,12 @@ public class FabricEntrypoint implements ModInitializer {
 
     public void registerPayloadHandlers() {
         //? if >26 {
-        /*PayloadTypeRegistry.serverboundPlay().register(ChangeStackPayload.TYPE, ChangeStackPayload.STREAM_CODEC);
+        PayloadTypeRegistry.serverboundPlay().register(ChangeStackPayload.TYPE, ChangeStackPayload.STREAM_CODEC);
         PayloadTypeRegistry.clientboundPlay().register(ShapeMapPayload.TYPE, ShapeMapPayload.STREAM_CODEC);
-        *///?} else {
-        PayloadTypeRegistry.playC2S().register(ChangeStackPayload.TYPE, ChangeStackPayload.STREAM_CODEC);
+        //?} else {
+        /*PayloadTypeRegistry.playC2S().register(ChangeStackPayload.TYPE, ChangeStackPayload.STREAM_CODEC);
         PayloadTypeRegistry.playS2C().register(ShapeMapPayload.TYPE, ShapeMapPayload.STREAM_CODEC);
-        //?}
+        *///?}
         ServerPlayNetworking.registerGlobalReceiver(ChangeStackPayload.TYPE, ChangeStackPayload::handleDataOnServer);
     }
 }

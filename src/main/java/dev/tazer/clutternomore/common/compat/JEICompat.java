@@ -7,7 +7,7 @@ import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.registration.IRecipeRegistration;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
@@ -20,13 +20,13 @@ public class JEICompat implements IModPlugin {
         ArrayList<ItemStack> stacksToHide = new ArrayList<>();
         BuiltInRegistries.ITEM.entrySet().stream().forEach(item -> {
             if (ShapeMap.isShape(item.getValue())) stacksToHide.add(item.getValue().getDefaultInstance());
-            else if (item.getKey().location().getNamespace().equals(ClutterNoMore.MODID)) stacksToHide.add(item.getValue().getDefaultInstance());
+            else if (item.getKey().identifier().getNamespace().equals(ClutterNoMore.MODID)) stacksToHide.add(item.getValue().getDefaultInstance());
         });
         registry.getIngredientManager().removeIngredientsAtRuntime(VanillaTypes.ITEM_STACK, stacksToHide);
     }
 
     @Override
-    public ResourceLocation getPluginUid() {
+    public Identifier getPluginUid() {
         return ClutterNoMore.location("jei");
     }
 }

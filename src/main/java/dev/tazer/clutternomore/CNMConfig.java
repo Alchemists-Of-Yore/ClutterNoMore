@@ -33,6 +33,9 @@ public class CNMConfig {
         @Comment("Whether to generate a resource pack for vertical slabs and steps when the game is launched.")
         @SerializedName("runtime_asset_generation")
         public final TrackedValue<Boolean> RUNTIME_ASSET_GENERATION = this.value(true);
+        @Comment("Whether to show a small indicator on hotbar items that have shape variants")
+        @SerializedName("shape_indicator")
+        public final TrackedValue<Boolean> SHAPE_INDICATOR = this.value(true);
     }
 
     public enum InputType implements StringRepresentable {

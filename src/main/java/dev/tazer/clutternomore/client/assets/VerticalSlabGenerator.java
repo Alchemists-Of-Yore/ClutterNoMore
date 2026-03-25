@@ -5,7 +5,7 @@ import dev.tazer.clutternomore.ClutterNoMore;
 import dev.tazer.clutternomore.common.blocks.VerticalSlabBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 
@@ -17,14 +17,14 @@ import java.util.Optional;
 import static dev.tazer.clutternomore.client.assets.AssetGenerator.write;
 
 public final class VerticalSlabGenerator {
-    public static ArrayList<ResourceLocation> SLABS = new ArrayList<>();
+    public static ArrayList<Identifier> SLABS = new ArrayList<>();
 
     public static void generate(ResourceManager manager) {
-        for (ResourceLocation parent : SLABS) {
+        for (Identifier parent : SLABS) {
             String namespace = parent.getNamespace() + "/";
             if (parent.getNamespace().equals("minecraft")) namespace = "";
 
-            ResourceLocation shape = ClutterNoMore.location(namespace + "vertical_" + parent.getPath());
+            Identifier shape = ClutterNoMore.location(namespace + "vertical_" + parent.getPath());
 
             try {
                 generateBlock(parent, shape, manager);
@@ -36,7 +36,7 @@ public final class VerticalSlabGenerator {
         }
     }
 
-    public static void generateBlock(ResourceLocation parent, ResourceLocation shape, ResourceManager manager) throws IOException {
+    public static void generateBlock(Identifier parent, Identifier shape, ResourceManager manager) throws IOException {
         Optional<Resource> existingBlockState = manager.getResource(shape.withPrefix("blockstates/").withSuffix(".json"));
         if (existingBlockState.isPresent()) return;
 

@@ -11,7 +11,7 @@ import dev.tazer.clutternomore.fabric.FabricPlatformImpl;
 /*import dev.tazer.clutternomore.forge.ForgePlatformImpl;
  *///?}
 import java.nio.file.Path;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import com.google.gson.JsonObject;
 

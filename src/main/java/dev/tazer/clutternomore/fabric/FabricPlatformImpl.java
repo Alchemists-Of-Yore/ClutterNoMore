@@ -9,7 +9,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.registry.OxidizableBlocksRegistry;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -59,10 +59,10 @@ public class FabricPlatformImpl implements Platform {
     public int shapeKey() {
         return
         //? if >26 {
-        /*net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper
-        *///?} else {
-        net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper
-        //?}
+        net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper
+        //?} else {
+        /*net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper
+        *///?}
         .getBoundKeyOf(SHAPE_KEY).getValue();
     }
 
@@ -78,10 +78,10 @@ public class FabricPlatformImpl implements Platform {
             *///?}
             OxidizableBlocksRegistry.
             //? if >26 {
-            /*registerNextStage
-            *///?} else {
-            registerOxidizableBlockPair
-             //?}
+            registerNextStage
+            //?} else {
+            /*registerOxidizableBlockPair
+             *///?}
             (lessBlock, moreBlock);
         });
         ClutterNoMore.WAXED_COPPER_BLOCKS.forEach(resourceLocation -> {
@@ -90,10 +90,10 @@ public class FabricPlatformImpl implements Platform {
             if (waxedBlock.isPresent() && unwaxedBlock.isPresent()) {
                 OxidizableBlocksRegistry.
                 //? if >26 {
-                /*registerWaxable
-                *///?} else {
-                registerWaxableBlockPair
-                //?}
+                registerWaxable
+                //?} else {
+                /*registerWaxableBlockPair
+                *///?}
                 (unwaxedBlock.get(), waxedBlock.get());
             }
         });

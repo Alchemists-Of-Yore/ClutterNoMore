@@ -30,18 +30,18 @@ public class FabricClientEntrypoint implements ClientModInitializer {
 
         net.fabricmc.fabric.api.client.
         //? if >26 {
-        /*keymapping.v1.KeyMappingHelper.registerKeyMapping
-        *///?} else {
-        keybinding.v1.KeyBindingHelper.registerKeyBinding
-         //?}
+        keymapping.v1.KeyMappingHelper.registerKeyMapping
+        //?} else {
+        /*keybinding.v1.KeyBindingHelper.registerKeyBinding
+         *///?}
         (SHAPE_KEY);
 
         net.fabricmc.fabric.api.client.rendering.v1
         //? if >26 {
-        /*.ClientTooltipComponentCallback
-        *///?} else {
-        .TooltipComponentCallback
-        //?}
+        .ClientTooltipComponentCallback
+        //?} else {
+        /*.TooltipComponentCallback
+        *///?}
         .EVENT.register(FabricClientEvents::registerTooltipComponent);
 
         ItemTooltipCallback.EVENT.register(ClutterNoMoreClient::onItemTooltips);

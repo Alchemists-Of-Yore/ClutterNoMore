@@ -31,7 +31,7 @@ import java.util.stream.Stream;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackResources;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.repository.Pack;
@@ -71,8 +71,8 @@ public class ClutterNoMore {
     /*private static final String PACK_INFO = ClutterNoMore.MODID+"-runtime";
     *///?}
     public static final CNMPackResources RESOURCES = new CNMPackResources(PACK_INFO);
-    public static LinkedHashMap<ResourceLocation, ResourceLocation> COPPER_BLOCKS = new LinkedHashMap<>();
-    public static ArrayList<ResourceLocation> WAXED_COPPER_BLOCKS = new ArrayList<>();
+    public static LinkedHashMap<Identifier, Identifier> COPPER_BLOCKS = new LinkedHashMap<>();
+    public static ArrayList<Identifier> WAXED_COPPER_BLOCKS = new ArrayList<>();
 
     public static void init() {
         LOGGER.info("Initializing {} on {}", MODID, Platform.INSTANCE.loader());
@@ -104,23 +104,23 @@ public class ClutterNoMore {
 
     }
 
-    public static ResourceLocation location(String path) {
+    public static Identifier location(String path) {
         return location(MODID, path);
     }
 
-    public static ResourceLocation location(String namespace, String path) {
+    public static Identifier location(String namespace, String path) {
         //? if >1.21
-        return ResourceLocation.fromNamespaceAndPath(namespace, path);
+        return Identifier.fromNamespaceAndPath(namespace, path);
         //? if <1.21
-        /*return new ResourceLocation(namespace, path);*/
+        /*return new Identifier(namespace, path);*/
     }
 
 
-    public static ResourceLocation parse(String id) {
+    public static Identifier parse(String id) {
         //? if >1.21
-        return ResourceLocation.parse(id);
+        return Identifier.parse(id);
         //? if <1.21
-        /*return new ResourceLocation(id);*/
+        /*return new Identifier(id);*/
     }
 
     public static void modifyRecipes(
@@ -199,8 +199,8 @@ public class ClutterNoMore {
          *///?}
         if (STARTUP_CONFIG.VERTICAL_SLABS.value() || STARTUP_CONFIG.STEPS.value()) {
             LinkedHashMap<String, Supplier<? extends Block>> toRegister = new LinkedHashMap<>();
-            ArrayList<ResourceLocation> slabs = new ArrayList<>();
-            ArrayList<ResourceLocation> stairs = new ArrayList<>();
+            ArrayList<Identifier> slabs = new ArrayList<>();
+            ArrayList<Identifier> stairs = new ArrayList<>();
 
             List<SoundType> woodenSoundTypes = List.of(
                     SoundType.WOOD,
@@ -216,7 +216,7 @@ public class ClutterNoMore {
 
             for (Map.Entry<ResourceKey<Item>, Item> resourceKeyItemEntry : BuiltInRegistries.ITEM.entrySet()) {
                 if (resourceKeyItemEntry.getValue().asItem() instanceof BlockItem blockItem) {
-                    var blockId = resourceKeyItemEntry.getKey().location();
+                    var blockId = resourceKeyItemEntry.getKey().identifier();
                     var blockNamespace = blockId.getNamespace() + "/";
                     if (blockId.getNamespace().equals("minecraft")) {
                         blockNamespace = "";
@@ -303,7 +303,7 @@ public class ClutterNoMore {
         }
     }
 
-    private static void matchCopperBlock(ResourceLocation id) {
+    private static void matchCopperBlock(Identifier id) {
         if (id.getPath().contains("oxidized")) {
             var weatheredPath = ClutterNoMore.location(id.getNamespace(), id.getPath().replace("oxidized", "weathered"));
             COPPER_BLOCKS.put(weatheredPath, id);

@@ -13,7 +13,7 @@ import net.minecraft.client.renderer.RenderPipelines;
 //? if =1.21.5 {
 /*import net.minecraft.client.renderer.RenderType;
 *///?}
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.Item;
 
@@ -49,7 +49,7 @@ public class ClientShapeTooltip implements ClientTooltipComponent {
     /*public void renderImage(Font font, int mouseX, int mouseY, GuiGraphics guiGraphics) {
     *///?}
         if (ClutterNoMoreClient.showTooltip) {
-            ResourceLocation selected = ClutterNoMore.location("textures/gui/selected_shape_inventory.png");
+            Identifier selected = ClutterNoMore.location("textures/gui/selected_shape_inventory.png");
 
             int spacing = 22;
             int startX = mouseX + 2;

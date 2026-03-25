@@ -8,7 +8,7 @@ import dev.tazer.clutternomore.Platform;
 /*import dev.tazer.clutternomore.common.data.CNMPackResources;
 *///?}
 import net.minecraft.client.Minecraft;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -108,7 +108,7 @@ public class AssetGenerator {
         return result.toString().trim();
     }
 
-    public static @Nullable JsonObject getTextures(ResourceManager manager, ResourceLocation parent) throws IOException {
+    public static @Nullable JsonObject getTextures(ResourceManager manager, Identifier parent) throws IOException {
         Optional<Resource> parentBlockState = manager.getResource(parent.withPrefix("blockstates/").withSuffix(".json"));
         if (parentBlockState.isEmpty()) return null;
 
@@ -156,7 +156,7 @@ public class AssetGenerator {
         return textures.get("top") == null ? null : textures;
     }
 
-    public static void generateItem(ResourceLocation shape, ResourceManager manager) {
+    public static void generateItem(Identifier shape, ResourceManager manager) {
         var modelString = shape.getPath();
         modelString = modelString.replace("waxed_", "");
         //? if >1.21.4 {
