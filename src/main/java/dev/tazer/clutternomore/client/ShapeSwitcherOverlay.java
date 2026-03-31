@@ -11,13 +11,7 @@ import dev.tazer.clutternomore.common.networking.ChangeStackPayload;
 /*import dev.tazer.clutternomore.forge.networking.ChangeStackPacket;
 *///?}
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
-//? if >1.21.6 {
-import net.minecraft.client.renderer.RenderPipelines;
-//?}
-//? if =1.21.5 {
-/*import net.minecraft.client.renderer.RenderType;
-*///?}
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
@@ -67,7 +61,7 @@ public class ShapeSwitcherOverlay {
         currentIndex = selectedIndex;
     }
 
-    public void render(GuiGraphics guiGraphics, float partialTick) {
+    public void render(GuiGraphicsExtractor guiGraphics, float partialTick) {
         Identifier background = ClutterNoMore.location("textures/gui/shape_background.png");
         Identifier selected = ClutterNoMore.location("textures/gui/selected_shape.png");
 
@@ -81,28 +75,12 @@ public class ShapeSwitcherOverlay {
 
         if (ClutterNoMoreClient.CLIENT_CONFIG.SCROLLING.value()) {
             startX = Mth.floor(centreX - currentIndex * spacing);
-
-            //? if <1.21.2
-            /*RenderSystem.enableBlend();*/
-            guiGraphics.blit(
-                    //? if >1.21.6
-                    RenderPipelines.GUI_TEXTURED,
-                    //? =1.21.5
-                    /*RenderType::guiTextured,*/
-                    selected, centreX - 3, y - 3, 0, 0, 22, 22, 22, 22);
+            RenderHelper.blit(guiGraphics, selected, centreX - 3, y - 3, 0, 0, 22, 22, 22, 22);
 
             for (int index = 0; index < shapes.size(); index++) {
                 int x = startX + index * spacing;
-                //? if <1.21.2
-                /*RenderSystem.enableBlend();*/
-                guiGraphics.blit(
-                        //? if >1.21.6
-                        RenderPipelines.GUI_TEXTURED,
-                        //? =1.21.5
-                        /*RenderType::guiTextured,*/
-                        background, x, y, 0, 0, 16, 16, 16, 16);
-
-                guiGraphics.renderItem(shapes.get(index).getDefaultInstance(), x, y);
+                RenderHelper.blit(guiGraphics, background, x, y, 0, 0, 16, 16, 16, 16);
+                RenderHelper.item(guiGraphics, shapes.get(index).getDefaultInstance(), x, y);
             }
 
         } else {
@@ -110,28 +88,13 @@ public class ShapeSwitcherOverlay {
 
             for (int index = 0; index < shapes.size(); index++) {
                 int x = startX + index * spacing;
-                //? if <1.21.2
-                /*RenderSystem.enableBlend();*/
-                guiGraphics.blit(
-                        //? if >1.21.6
-                        RenderPipelines.GUI_TEXTURED,
-                        //? =1.21.5
-                        /*RenderType::guiTextured,*/
-                        background, x, y, 0, 0, 16, 16, 16, 16);
-
-                guiGraphics.renderItem(shapes.get(index).getDefaultInstance(), x, y);
+                RenderHelper.blit(guiGraphics, background, x, y, 0, 0, 16, 16, 16, 16);
+                RenderHelper.item(guiGraphics, shapes.get(index).getDefaultInstance(), x, y);
             }
-            //? if <1.21.2
-            /*RenderSystem.enableBlend();*/
-            guiGraphics.blit(
-                    //? if >1.21.6
-                    RenderPipelines.GUI_TEXTURED,
-                    //? =1.21.5
-                    /*RenderType::guiTextured,*/
-                    selected, Mth.floor(startX + currentIndex * spacing) - 3, y - 3, 0, 0, 22, 22, 22, 22);
+            RenderHelper.blit(guiGraphics, selected, Mth.floor(startX + currentIndex * spacing) - 3, y - 3, 0, 0, 22, 22, 22, 22);
         }
         //? if <1.21.2
-        /*RenderSystem.disableBlend();*/
+        //RenderSystem.disableBlend();
     }
 
     public void onMouseScrolled(int direction) {

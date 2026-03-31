@@ -204,6 +204,14 @@ stonecutter {
         replace("ResourceLocation", "Identifier")
     }
     replacements.string {
+        direction = eval(current.version, ">26")
+        replace("GuiGraphics;", "GuiGraphicsExtractor;")
+    }
+    replacements.string {
+        direction = eval(current.version, ">26")
+        replace("GuiGraphics ", "GuiGraphicsExtractor ")
+    }
+    replacements.string {
         direction = eval(current.version, ">1.21.10")
         replace("getKey().location()", "getKey().identifier()")
     }

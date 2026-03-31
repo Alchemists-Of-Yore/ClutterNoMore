@@ -50,6 +50,7 @@ import net.minecraftforge.registries.RegistryManager;
 *///?} else if fabric {
 import dev.tazer.clutternomore.fabric.FabricEntrypoint;
 //?}
+import net.minecraft.world.level.block.state.BlockState;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -221,7 +222,7 @@ public class ClutterNoMore {
                     if (blockId.getNamespace().equals("minecraft")) {
                         blockNamespace = "";
                     }
-                    if (blockItem.getBlock() instanceof SlabBlock slabBlock && slabBlock.defaultBlockState().getValues().size() == 2 && STARTUP_CONFIG.VERTICAL_SLABS.value()) {
+                    if (blockItem.getBlock() instanceof SlabBlock slabBlock && size(slabBlock.defaultBlockState()) == 2 && STARTUP_CONFIG.VERTICAL_SLABS.value()) {
                         String shortPath = "vertical_" + blockId.getPath();
                         String path = blockNamespace + shortPath;
 
@@ -257,7 +258,7 @@ public class ClutterNoMore {
                         }
                     }
 
-                    if (blockItem.getBlock() instanceof StairBlock stairBlock && stairBlock.defaultBlockState().getValues().size() == 4 && STARTUP_CONFIG.STEPS.value()) {
+                    if (blockItem.getBlock() instanceof StairBlock stairBlock && size(stairBlock.defaultBlockState()) == 4 && STARTUP_CONFIG.STEPS.value()) {
                         String shortPath = blockId.getPath().replace("stairs", "step");
                         String path = blockNamespace + shortPath;
                         if (stairBlock instanceof WeatheringCopperStairBlock weatheringCopperStairBlock) {
@@ -302,6 +303,13 @@ public class ClutterNoMore {
             Platform.INSTANCE.finalizeCopperBlockRegistration();
         }
     }
+
+	private static int size(BlockState blockState) {
+		return blockState.getValues()
+                //? if >26
+                .toList()
+                .size();
+	}
 
     private static void matchCopperBlock(Identifier id) {
         if (id.getPath().contains("oxidized")) {

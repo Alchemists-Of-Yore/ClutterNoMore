@@ -18,7 +18,7 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.ChatFormatting;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
@@ -179,7 +179,7 @@ public class ClutterNoMoreClient {
     }
 
     //? if >1.21 {
-    public static void onRenderGui(GuiGraphics guiGraphics, DeltaTracker tracker) {
+    public static void onRenderGui(GuiGraphicsExtractor guiGraphics, DeltaTracker tracker) {
         if (OVERLAY != null && OVERLAY.render) {
             OVERLAY.render(guiGraphics, tracker.getGameTimeDeltaTicks());
         }

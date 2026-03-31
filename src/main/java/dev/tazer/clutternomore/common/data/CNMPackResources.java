@@ -66,11 +66,11 @@ public class CNMPackResources extends AbstractPackResources {
         this.rootResources = new ConcurrentHashMap<>();
         this.clientMetadata = new PackMetadataSection(Component.literal("ClutterNoMore Runtime Client Resources"), resourcePackVersion
                 //? if >1.21 && <1.21.9
-                /*, Optional.empty()*/
+                //, Optional.empty()
         );
         this.serverMetadata = new PackMetadataSection(Component.literal("ClutterNoMore Runtime Server Data"), dataPackVersion
                 //? if >1.21 && <1.21.9
-                /*, Optional.empty()*/
+                //, Optional.empty()
         );
     }
 

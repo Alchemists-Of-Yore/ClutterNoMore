@@ -5,7 +5,7 @@ import dev.tazer.clutternomore.ClutterNoMore;
 import dev.tazer.clutternomore.ClutterNoMoreClient;
 import dev.tazer.clutternomore.common.networking.ShapeTooltip;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 //? if >1.21.6 {
 import net.minecraft.client.renderer.RenderPipelines;
@@ -43,10 +43,10 @@ public class ClientShapeTooltip implements ClientTooltipComponent {
     }
 
     @Override
-    //? if >1.21.2 {
-    public void renderImage(Font font, int mouseX, int mouseY, int width, int height, GuiGraphics guiGraphics) {
+    //? if >26 {
+    public void extractImage(Font font, int mouseX, int mouseY, int width, int height, GuiGraphicsExtractor guiGraphics) {
     //?} else {
-    /*public void renderImage(Font font, int mouseX, int mouseY, GuiGraphics guiGraphics) {
+    /*public void renderImage(Font font, int mouseX, int mouseY, GuiGraphicsExtractor guiGraphics) {
     *///?}
         if (ClutterNoMoreClient.showTooltip) {
             Identifier selected = ClutterNoMore.location("textures/gui/selected_shape_inventory.png");
@@ -56,19 +56,12 @@ public class ClientShapeTooltip implements ClientTooltipComponent {
 
             for (int index = 0; index < shapes.size(); index++) {
                 int x = startX + index * spacing;
-                guiGraphics.renderItem(shapes.get(index).getDefaultInstance(), x, mouseY);
+                RenderHelper.item(guiGraphics, shapes.get(index).getDefaultInstance(), x, mouseY);
             }
-
+            RenderHelper.blit(
+                    guiGraphics, selected, Mth.floor(startX + selectedIndex * spacing) - 3, mouseY - 3, 0, 0, 22, 22, 22, 22);
             //? if <1.21.2
-            /*RenderSystem.enableBlend();*/
-            guiGraphics.blit(
-                    //? if >1.21.6
-                    RenderPipelines.GUI_TEXTURED,
-                    //? =1.21.5
-                    /*RenderType::guiTextured,*/
-                    selected, Mth.floor(startX + selectedIndex * spacing) - 3, mouseY - 3, 0, 0, 22, 22, 22, 22);
-            //? if <1.21.2
-            /*RenderSystem.disableBlend();*/
+            //RenderSystem.disableBlend();
         }
     }
 }
