@@ -3,14 +3,12 @@ package dev.tazer.clutternomore.neoforge;
 /*import dev.tazer.clutternomore.ClutterNoMore;
 import dev.tazer.clutternomore.ClutterNoMoreClient;
 import dev.tazer.clutternomore.client.ClientShapeTooltip;
-import dev.tazer.clutternomore.client.assets.AssetGenerator;
 import dev.tazer.clutternomore.common.networking.ShapeTooltip;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.*;
 import net.neoforged.neoforge.common.util.Lazy;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
@@ -91,9 +89,5 @@ public class NeoForgeClientEvents {
         ClutterNoMoreClient.onPlayerTick(Minecraft.getInstance());
     }
 
-    @SubscribeEvent
-    private static void clientSetup(FMLClientSetupEvent event) {
-        ClutterNoMoreClient.clientStarted(Minecraft.getInstance());
-    }
 }
 *///?}

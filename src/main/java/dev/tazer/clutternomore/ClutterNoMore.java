@@ -16,7 +16,6 @@ import dev.tazer.clutternomore.common.mixin.access.BlockBehaviorAccessor;
 *///?} else {
 import net.minecraft.core.HolderLookup;
 import net.minecraft.server.packs.PackLocationInfo;
-import net.minecraft.server.packs.PackSelectionConfig;
 //?}
 
 //? if <1.21.4 {
@@ -32,9 +31,6 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
-import net.minecraft.server.packs.PackResources;
-import net.minecraft.server.packs.PackType;
-import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.repository.PackSource;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -347,22 +343,4 @@ public class ClutterNoMore {
         /*return BlockBehaviour.Properties.copy(block);*/
     }
 
-    private static class PackResourcesSupplier implements Pack.ResourcesSupplier {
-        //? if >1.21 {
-        @Override
-        public PackResources openPrimary(PackLocationInfo location) {
-            return RESOURCES;
-        }
-
-        @Override
-        public PackResources openFull(PackLocationInfo location, Pack.Metadata metadata) {
-            return RESOURCES;
-        }
-        //?} else {
-        /*@Override
-        public PackResources open(String s) {
-            return RESOURCES;
-        }
-        *///?}
-    }
 }

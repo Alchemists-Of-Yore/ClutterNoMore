@@ -15,9 +15,9 @@ public class CNMConfig {
         @Comment("If steps should be added to all existing stairs")
         @SerializedName("steps")
         public final TrackedValue<Boolean> STEPS = this.value(true);
-        @Comment("Whether to generate a copy of the runtime datapack.")
+        @Comment("Whether to generate a copy of the runtime datapack")
         @SerializedName("runtime_data_generation")
-        public final TrackedValue<Boolean> RUNTIME_DATA_GENERATION = this.value(true);
+        public final TrackedValue<Boolean> RUNTIME_DATA_GENERATION = this.value(false);
     }
 
     public static class ClientConfig extends ReflectiveConfig {
@@ -30,9 +30,9 @@ public class CNMConfig {
         @Comment("If the change block shape key should be held or toggled to open the menu")
         @SerializedName("hold")
         public final TrackedValue<InputType> HOLD = this.value(InputType.HOLD);
-        @Comment("Whether to generate a resource pack for vertical slabs and steps when the game is launched.")
+        @Comment("Whether to generate a copy of the runtime resourcepack")
         @SerializedName("runtime_asset_generation")
-        public final TrackedValue<Boolean> RUNTIME_ASSET_GENERATION = this.value(true);
+        public final TrackedValue<Boolean> RUNTIME_ASSET_GENERATION = this.value(false);
         @Comment("Whether to show a small indicator on hotbar items that have shape variants")
         @SerializedName("shape_indicator")
         public final TrackedValue<Boolean> SHAPE_INDICATOR = this.value(true);

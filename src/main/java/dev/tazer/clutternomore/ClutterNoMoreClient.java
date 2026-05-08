@@ -22,7 +22,6 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.packs.repository.PackRepository;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
@@ -33,7 +32,6 @@ import net.minecraft.world.item.TooltipFlag;
 //? if neoforge {
 /*import net.neoforged.neoforge.network.PacketDistributor;
 *///?}
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,14 +41,8 @@ public class ClutterNoMoreClient {
     public static boolean showTooltip = false;
     public static ShapeSwitcherOverlay OVERLAY = null;
     public static final CNMConfig.ClientConfig CLIENT_CONFIG = CNMConfig.ClientConfig.createToml(Platform.INSTANCE.configPath(), MODID,  "client", CNMConfig.ClientConfig.class);
-    public static boolean requireReload = false;
 
     public static void init() {
-    }
-
-    public static void clientStarted(Minecraft client) {
-        AssetGenerator.generate();
-        ClutterNoMoreClient.enablePack(client);
     }
 
     public static void onItemTooltips(ItemStack stack,
@@ -211,17 +203,5 @@ public class ClutterNoMoreClient {
             return true;
         }
         return false;
-    }
-
-    private static void enablePack(Minecraft client) {
-        PackRepository repository = client.getResourcePackRepository();
-        Path packPath = client.getResourcePackDirectory().resolve("clutternomore");
-        String packId = "file/" + packPath.getFileName().toString();
-        if (requireReload || !repository.getSelectedIds().contains(packId)) {
-            if (repository.getPack(packId) != null) {
-                repository.addPack(packId);
-                client.reloadResourcePacks();
-            }
-        }
     }
 }

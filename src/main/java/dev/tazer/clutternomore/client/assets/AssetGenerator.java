@@ -3,11 +3,9 @@ package dev.tazer.clutternomore.client.assets;
 import com.google.gson.*;
 import dev.tazer.clutternomore.ClutterNoMore;
 import dev.tazer.clutternomore.ClutterNoMoreClient;
-import dev.tazer.clutternomore.Platform;
 //? if <1.21.9 {
 /*import dev.tazer.clutternomore.common.data.CNMPackResources;
 *///?}
-import net.minecraft.client.Minecraft;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.Resource;
@@ -15,7 +13,6 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.BufferedReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
@@ -28,9 +25,8 @@ import static dev.tazer.clutternomore.ClutterNoMore.writeFile;
 public class AssetGenerator {
     public static Set<String> keys;
 
-    public static void generate() {
+    public static void generate(ResourceManager manager) {
         if (keys == null) return;
-        ResourceManager manager = Minecraft.getInstance().getResourceManager();
 
         //lang
         JsonObject lang = new JsonObject();
@@ -83,7 +79,6 @@ public class AssetGenerator {
         ClutterNoMore.RESOURCES.addJson(PackType.CLIENT_RESOURCES, ClutterNoMore.location(fileName), contents);
         if (ClutterNoMoreClient.CLIENT_CONFIG.RUNTIME_ASSET_GENERATION.value()) {
             Path assets = pack.resolve("assets/clutternomore");
-            ClutterNoMoreClient.requireReload = true;
             writeFile(assets.resolve(fileName.substring(0, fileName.lastIndexOf("/"))), assets.resolve(fileName), contents.toString());
         }
     }

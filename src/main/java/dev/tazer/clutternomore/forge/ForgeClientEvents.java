@@ -18,10 +18,7 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import org.lwjgl.glfw.GLFW;
-
-import static dev.tazer.clutternomore.ClutterNoMoreClient.*;
 
 @Mod.EventBusSubscriber(modid = ClutterNoMore.MODID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ForgeClientEvents {
@@ -36,10 +33,6 @@ public class ForgeClientEvents {
         public static void registerTooltipComponent(RegisterClientTooltipComponentFactoriesEvent event) {
             ClutterNoMore.LOGGER.info("Registering tooltip component factory");
             event.register(ShapeTooltip.class, ClientShapeTooltip::new);
-        }
-        @SubscribeEvent
-        public static void clientSetup(FMLClientSetupEvent event) {
-            ClutterNoMoreClient.clientStarted(Minecraft.getInstance());
         }
     }
 

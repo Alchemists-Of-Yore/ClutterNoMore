@@ -4,10 +4,8 @@ package dev.tazer.clutternomore.fabric;
 
 import dev.tazer.clutternomore.ClutterNoMore;
 import dev.tazer.clutternomore.ClutterNoMoreClient;
-import dev.tazer.clutternomore.client.assets.AssetGenerator;
 import dev.tazer.clutternomore.common.networking.ShapeMapPayload;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -54,7 +52,6 @@ public class FabricClientEntrypoint implements ClientModInitializer {
 
         ClientTickEvents.START_CLIENT_TICK.register(ClutterNoMoreClient::onPlayerTick);
         ScreenEvents.AFTER_INIT.register(this::afterInitScreen);
-        ClientLifecycleEvents.CLIENT_STARTED.register(ClutterNoMoreClient::clientStarted);
         ClientPlayNetworking.registerGlobalReceiver(ShapeMapPayload.TYPE, ShapeMapPayload::handleDataOnClient);
     }
 

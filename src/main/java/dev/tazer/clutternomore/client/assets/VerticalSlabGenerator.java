@@ -3,7 +3,6 @@ package dev.tazer.clutternomore.client.assets;
 import com.google.gson.JsonObject;
 import dev.tazer.clutternomore.ClutterNoMore;
 import dev.tazer.clutternomore.common.blocks.VerticalSlabBlock;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.Resource;
