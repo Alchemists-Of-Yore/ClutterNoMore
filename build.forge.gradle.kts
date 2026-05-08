@@ -1,46 +1,96 @@
 plugins {
+    id("common")
     id("net.neoforged.moddev.legacyforge")
-    id ("dev.kikugie.postprocess.jsonlang")
+    id("dev.kikugie.postprocess.jsonlang")
     id("me.modmuss50.mod-publish-plugin")
 }
 
 tasks.named<ProcessResources>("processResources") {
-    fun prop(name: String) = project.property(name) as String
-
-    val props = HashMap<String, String>().apply {
-        this["mod_version"] = prop("mod.version") + "+" + prop("deps.minecraft")
-        this["minecraft"] = prop("deps.minecraft")
-        this["loader_version_range"] = prop("deps.loader_version_range")
-        this["mod_license"] = prop("mod.license")
-        this["mod_description"] = prop("mod.description")
-        this["mod_id"] = prop("mod.id")
-        this["mod_name"] = prop("mod.name")
-        this["mod_authors"] = prop("mod.authors")
-        this["neo_version_range"] = prop("deps.neo_version_range")
-        this["forge_version_range"] = prop("deps.forge_version_range")
-        this["minecraft_version_range"] = prop("deps.minecraft_version_range")
-
-    }
+    val props = mapOf(
+        "mod_version" to "${prop("mod.version")}+${dep("minecraft")}",
+        "minecraft" to dep("minecraft"),
+        "loader_version_range" to dep("loader_version_range"),
+        "mod_license" to prop("mod.license"),
+        "mod_description" to prop("mod.description"),
+        "mod_id" to prop("mod.id"),
+        "mod_name" to prop("mod.name"),
+        "mod_authors" to prop("mod.authors"),
+        "neo_version_range" to dep("neo_version_range"),
+        "forge_version_range" to dep("forge_version_range"),
+        "minecraft_version_range" to dep("minecraft_version_range"),
+    )
 
     filesMatching(listOf("fabric.mod.json", "META-INF/neoforge.mods.toml", "META-INF/mods.toml")) {
         expand(props)
     }
+    inputs.properties(props)
 }
 
-version = "${property("mod.version")}+${property("deps.minecraft")}-forge"
-base.archivesName = property("mod.id") as String
-
 jsonlang {
-    languageDirectories = listOf("assets/${property("mod.id")}/lang")
+    languageDirectories = listOf("assets/${prop("mod.id")}/lang")
     prettyPrint = true
 }
 
+repositories {
+    mavenCentral()
+    maven("https://maven.blamejared.com/") {
+        name = "JEI"
+        content { includeGroup("mezz.jei") }
+    }
+    maven("https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1") {
+        name = "DevAuth"
+        content { includeGroup("me.djtheredstoner") }
+    }
+    maven("https://cursemaven.com") {
+        name = "Curse Maven"
+        content { includeGroup("curse.maven") }
+    }
+    maven("https://thedarkcolour.github.io/KotlinForForge/") {
+        name = "Kotlin for Forge"
+        content { includeGroupAndSubgroups("thedarkcolour") }
+    }
+    maven("https://maven.greenhouse.lgbt/releases/") {
+        name = "Greenhouse Maven"
+        content {
+            includeGroup("house.greenhouse")
+            includeGroup("umpaz.brewinandchewin")
+        }
+    }
+    maven("https://maven.terraformersmc.com/releases/") {
+        name = "Terraformers (Mod Menu)"
+        content { includeGroup("dev.emi") }
+    }
+    maven("https://api.modrinth.com/maven") {
+        name = "Modrinth"
+        content { includeGroup("maven.modrinth") }
+    }
+    maven("https://repo.sleeping.town/") {
+        name = "Sisby Maven"
+        content { includeGroup("folk.sisby") }
+    }
+    maven("https://maven.parchmentmc.org") {
+        name = "Parchment Mappings"
+        content { includeGroup("org.parchmentmc.data") }
+    }
+    maven("https://maven.isxander.dev/releases") {
+        name = "Xander Maven"
+        content {
+            includeGroupAndSubgroups("dev.isxander")
+            includeGroupAndSubgroups("org.quiltmc.parsers")
+        }
+    }
+    maven("https://maven.su5ed.dev/releases") {
+        name = "Sinytra Maven"
+        content { includeGroupAndSubgroups("dev.su5ed.sinytra") }
+    }
+}
+
 legacyForge {
-    version = property("deps.forge") as String
+    version = dep("forge")
     validateAccessTransformers = true
 
     if (hasProperty("deps.parchment")) parchment {
-        val (mc, ver) = (property("deps.parchment") as String).split(':')
+        val (mc, ver) = dep("parchment").split(':')
         mappingsVersion = ver
         minecraftVersion = mc
     }
@@ -57,125 +107,39 @@ legacyForge {
     }
 
     mods {
-        register(property("mod.id") as String) {
+        register(prop("mod.id")) {
             sourceSet(sourceSets["main"])
         }
     }
     sourceSets["main"].resources.srcDir("src/main/generated")
 }
 
-
-repositories {
-    mavenCentral()
-    maven ( url = "https://maven.blamejared.com/" )
-    maven {
-        name = "DevAuth"
-        url = uri("https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1")
-        content {
-            includeGroup("me.djtheredstoner")
-        }
-    }
-    maven {
-        name = "Curse Maven"
-        url = uri("https://cursemaven.com")
-        content {
-            includeGroup("curse.maven")
-        }
-    }
-    maven {
-        name = "Kotlin for Forge"
-        url = uri("https://thedarkcolour.github.io/KotlinForForge/")
-        content {
-            includeGroupAndSubgroups("thedarkcolour")
-        }
-    }
-    maven {
-        name = "Greenhouse Maven"
-        url = uri("https://maven.greenhouse.lgbt/releases/")
-        content {
-            includeGroup("house.greenhouse")
-            includeGroup("umpaz.brewinandchewin")
-        }
-    }
-    maven {
-        name = "Terraformers (Mod Menu)"
-        url = uri("https://maven.terraformersmc.com/releases/")
-        content {
-            includeGroup("dev.emi")
-        }
-    }
-    maven {
-        name = "Modrinth"
-        url = uri("https://api.modrinth.com/maven")
-        content {
-            includeGroup("maven.modrinth")
-        }
-    }
-    maven {
-        name = "Sisby Maven"
-        url = uri("https://repo.sleeping.town/")
-        content {
-            includeGroup("folk.sisby")
-        }
-    }
-    maven {
-        name = "Parchment Mappings"
-        url = uri("https://maven.parchmentmc.org")
-        content {
-            includeGroup("org.parchmentmc.data")
-        }
-    }
-    maven {
-        name = "Xander Maven"
-        url = uri("https://maven.isxander.dev/releases")
-        content {
-            includeGroupAndSubgroups("dev.isxander")
-            includeGroupAndSubgroups("org.quiltmc.parsers")
-        }
-    }
-    maven {
-        name = "Sinytra Maven"
-        url = uri("https://maven.su5ed.dev/releases")
-        content {
-            includeGroupAndSubgroups("dev.su5ed.sinytra")
-        }
-    }
-    maven {
-        name = "JEI"
-        url = uri("https://maven.blamejared.com/")
-        content {
-            includeGroup("mezz.jei")
-        }
-    }
-}
-
 dependencies {
+    implementation("folk.sisby:kaleido-config:${dep("kaleido")}")
+    jarJar("folk.sisby:kaleido-config:${dep("kaleido")}")
+    "additionalRuntimeClasspath"("folk.sisby:kaleido-config:${dep("kaleido")}")
 
-    implementation("folk.sisby:kaleido-config:${property("deps.kaleido")}")
-    jarJar("folk.sisby:kaleido-config:${property("deps.kaleido")}")
-    "additionalRuntimeClasspath"("folk.sisby:kaleido-config:${property("deps.kaleido")}")
+    modCompileOnly("dev.emi:emi-forge:${dep("emi")}:api")
+//    modRuntimeOnly("dev.emi:emi-forge:${dep("emi")}")
 
-    modCompileOnly("dev.emi:emi-forge:${property("deps.emi")}:api")
-//    modRuntimeOnly("dev.emi:emi-forge:${property("deps.emi")}")
-
-    modRuntimeOnly("maven.modrinth:moonlight:${property("deps.moonlight")}")
+    modRuntimeOnly("maven.modrinth:moonlight:${dep("moonlight")}")
     modRuntimeOnly("maven.modrinth:supplementaries:LAQ22yJj")
     modRuntimeOnly("maven.modrinth:would:2FZ421Oh")
 
     // compile against the JEI API but do not include it at runtime
-    compileOnly("mezz.jei:jei-${property("deps.minecraft")}-forge-api:${property("deps.jei")}")
+    compileOnly("mezz.jei:jei-${dep("minecraft")}-forge-api:${dep("jei")}")
     // at runtime, use the full JEI jar for Forge
-    modRuntimeOnly("mezz.jei:jei-${property("deps.minecraft")}-forge:${property("deps.jei")}")
+    modRuntimeOnly("mezz.jei:jei-${dep("minecraft")}-forge:${dep("jei")}")
 
     modImplementation("dev.su5ed.sinytra:fabric-loader:2.7.11+0.16.5+1.20.1")
     modImplementation("dev.su5ed.sinytra.fabric-api:fabric-api-base:0.4.32+ef105b4977")
     modImplementation("dev.su5ed.sinytra.fabric-api:fabric-item-group-api-v1:4.0.14+c9161c2d77")
 
     annotationProcessor("org.spongepowered:mixin:0.8.5:processor")
-    annotationProcessor("io.github.llamalad7:mixinextras-common:0.5.0")
-    compileOnly("io.github.llamalad7:mixinextras-common:0.5.0")
-    implementation("io.github.llamalad7:mixinextras-forge:0.5.0")
-    jarJar("io.github.llamalad7:mixinextras-forge:0.5.0")
+    annotationProcessor("io.github.llamalad7:mixinextras-common:0.5.4")
+    compileOnly("io.github.llamalad7:mixinextras-common:0.5.4")
+    implementation("io.github.llamalad7:mixinextras-forge:0.5.4")
+    jarJar("io.github.llamalad7:mixinextras-forge:0.5.4")
 }
 
 mixin {
@@ -191,25 +155,6 @@ tasks.named<Jar>("jar") {
     }
 }
 
-stonecutter {
-    replacements.string {
-        direction = eval(current.version, ">1.21.10")
-        replace("ResourceLocation", "Identifier")
-    }
-    replacements.string {
-        direction = eval(current.version, ">26")
-        replace("GuiGraphics;", "GuiGraphicsExtractor;")
-    }
-    replacements.string {
-        direction = eval(current.version, ">26")
-        replace("GuiGraphics ", "GuiGraphicsExtractor ")
-    }
-    replacements.string {
-        direction = eval(current.version, ">1.21.10")
-        replace("getKey().location()", "getKey().identifier()")
-    }
-}
-
 tasks {
     processResources {
         exclude("**/fabric.mod.json", "**/*.accesswidener", "**/neoforge.mods.toml")
@@ -222,46 +167,32 @@ tasks {
     register<Copy>("buildAndCollect") {
         group = "build"
         from(jar.map { it.archiveFile })
-        into(rootProject.layout.buildDirectory.file("libs/${project.property("mod.version")}"))
+        into(rootProject.layout.buildDirectory.file("libs/${prop("mod.version")}"))
         dependsOn("build")
     }
 }
-
-java {
-    withSourcesJar()
-    val javaCompat = JavaVersion.VERSION_17
-    sourceCompatibility = javaCompat
-    targetCompatibility = javaCompat
-}
-
-val additionalVersionsStr = findProperty("publish.additionalVersions") as String?
-val additionalVersions: List<String> = additionalVersionsStr
-    ?.split(",")
-    ?.map { it.trim() }
-    ?.filter { it.isNotEmpty() }
-    ?: emptyList()
 
 publishMods {
     file = (tasks.named<org.gradle.jvm.tasks.Jar>("reobfJar").map { it.archiveFile.get() })
     additionalFiles.from(tasks.named<org.gradle.jvm.tasks.Jar>("sourcesJar").map { it.archiveFile.get() })
 
     type = BETA
-    displayName = "${property("mod.name")} ${property("mod.version")} for ${stonecutter.current.version} Forge"
-    version = "${property("mod.version")}+${property("deps.minecraft")}-forge"
+    displayName = "${prop("mod.name")} ${prop("mod.version")} for $mc Forge"
+    version = "${prop("mod.version")}+${dep("minecraft")}-forge"
     changelog = provider { rootProject.file("CHANGELOG.md").readText() }
     modLoaders.add("forge")
 
     modrinth {
-        projectId = property("publish.modrinth") as String
+        projectId = prop("publish.modrinth")
         accessToken = env.MODRINTH_API_KEY.orNull()
-        minecraftVersions.add(stonecutter.current.version)
+        minecraftVersions.add(mc)
         minecraftVersions.addAll(additionalVersions)
     }
 
     curseforge {
-        projectId = property("publish.curseforge") as String
+        projectId = prop("publish.curseforge")
         accessToken = env.CURSEFORGE_API_KEY.orNull()
-        minecraftVersions.add(stonecutter.current.version)
+        minecraftVersions.add(mc)
         minecraftVersions.addAll(additionalVersions)
     }
 }
