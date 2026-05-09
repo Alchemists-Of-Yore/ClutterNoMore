@@ -12,6 +12,7 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 //?}
 import dev.tazer.clutternomore.ClutterNoMore;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
@@ -87,6 +88,14 @@ public class ShapeMap {
 
     public static List<Item> getShapes(Item item) {
         return SHAPES_DATAMAP.getOrDefault(getParent(item), List.of());
+    }
+
+    public static List<String> getSearchAliases(Item item) {
+        List<Item> shapes = SHAPES_DATAMAP.get(item);
+        if (shapes == null || shapes.isEmpty()) return List.of();
+        List<String> aliases = new ArrayList<>(shapes.size());
+        for (Item shape : shapes) aliases.add(Component.translatable(shape.getDescriptionId()).getString());
+        return aliases;
     }
 
     public static void setEdges(List<Edge> edges, boolean detailedLogs) {
