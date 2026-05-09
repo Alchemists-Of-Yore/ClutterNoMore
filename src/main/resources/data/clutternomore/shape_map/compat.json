@@ -1,0 +1,50 @@
+{
+  "priority": 500,
+  "add": {
+    "glass": [
+      "create:tiled_glass",
+      "create:framed_glass",
+      "create:horizontal_framed_glass",
+      "create:vertical_framed_glass"
+    ],
+    "glass_pane": [
+      "create:tiled_glass_pane",
+      "create:framed_glass_pane",
+      "create:horizontal_framed_glass_pane",
+      "create:vertical_framed_glass_pane"
+    ],
+    "clayworks:glass_door": [
+      "create:framed_glass_door"
+    ],
+    "clayworks:glass_trapdoor": [
+      "create:framed_glass_trapdoor"
+    ],
+    "create:gearbox": [
+      "create:vertical_gearbox"
+    ],
+    "/create:(?<color>.+?)_sail/": [
+      "simulated:${color}_symmetric_sail"
+    ],
+    "supplementaries:timber_frame": [
+      "supplementaries:timber_brace",
+      "supplementaries:timber_cross_brace"
+    ],
+    "supplementaries:daub_frame": [
+      "supplementaries:daub_brace",
+      "supplementaries:daub_cross_brace"
+    ],
+    "podzol": ["pyrite:podzol_turf"],
+    "mycelium": ["pyrite:mycelium_turf"],
+    "grass_block": ["pyrite:grass_turf"],
+    "dirt_path": [
+      "pyrite:path_turf",
+      "pyrite:path_slab",
+      "pyrite:path_stairs"
+    ]
+  },
+  "remove": {
+    "/.*?copycat.*/": [
+      "/.*?copycat.*/"
+    ]
+  }
+}
