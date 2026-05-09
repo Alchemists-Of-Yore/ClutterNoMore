@@ -103,30 +103,96 @@ public class ShapeMapFileHandler extends SimpleJsonResourceReloadListener
         Map<ShapeMapKey, List<ShapeMapTemplate>> rules = isAdd ? file.contents.add() : file.contents.remove();
         for (Map.Entry<ShapeMapKey, List<ShapeMapTemplate>> rule : rules.entrySet()) {
             ShapeMapKey key = rule.getKey();
-            if (detailed && key instanceof ShapeMapKey.Tag) {
-                for (ShapeMapTemplate t : rule.getValue()) {
-                    if (t.raw().startsWith("#")) {
-                        ClutterNoMore.LOGGER.info("[ShapeMap] tag-on-tag rule '{}' -> '{}' produces a full cross product shape set in {}. This is not recommended and likely a mistake!",
-                                key.raw(), t.raw(), file.id);
-                        break;
-                    }
-                }
-            }
-            List<KeyMatch> matches = resolveKey(key, file.id, detailed);
-            for (KeyMatch match : matches) {
-                for (ShapeMapTemplate template : rule.getValue()) {
-                    String resolved = template.substitute(match.vars);
-                    List<Item> shapes = resolveValue(resolved, template.raw(), file.id, detailed);
-                    for (Item shape : shapes) {
-                        if (shape == match.item) continue;
-                        if (isAdd) {
-                            edges.add(new ShapeMap.Edge(match.item, shape, file.contents.priority(), file.id));
-                        } else {
-                            edges.removeIf(e -> e.parent() == match.item && e.shape() == shape);
+            List<ShapeMapTemplate> templates = rule.getValue();
+
+            if (isAdd) {
+                if (detailed && key instanceof ShapeMapKey.Tag) {
+                    for (ShapeMapTemplate t : templates) {
+                        if (t.raw().startsWith("#")) {
+                            ClutterNoMore.LOGGER.info("[ShapeMap] tag-on-tag rule '{}' -> '{}' produces a full cross product shape set in {}. This is not recommended and likely a mistake!",
+                                    key.raw(), t.raw(), file.id);
+                            break;
                         }
                     }
                 }
+                List<KeyMatch> matches = resolveKey(key, file.id, detailed);
+                for (KeyMatch match : matches) {
+                    for (ShapeMapTemplate template : templates) {
+                        String resolved = template.substitute(match.vars);
+                        List<Item> shapes = resolveValue(resolved, template.raw(), file.id, detailed);
+                        for (Item shape : shapes) {
+                            if (shape == match.item) continue;
+                            edges.add(new ShapeMap.Edge(match.item, shape, file.contents.priority(), file.id));
+                        }
+                    }
+                }
+            } else {
+                edges.removeIf(edge -> ruleMatchesEdge(key, templates, edge));
             }
+        }
+    }
+
+    private boolean ruleMatchesEdge(ShapeMapKey key, List<ShapeMapTemplate> templates, ShapeMap.Edge edge) {
+        Map<String, String> vars = matchKeyAgainst(key, edge.parent());
+        if (vars == null) return false;
+        for (ShapeMapTemplate template : templates) {
+            String resolved = template.substitute(vars);
+            if (matchesValueAgainst(resolved, edge.shape())) return true;
+        }
+        return false;
+    }
+
+    private Map<String, String> matchKeyAgainst(ShapeMapKey key, Item parent) {
+        Identifier parentId = BuiltInRegistries.ITEM.getKey(parent);
+        if (key instanceof ShapeMapKey.Literal literal) {
+            return literal.id().equals(parentId) ? defaultVars(parentId) : null;
+        }
+        if (key instanceof ShapeMapKey.Tag tag) {
+            TagKey<Item> tagKey = TagKey.create(Registries.ITEM, tag.tagId());
+            return BuiltInRegistries.ITEM.wrapAsHolder(parent).is(tagKey) ? defaultVars(parentId) : null;
+        }
+        if (key instanceof ShapeMapKey.Regex regex) {
+            Matcher m = regex.pattern().matcher(parentId.toString());
+            if (!m.matches()) return null;
+            Map<String, String> vars = new HashMap<>();
+            vars.put("ns", parentId.getNamespace());
+            vars.put("path", parentId.getPath());
+            for (int i = 1; i <= m.groupCount(); i++) {
+                String g = m.group(i);
+                if (g != null) vars.put(String.valueOf(i), g);
+            }
+            for (String name : namedGroupNames(regex.pattern())) {
+                try {
+                    String g = m.group(name);
+                    if (g != null) vars.put(name, g);
+                } catch (IllegalArgumentException ignored) {}
+            }
+            return vars;
+        }
+        return null;
+    }
+
+    private boolean matchesValueAgainst(String resolved, Item shape) {
+        Identifier shapeId = BuiltInRegistries.ITEM.getKey(shape);
+        if (resolved.length() >= 2 && resolved.startsWith("/") && resolved.endsWith("/")) {
+            try {
+                return Pattern.compile(resolved.substring(1, resolved.length() - 1))
+                        .matcher(shapeId.toString()).matches();
+            } catch (PatternSyntaxException e) {
+                return false;
+            }
+        }
+        if (resolved.startsWith("#")) {
+            Identifier tagId;
+            try { tagId = Identifier.parse(resolved.substring(1)); }
+            catch (Exception e) { return false; }
+            TagKey<Item> tagKey = TagKey.create(Registries.ITEM, tagId);
+            return BuiltInRegistries.ITEM.wrapAsHolder(shape).is(tagKey);
+        }
+        try {
+            return Identifier.parse(resolved).equals(shapeId);
+        } catch (Exception e) {
+            return false;
         }
     }
 
