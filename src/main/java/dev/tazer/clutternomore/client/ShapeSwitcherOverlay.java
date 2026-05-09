@@ -116,7 +116,9 @@ public class ShapeSwitcherOverlay {
         int maxIndex = shapes.size() - 1;
         int previousIndex = selectedIndex;
         selectedIndex = newIndex;
-        if (ClutterNoMoreClient.CLIENT_CONFIG.WRAP_SCROLLING.value()) {
+        boolean wrap = ClutterNoMoreClient.CLIENT_CONFIG.WRAP_SCROLLING.value()
+                || ClutterNoMoreClient.CLIENT_CONFIG.HOLD.value() == CNMConfig.InputType.PRESS;
+        if (wrap) {
             if (selectedIndex < 0) selectedIndex = maxIndex;
             if (selectedIndex > maxIndex) selectedIndex = 0;
         } else {

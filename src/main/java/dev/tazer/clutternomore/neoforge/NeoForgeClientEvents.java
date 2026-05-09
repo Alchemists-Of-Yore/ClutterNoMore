@@ -60,22 +60,22 @@ public class NeoForgeClientEvents {
     }
 
     @SubscribeEvent
-    public static void onScreenInput(ScreenEvent.KeyPressed.Post event) {
+    public static void onScreenInput(ScreenEvent.KeyPressed.Pre event) {
         ClutterNoMoreClient.onKeyPress(event.getScreen(), event.getKeyCode());
     }
 
     @SubscribeEvent
-    public static void onScreenInput(ScreenEvent.MouseButtonPressed.Post event) {
+    public static void onScreenInput(ScreenEvent.MouseButtonPressed.Pre event) {
         ClutterNoMoreClient.onKeyPress(event.getScreen(), event.getButton());
     }
 
     @SubscribeEvent
-    public static void onScreenInput(ScreenEvent.KeyReleased.Post event) {
+    public static void onScreenInput(ScreenEvent.KeyReleased.Pre event) {
         ClutterNoMoreClient.onKeyReleased(event.getKeyCode());
     }
 
     @SubscribeEvent
-    public static void onScreenInput(ScreenEvent.MouseButtonReleased.Post event) {
+    public static void onScreenInput(ScreenEvent.MouseButtonReleased.Pre event) {
         ClutterNoMoreClient.onKeyReleased(event.getButton());
     }
 

@@ -64,22 +64,22 @@ public class ForgeClientEvents {
     }
 
     @SubscribeEvent
-    public static void onScreenKeyPressedPost(ScreenEvent.KeyPressed.Post event) {
+    public static void onScreenKeyPressed(ScreenEvent.KeyPressed.Pre event) {
         ClutterNoMoreClient.onKeyPress(event.getScreen(), event.getKeyCode());
     }
 
     @SubscribeEvent
-    public static void onScreenMouseButtonPressedPost(ScreenEvent.MouseButtonPressed.Post event) {
+    public static void onScreenMouseButtonPressed(ScreenEvent.MouseButtonPressed.Pre event) {
         ClutterNoMoreClient.onKeyPress(event.getScreen(), event.getButton());
     }
 
     @SubscribeEvent
-    public static void onScreenKeyReleasedPost(ScreenEvent.KeyReleased.Post event) {
+    public static void onScreenKeyReleased(ScreenEvent.KeyReleased.Pre event) {
         ClutterNoMoreClient.onKeyReleased(event.getKeyCode());
     }
 
     @SubscribeEvent
-    public static void onScreenMouseButtonReleasedPost(ScreenEvent.MouseButtonReleased.Post event) {
+    public static void onScreenMouseButtonReleased(ScreenEvent.MouseButtonReleased.Pre event) {
         ClutterNoMoreClient.onKeyReleased(event.getButton());
     }
 

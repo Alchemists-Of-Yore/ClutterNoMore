@@ -16,9 +16,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(AbstractContainerScreen.class)
 public class CreativeShapeIndicatorMixin {
-    //? if >1.20.1 {
-    @Inject(method = "renderSlot", at = @At("RETURN"))
+    //? if >26 {
+    @Inject(method = "extractSlot", at = @At("RETURN"))
+    private void cnm$drawShapeIndicator(GuiGraphicsExtractor guiGraphics, Slot slot, int mouseX, int mouseY, CallbackInfo ci) {
+    //?} else {
+    /*@Inject(method = "renderSlot", at = @At("RETURN"))
     private void cnm$drawShapeIndicator(GuiGraphicsExtractor guiGraphics, Slot slot, CallbackInfo ci) {
+    *///?}
         if (!ClutterNoMoreClient.CLIENT_CONFIG.SHAPE_INDICATOR.value()) return;
         if (!ClutterNoMoreClient.isCreativeTabSlot(slot)) return;
         ItemStack stack = slot.getItem();
@@ -33,5 +37,4 @@ public class CreativeShapeIndicatorMixin {
         /*guiGraphics.pose().popPose();
         *///?}
     }
-    //?}
 }

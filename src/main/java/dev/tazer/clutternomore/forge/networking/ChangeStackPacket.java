@@ -58,8 +58,8 @@ public record ChangeStackPacket(int containerId, int slot, ItemStack stack) {
         if (!ShapeMap.inSameShapeSet(stack.getItem(), current.getItem())) return;
 
         ItemStack replaced = stack.copyWithCount(current.getCount());
-        slot.set(replaced);
-        menu.broadcastChanges();
+        slot.setByPlayer(replaced);
+        menu.sendAllDataToRemote();
     }
 
     private static AbstractContainerMenu resolveMenu(Player player, int containerId) {

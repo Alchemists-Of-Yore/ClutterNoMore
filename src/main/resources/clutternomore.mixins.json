@@ -33,6 +33,7 @@
     "client.CreativeInventoryScreenAccessor",
     "client.CreativeShapeIndicatorMixin",
     "client.CreativeSlotWrapperAccessor",
+    "client.CreativeTooltipMixin",
     "client.HotbarMixin",
     "client.KeyboardHandlerMixin",
     "client.MouseHandlerMixin",

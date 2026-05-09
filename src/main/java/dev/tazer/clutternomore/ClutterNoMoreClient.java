@@ -92,19 +92,9 @@ public class ClutterNoMoreClient {
         if (!ShapeMap.contains(stack.getItem())) return;
 
         if (CLIENT_CONFIG.DETAILED_TOOLTIPS.value()) {
-            Component hint;
-            if (showTooltip) {
-                hint = Component.translatable("tooltip.clutternomore.scroll_to_change",
-                        Component.translatable("tooltip.clutternomore.scroll").withStyle(ChatFormatting.GRAY));
-            } else {
-                String key = CLIENT_CONFIG.HOLD.value() == CNMConfig.InputType.HOLD
-                        ? "tooltip.clutternomore.hold_to_change"
-                        : "tooltip.clutternomore.press_to_change";
-                hint = Component.translatable(key,
-                        Component.keybind("key.clutternomore.change_block_shape").copy().withStyle(ChatFormatting.GRAY));
-            }
+            if (Minecraft.getInstance().screen instanceof CreativeModeInventoryScreen) return;
             int insertAt = tooltip.isEmpty() ? 0 : 1;
-            tooltip.add(insertAt, hint.copy().withStyle(ChatFormatting.DARK_GRAY));
+            tooltip.add(insertAt, hintComponent());
         } else if (!isHoveringCreativeTabSlot() && !showTooltip && !tooltip.isEmpty()) {
             Component component = tooltip.get(0).copy().append(Component.literal(" [+]").withStyle(ChatFormatting.DARK_GRAY));
             tooltip.remove(0);
@@ -112,39 +102,52 @@ public class ClutterNoMoreClient {
         }
     }
 
-    public static void onKeyInput(int keyCode, int action) {
-        if (keyCode == shapeKey()) {
-            if (action == 1) keyHeld = true;
-            else if (action == 0) keyHeld = false;
-            Minecraft minecraft = Minecraft.getInstance();
-            if (minecraft.screen == null) {
-                Player player = minecraft.player;
-                if (player != null) {
-                    ItemStack heldStack = player.getItemInHand(InteractionHand.MAIN_HAND);
-                    if (ShapeMap.contains(heldStack.getItem())) {
-                        switch (CLIENT_CONFIG.HOLD.value()) {
-                            case HOLD -> {
-                                if (OVERLAY == null && action == 1)
-                                    OVERLAY = new ShapeSwitcherOverlay(minecraft, heldStack, true);
-                                else if (action == 0) OVERLAY = null;
-                            }
-                            case TOGGLE -> {
-                                if (action == 1) {
-                                    if (OVERLAY == null) OVERLAY = new ShapeSwitcherOverlay(minecraft, heldStack, true);
-                                    else OVERLAY = null;
-                                }
-                            }
-                            case PRESS -> {
-                                if (action == 1) {
-                                    if (OVERLAY == null)
-                                        OVERLAY = new ShapeSwitcherOverlay(minecraft, heldStack, false);
-                                    OVERLAY.onMouseScrolled(-1);
-                                    OVERLAY = null;
-                                }
-                            }
-                        }
+    public static Component hintComponent() {
+        Component hint;
+        if (showTooltip) {
+            hint = Component.translatable("tooltip.clutternomore.scroll_to_change",
+                    Component.translatable("tooltip.clutternomore.scroll").withStyle(ChatFormatting.GRAY));
+        } else {
+            String key = CLIENT_CONFIG.HOLD.value() == CNMConfig.InputType.HOLD
+                    ? "tooltip.clutternomore.hold_to_change"
+                    : "tooltip.clutternomore.press_to_change";
+            hint = Component.translatable(key,
+                    Component.keybind("key.clutternomore.change_block_shape").copy().withStyle(ChatFormatting.GRAY));
+        }
+        return hint.copy().withStyle(ChatFormatting.DARK_GRAY);
+    }
 
-                    }
+    public static void onKeyInput(int keyCode, int action) {
+        if (keyCode != shapeKey()) return;
+        Minecraft minecraft = Minecraft.getInstance();
+        if (minecraft.screen != null) return;
+
+        if (action == 1) keyHeld = true;
+        else if (action == 0) keyHeld = false;
+
+        Player player = minecraft.player;
+        if (player == null) return;
+        ItemStack heldStack = player.getItemInHand(InteractionHand.MAIN_HAND);
+        if (!ShapeMap.contains(heldStack.getItem())) return;
+
+        switch (CLIENT_CONFIG.HOLD.value()) {
+            case HOLD -> {
+                if (OVERLAY == null && action == 1)
+                    OVERLAY = new ShapeSwitcherOverlay(minecraft, heldStack, true);
+                else if (action == 0) OVERLAY = null;
+            }
+            case TOGGLE -> {
+                if (action == 1) {
+                    if (OVERLAY == null) OVERLAY = new ShapeSwitcherOverlay(minecraft, heldStack, true);
+                    else OVERLAY = null;
+                }
+            }
+            case PRESS -> {
+                if (action == 1) {
+                    if (OVERLAY == null)
+                        OVERLAY = new ShapeSwitcherOverlay(minecraft, heldStack, false);
+                    OVERLAY.onMouseScrolled(-1);
+                    OVERLAY = null;
                 }
             }
         }
@@ -268,7 +271,12 @@ public class ClutterNoMoreClient {
     public static boolean isShapeKeyPhysicallyDown() {
         int code = shapeKey();
         if (code < 0) return false;
-        long window = Minecraft.getInstance().getWindow().getWindow();
+        long window =
+                //? if >26 {
+                Minecraft.getInstance().getWindow().handle();
+                //?} else {
+                /*Minecraft.getInstance().getWindow().getWindow();
+                *///?}
         if (code < GLFW.GLFW_KEY_SPACE) {
             return GLFW.glfwGetMouseButton(window, code) == GLFW.GLFW_PRESS;
         }

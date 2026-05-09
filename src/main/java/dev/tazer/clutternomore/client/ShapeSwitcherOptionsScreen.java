@@ -110,6 +110,14 @@ public class ShapeSwitcherOptionsScreen extends OptionsSubScreen {
                 ClutterNoMoreClient.CLIENT_CONFIG.HOLD.value(),
                 ClutterNoMoreClient.CLIENT_CONFIG.HOLD::setValue);
 
+        OptionInstance<?> overscroll = new OptionInstance<>(
+                "key.clutternomore.wrap_scrolling",
+                OptionInstance.noTooltip(),
+                (component, value) -> value ? Component.translatable("key.clutternomore.enabled") : Component.translatable("key.clutternomore.disabled"),
+                OptionInstance.BOOLEAN_VALUES,
+                ClutterNoMoreClient.CLIENT_CONFIG.WRAP_SCROLLING.value(),
+                ClutterNoMoreClient.CLIENT_CONFIG.WRAP_SCROLLING::setValue);
+
         OptionInstance<?> lookToSwitch = new OptionInstance<>(
                 "key.clutternomore.look_to_switch",
                 OptionInstance.noTooltip(),
@@ -134,7 +142,7 @@ public class ShapeSwitcherOptionsScreen extends OptionsSubScreen {
                 ClutterNoMoreClient.CLIENT_CONFIG.DETAILED_TOOLTIPS.value(),
                 ClutterNoMoreClient.CLIENT_CONFIG.DETAILED_TOOLTIPS::setValue);
 
-        this.list.addSmall(moving, toggleButton, lookToSwitch, shapeIndicator, detailedTooltips);
+        this.list.addSmall(new OptionInstance[]{moving, toggleButton, overscroll, lookToSwitch, shapeIndicator, detailedTooltips});
         this.addRenderableWidget(this.list);
 
         this.addRenderableWidget(Button.builder(CommonComponents.GUI_DONE, (button) -> {
