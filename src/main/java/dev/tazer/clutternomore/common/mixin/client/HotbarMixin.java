@@ -1,4 +1,4 @@
-package dev.tazer.clutternomore.common.mixin;
+package dev.tazer.clutternomore.common.mixin.client;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -24,11 +24,11 @@ public class HotbarMixin {
             original.call(instance, selectedIndex);
         }
     }
-     
+
     //?} else {
     /*@WrapOperation(method = "handleKeybinds", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/KeyMapping;consumeClick()Z", ordinal = 2))
     private boolean pickBlock(KeyMapping instance, Operation<Boolean> original, @Local int selectedIndex) {
-        var b = original.call(instance);
+        boolean b = original.call(instance);
         if (ClutterNoMoreClient.OVERLAY != null && b) {
             int maxIndex = ClutterNoMoreClient.OVERLAY.shapes.size() - 1;
             if (selectedIndex < 0) selectedIndex = 0;

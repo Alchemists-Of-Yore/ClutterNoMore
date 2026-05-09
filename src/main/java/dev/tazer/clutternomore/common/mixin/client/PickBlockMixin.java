@@ -1,4 +1,4 @@
-package dev.tazer.clutternomore.common.mixin;
+package dev.tazer.clutternomore.common.mixin.client;
 
 //? if >1.21.2 {
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -78,7 +78,7 @@ public abstract class PickBlockMixin {
     *///?} else {
     @WrapOperation(method = "tryPickItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Inventory;findSlotMatchingItem(Lnet/minecraft/world/item/ItemStack;)I"))
     private int pickBlock(Inventory inventory, ItemStack targetStack, Operation<Integer> original) {
-        var p = (ServerGamePacketListenerImpl) (Object) this;
+        ServerGamePacketListenerImpl p = (ServerGamePacketListenerImpl) (Object) this;
         int exactIndex = inventory.findSlotMatchingItem(targetStack);
 
         if (exactIndex != -1) {

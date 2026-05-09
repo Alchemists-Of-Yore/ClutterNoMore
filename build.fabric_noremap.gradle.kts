@@ -87,6 +87,10 @@ dependencies {
     include("folk.sisby:kaleido-config:${dep("kaleido")}")
     compileOnly("mezz.jei:jei-1.21.11-neoforge-api:${dep("jei")}")
     implementation("cc.cassian.rrv:reliable-recipe-viewer-fabric:${dep("rrv")}+${dep("minecraft")}")
+
+    if (hasProperty("deps.mousetweaks")) {
+        implementation("maven.modrinth:mouse-tweaks:${dep("mousetweaks")}")
+    }
 }
 
 configurations.all {

@@ -143,6 +143,10 @@ dependencies {
 
     val modules = listOf("transitive-access-wideners-v1", "registry-sync-v0", "resource-loader-v0")
     for (it in modules) modImplementation(fabricApi.module("fabric-$it", dep("fabric-api")))
+
+    if (hasProperty("deps.mousetweaks")) {
+        modImplementation("maven.modrinth:mouse-tweaks:${dep("mousetweaks")}")
+    }
 }
 
 tasks {

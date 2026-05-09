@@ -86,8 +86,19 @@ repositories {
     }
     maven("https://maven.blamejared.com/") {
         name = "JEI"
-        content { includeGroup("mezz.jei") }
     }
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = "Registrate"
+                url = uri("https://mvn.devos.one/snapshots")
+            }
+        }
+        filter {
+            includeGroup("com.tterrag.registrate")
+        }
+    }
+    maven("https://maven.createmod.net")
 }
 
 neoForge {
@@ -158,6 +169,13 @@ dependencies {
     }
     if (hasProperty("deps.farmers_delight")) {
         implementation("maven.modrinth:farmers-delight:${dep("farmers_delight")}")
+    }
+
+    if (hasProperty("deps.create")) {
+        implementation("com.simibubi.create:create-${dep("minecraft")}:${dep("create")}:slim") { isTransitive = false }
+    }
+    if (hasProperty("deps.mousetweaks")) {
+        implementation("maven.modrinth:mouse-tweaks:${dep("mousetweaks")}")
     }
 }
 

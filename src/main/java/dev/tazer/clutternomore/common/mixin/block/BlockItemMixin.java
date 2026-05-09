@@ -1,4 +1,4 @@
-package dev.tazer.clutternomore.common.mixin;
+package dev.tazer.clutternomore.common.mixin.block;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import dev.tazer.clutternomore.common.blocks.VerticalSlabBlock;

@@ -1,4 +1,4 @@
-package dev.tazer.clutternomore.common.mixin;
+package dev.tazer.clutternomore.common.mixin.client;
 
 //? fabric {
 import dev.tazer.clutternomore.ClutterNoMoreClient;
@@ -20,7 +20,7 @@ public class KeyboardHandlerMixin {
     private void key(long windowPointer, int action, KeyEvent keyEvent, CallbackInfo ci) {
         int key = keyEvent.key();
     //?} else {
-    
+
     /*private void key(long windowPointer, int key, int scanCode, int action, int modifiers, CallbackInfo ci) {
     *///?}
         ClutterNoMoreClient.onKeyInput(key, action);

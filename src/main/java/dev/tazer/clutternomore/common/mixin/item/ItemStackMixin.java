@@ -1,4 +1,4 @@
-package dev.tazer.clutternomore.common.mixin;
+package dev.tazer.clutternomore.common.mixin.item;
 
 import dev.tazer.clutternomore.common.shape_map.ShapeMap;
 import net.minecraft.world.item.ItemStack;

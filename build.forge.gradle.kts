@@ -83,6 +83,18 @@ repositories {
         name = "Sinytra Maven"
         content { includeGroupAndSubgroups("dev.su5ed.sinytra") }
     }
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = "Registrate"
+                url = uri("https://mvn.devos.one/snapshots")
+            }
+        }
+        filter {
+            includeGroup("com.tterrag.registrate")
+        }
+    }
+    maven("https://maven.createmod.net")
 }
 
 legacyForge {
@@ -140,6 +152,13 @@ dependencies {
     compileOnly("io.github.llamalad7:mixinextras-common:0.5.4")
     implementation("io.github.llamalad7:mixinextras-forge:0.5.4")
     jarJar("io.github.llamalad7:mixinextras-forge:0.5.4")
+
+//    if (hasProperty("deps.create")) {
+//        compileOnly("com.simibubi.create:create-${dep("minecraft")}:${dep("create")}:slim") { isTransitive = false }
+//    }
+    if (hasProperty("deps.mousetweaks")) {
+        modImplementation("maven.modrinth:mouse-tweaks:${dep("mousetweaks")}")
+    }
 }
 
 mixin {

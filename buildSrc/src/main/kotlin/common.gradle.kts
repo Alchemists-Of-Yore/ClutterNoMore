@@ -7,13 +7,13 @@ base.archivesName = prop("mod.id")
 
 java {
     withSourcesJar()
-    val compat = when {
-        stonecutterBuild.eval(mc, ">26") -> JavaVersion.VERSION_25
-        stonecutterBuild.eval(mc, ">=1.21") -> JavaVersion.VERSION_21
-        else -> JavaVersion.VERSION_17
-    }
-    sourceCompatibility = compat
-    targetCompatibility = compat
+    toolchain.languageVersion = JavaLanguageVersion.of(
+        when {
+            stonecutterBuild.eval(mc, ">26") -> 25
+            stonecutterBuild.eval(mc, ">=1.21") -> 21
+            else -> 17
+        }
+    )
 }
 
 stonecutterBuild.replacements.string {

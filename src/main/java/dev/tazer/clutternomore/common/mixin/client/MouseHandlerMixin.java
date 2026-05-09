@@ -1,4 +1,4 @@
-package dev.tazer.clutternomore.common.mixin;
+package dev.tazer.clutternomore.common.mixin.client;
 
 //? if >1.21.8 {
 import net.minecraft.client.input.MouseButtonInfo;
