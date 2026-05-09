@@ -8,6 +8,9 @@ val Project.stonecutterBuild: StonecutterBuildExtension
 val Project.mc: String
     get() = stonecutterBuild.current.version
 
+val Project.mcMajor: String
+    get() = mc.substringBeforeLast(".")
+
 val Project.loaderName: String
     get() = stonecutterBuild.current.project.substringAfterLast('-')
 

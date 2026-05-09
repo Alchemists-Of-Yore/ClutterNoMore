@@ -66,13 +66,13 @@ repositories {
     }
 }
 
-val accesswidener = "1.21.1.accesswidener"
+val accesswidener = "${mc}.accesswidener"
 
 tasks.named<ProcessResources>("processResources") {
     dependsOn("stonecutterGenerate")
 
     val props = mapOf(
-        "mod_version" to "${prop("mod.version")}+${dep("minecraft")}",
+        "mod_version" to "${prop("mod.version")}+${mc}",
         "minecraft" to dep("minecraft_version_range"),
         "loader_version_range" to dep("loader_version_range"),
         "mod_license" to prop("mod.license"),
@@ -100,7 +100,7 @@ jsonlang {
 }
 
 dependencies {
-    minecraft("com.mojang:minecraft:${dep("minecraft")}")
+    minecraft("com.mojang:minecraft:${mc}")
     mappings(loom.layered {
         officialMojangMappings()
         if (hasProperty("deps.parchment"))
@@ -124,7 +124,7 @@ dependencies {
         modLocalRuntime("dev.emi:emi-fabric:${dep("emi")}")
     }
     if (hasProperty("deps.rrv")) {
-        modImplementation("cc.cassian.rrv:reliable-recipe-viewer-fabric:${dep("rrv")}+${dep("minecraft")}")
+        modImplementation("cc.cassian.rrv:reliable-recipe-viewer-fabric:${dep("rrv")}+${mc}")
     }
     if (hasProperty("deps.pyrite")) {
         modLocalRuntime("maven.modrinth:pyrite:${dep("pyrite")}")
@@ -168,7 +168,7 @@ publishMods {
 
     type = STABLE
     displayName = "${prop("mod.name")} ${prop("mod.version")} for $mc Fabric"
-    version = "${prop("mod.version")}+${dep("minecraft")}-fabric"
+    version = "${prop("mod.version")}+${mc}-fabric"
     changelog = provider { rootProject.file("CHANGELOG.md").readText() }
     modLoaders.add("fabric")
 

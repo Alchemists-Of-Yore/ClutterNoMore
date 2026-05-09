@@ -7,8 +7,8 @@ plugins {
 
 tasks.named<ProcessResources>("processResources") {
     val props = mapOf(
-        "mod_version" to "${prop("mod.version")}+${dep("minecraft")}",
-        "minecraft" to dep("minecraft"),
+        "mod_version" to "${prop("mod.version")}+${mc}",
+        "minecraft" to mc,
         "loader_version_range" to dep("loader_version_range"),
         "mod_license" to prop("mod.license"),
         "mod_description" to prop("mod.description"),
@@ -137,9 +137,9 @@ dependencies {
     }
 
     // compile against the JEI API but do not include it at runtime
-    compileOnly("mezz.jei:jei-${dep("minecraft")}-neoforge-api:${dep("jei")}")
+    compileOnly("mezz.jei:jei-${mc}-neoforge-api:${dep("jei")}")
     // at runtime, use the full JEI jar for NeoForge
-    runtimeOnly("mezz.jei:jei-${dep("minecraft")}-neoforge:${dep("jei")}")
+    runtimeOnly("mezz.jei:jei-${mc}-neoforge:${dep("jei")}")
 
     implementation("folk.sisby:kaleido-config:${dep("kaleido")}")
     jarJar("folk.sisby:kaleido-config:${dep("kaleido")}")
@@ -150,7 +150,7 @@ dependencies {
     runtimeOnly("me.djtheredstoner:DevAuth-neoforge:1.2.1")
 
     runtimeOnly("maven.modrinth:moonlight:${dep("moonlight")}")
-    runtimeOnly("maven.modrinth:supplementaries:neoforge_1.21-3.4.14")
+    runtimeOnly("maven.modrinth:supplementaries:neoforge_${mcMajor}-3.4.14")
     runtimeOnly("maven.modrinth:the-block-box:0.1.1")
     runtimeOnly("maven.modrinth:no-mans-land:1.3.3")
     runtimeOnly("maven.modrinth:biolith:hd0IDIF5")
@@ -163,8 +163,8 @@ dependencies {
         runtimeOnly("dev.isxander:yet-another-config-lib:${dep("yacl")}-neoforge")
     }
     if (hasProperty("deps.brewin_and_chewin")) {
-        implementation("umpaz.brewinandchewin:BrewinAndChewin-neoforge:${dep("brewin_and_chewin")}+${dep("minecraft")}") { isTransitive = false }
-        implementation("house.greenhouse:greenhouseconfig:${dep("greenhouse_config")}+${dep("minecraft")}-neoforge")
+        implementation("umpaz.brewinandchewin:BrewinAndChewin-neoforge:${dep("brewin_and_chewin")}+${mc}") { isTransitive = false }
+        implementation("house.greenhouse:greenhouseconfig:${dep("greenhouse_config")}+${mc}-neoforge")
         implementation("house.greenhouse:greenhouseconfig_toml:${dep("greenhouse_config_toml")}")
     }
     if (hasProperty("deps.farmers_delight")) {
@@ -172,7 +172,10 @@ dependencies {
     }
 
     if (hasProperty("deps.create")) {
-        implementation("com.simibubi.create:create-${dep("minecraft")}:${dep("create")}:slim") { isTransitive = false }
+        implementation("com.simibubi.create:create-${mc}:${dep("create")}:slim") { isTransitive = false }
+        implementation("dev.engine-room.flywheel:flywheel-neoforge-${mc}:${dep("flywheel")}")
+        implementation("net.createmod.ponder:ponder-neoforge:${dep("ponder")}+mc${mc}")
+        implementation("com.tterrag.registrate:Registrate:MC${mcMajor}-${dep("registrate")}")
     }
     if (hasProperty("deps.mousetweaks")) {
         implementation("maven.modrinth:mouse-tweaks:${dep("mousetweaks")}")
@@ -202,7 +205,7 @@ publishMods {
 
     type = STABLE
     displayName = "${prop("mod.name")} ${prop("mod.version")} for $mc Neoforge"
-    version = "${prop("mod.version")}+${dep("minecraft")}-neoforge"
+    version = "${prop("mod.version")}+${mc}-neoforge"
     changelog = provider { rootProject.file("CHANGELOG.md").readText() }
     modLoaders.add("neoforge")
 

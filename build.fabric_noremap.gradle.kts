@@ -45,13 +45,13 @@ repositories {
     }
 }
 
-val accesswidener = "26.1.accesswidener"
+val accesswidener = "${mc}.accesswidener"
 
 tasks.named<ProcessResources>("processResources") {
     dependsOn(":${stonecutter.current.project}:stonecutterGenerate")
 
     val props = mapOf(
-        "mod_version" to "${prop("mod.version")}+${dep("minecraft")}",
+        "mod_version" to "${prop("mod.version")}+${mc}",
         "minecraft" to dep("minecraft_version_range"),
         "loader_version_range" to dep("loader_version_range"),
         "mod_license" to prop("mod.license"),
@@ -79,14 +79,14 @@ jsonlang {
 }
 
 dependencies {
-    minecraft("com.mojang:minecraft:${dep("minecraft")}")
+    minecraft("com.mojang:minecraft:${mc}")
     implementation("net.fabricmc:fabric-loader:${dep("fabric-loader")}")
     implementation("net.fabricmc.fabric-api:fabric-api:${dep("fabric-api")}")
 
     implementation("folk.sisby:kaleido-config:${dep("kaleido")}")
     include("folk.sisby:kaleido-config:${dep("kaleido")}")
     compileOnly("mezz.jei:jei-1.21.11-neoforge-api:${dep("jei")}")
-    implementation("cc.cassian.rrv:reliable-recipe-viewer-fabric:${dep("rrv")}+${dep("minecraft")}")
+    implementation("cc.cassian.rrv:reliable-recipe-viewer-fabric:${dep("rrv")}+${mc}")
 
     if (hasProperty("deps.mousetweaks")) {
         implementation("maven.modrinth:mouse-tweaks:${dep("mousetweaks")}")
@@ -121,14 +121,14 @@ publishMods {
 
     type = STABLE
     displayName = "${prop("mod.name")} ${prop("mod.version")} for $mc Fabric"
-    version = "${prop("mod.version")}+${dep("minecraft")}-fabric"
+    version = "${prop("mod.version")}+${mc}-fabric"
     changelog = provider { rootProject.file("CHANGELOG.md").readText() }
     modLoaders.add("fabric")
 
     modrinth {
         projectId = prop("publish.modrinth")
         accessToken = env.MODRINTH_API_KEY.orNull()
-        minecraftVersions.add(dep("minecraft"))
+        minecraftVersions.add(mc)
         minecraftVersions.addAll(additionalVersions)
         requires("fabric-api")
     }

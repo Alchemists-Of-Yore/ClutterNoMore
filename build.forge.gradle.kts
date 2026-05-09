@@ -7,8 +7,8 @@ plugins {
 
 tasks.named<ProcessResources>("processResources") {
     val props = mapOf(
-        "mod_version" to "${prop("mod.version")}+${dep("minecraft")}",
-        "minecraft" to dep("minecraft"),
+        "mod_version" to "${prop("mod.version")}+${mc}",
+        "minecraft" to mc,
         "loader_version_range" to dep("loader_version_range"),
         "mod_license" to prop("mod.license"),
         "mod_description" to prop("mod.description"),
@@ -139,11 +139,11 @@ dependencies {
     modRuntimeOnly("maven.modrinth:would:2FZ421Oh")
 
     // compile against the JEI API but do not include it at runtime
-    compileOnly("mezz.jei:jei-${dep("minecraft")}-forge-api:${dep("jei")}")
+    compileOnly("mezz.jei:jei-${mc}-forge-api:${dep("jei")}")
     // at runtime, use the full JEI jar for Forge
-    modRuntimeOnly("mezz.jei:jei-${dep("minecraft")}-forge:${dep("jei")}")
+    modRuntimeOnly("mezz.jei:jei-${mc}-forge:${dep("jei")}")
 
-    modImplementation("dev.su5ed.sinytra:fabric-loader:2.7.11+0.16.5+1.20.1")
+    modImplementation("dev.su5ed.sinytra:fabric-loader:2.7.11+0.16.5+${mc}")
     modImplementation("dev.su5ed.sinytra.fabric-api:fabric-api-base:0.4.32+ef105b4977")
     modImplementation("dev.su5ed.sinytra.fabric-api:fabric-item-group-api-v1:4.0.14+c9161c2d77")
 
@@ -154,7 +154,7 @@ dependencies {
     jarJar("io.github.llamalad7:mixinextras-forge:0.5.4")
 
 //    if (hasProperty("deps.create")) {
-//        compileOnly("com.simibubi.create:create-${dep("minecraft")}:${dep("create")}:slim") { isTransitive = false }
+//        compileOnly("com.simibubi.create:create-${mc}:${dep("create")}:slim") { isTransitive = false }
 //    }
     if (hasProperty("deps.mousetweaks")) {
         modImplementation("maven.modrinth:mouse-tweaks:${dep("mousetweaks")}")
@@ -197,7 +197,7 @@ publishMods {
 
     type = BETA
     displayName = "${prop("mod.name")} ${prop("mod.version")} for $mc Forge"
-    version = "${prop("mod.version")}+${dep("minecraft")}-forge"
+    version = "${prop("mod.version")}+${mc}-forge"
     changelog = provider { rootProject.file("CHANGELOG.md").readText() }
     modLoaders.add("forge")
 
