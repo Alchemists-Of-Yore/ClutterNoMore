@@ -1,9 +1,9 @@
 package dev.tazer.clutternomore;
 
 import dev.tazer.clutternomore.client.ShapeSwitcherOverlay;
-import dev.tazer.clutternomore.client.assets.AssetGenerator;
 import dev.tazer.clutternomore.common.shape_map.ShapeMap;
-import dev.tazer.clutternomore.common.mixin.access.SlotAccessor;
+import dev.tazer.clutternomore.common.mixin.client.CreativeInventoryScreenAccessor;
+import dev.tazer.clutternomore.common.mixin.client.CreativeSlotWrapperAccessor;
 import dev.tazer.clutternomore.common.mixin.screen.ContainerScreenAccessor;
 //? if !forge {
  import dev.tazer.clutternomore.common.networking.ChangeStackPayload;
@@ -15,12 +15,11 @@ import dev.tazer.clutternomore.forge.networking.ForgeNetworking;
 //? if fabric {
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 //?}
-import net.minecraft.ChatFormatting;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
@@ -32,6 +31,8 @@ import net.minecraft.world.item.TooltipFlag;
 //? if neoforge {
 /*import net.neoforged.neoforge.network.PacketDistributor;
 *///?}
+import net.minecraft.ChatFormatting;
+import org.lwjgl.glfw.GLFW;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,10 +40,47 @@ import static dev.tazer.clutternomore.ClutterNoMore.MODID;
 
 public class ClutterNoMoreClient {
     public static boolean showTooltip = false;
+    public static boolean keyHeld = false;
     public static ShapeSwitcherOverlay OVERLAY = null;
     public static final CNMConfig.ClientConfig CLIENT_CONFIG = CNMConfig.ClientConfig.createToml(Platform.INSTANCE.configPath(), MODID,  "client", CNMConfig.ClientConfig.class);
 
     public static void init() {
+    }
+
+    public static boolean isCreativeTabSlot(Slot slot) {
+        return slot != null && slot.container == CreativeInventoryScreenAccessor.cnm$getContainer();
+    }
+
+    public static Slot hoveredSlot() {
+        Screen screen = Minecraft.getInstance().screen;
+        if (!(screen instanceof AbstractContainerScreen<?>)) return null;
+        return ((ContainerScreenAccessor) screen).getSlotUnderMouse();
+    }
+
+    public static boolean isHoveringCreativeTabSlot() {
+        return isCreativeTabSlot(hoveredSlot());
+    }
+
+    private static ItemStack nextShape(ItemStack heldStack, int direction, boolean wrap) {
+        Item parent = ShapeMap.getParent(heldStack.getItem());
+        List<Item> shapes = new ArrayList<>(ShapeMap.getShapes(parent));
+        shapes.add(0, parent);
+        int idx = shapes.indexOf(heldStack.getItem()) - direction;
+        int max = shapes.size() - 1;
+        if (wrap) {
+            if (idx < 0) idx = max;
+            if (idx > max) idx = 0;
+        } else {
+            if (idx < 0) idx = 0;
+            if (idx > max) idx = max;
+        }
+        ItemStack next = shapes.get(idx).getDefaultInstance();
+        next.setCount(heldStack.getCount());
+        return next;
+    }
+
+    private static void playSwitchSound(Player player) {
+        player.playSound(SoundEvents.UI_BUTTON_CLICK.value(), 0.3F, 1.5F);
     }
 
     public static void onItemTooltips(ItemStack stack,
@@ -51,17 +89,33 @@ public class ClutterNoMoreClient {
                                               //?} else
                                               /*Object*/
                                               tooltipContext, TooltipFlag tooltipFlag, List<Component> tooltip) {
-        if (!showTooltip) {
-            if (ShapeMap.contains(stack.getItem())) {
-                Component component = tooltip.get(0).copy().append(Component.literal(" [+]").withStyle(ChatFormatting.DARK_GRAY));
-                tooltip.remove(0);
-                tooltip.add(0, component);
+        if (!ShapeMap.contains(stack.getItem())) return;
+
+        if (CLIENT_CONFIG.DETAILED_TOOLTIPS.value()) {
+            Component hint;
+            if (showTooltip) {
+                hint = Component.translatable("tooltip.clutternomore.scroll_to_change",
+                        Component.translatable("tooltip.clutternomore.scroll").withStyle(ChatFormatting.GRAY));
+            } else {
+                String key = CLIENT_CONFIG.HOLD.value() == CNMConfig.InputType.HOLD
+                        ? "tooltip.clutternomore.hold_to_change"
+                        : "tooltip.clutternomore.press_to_change";
+                hint = Component.translatable(key,
+                        Component.keybind("key.clutternomore.change_block_shape").copy().withStyle(ChatFormatting.GRAY));
             }
+            int insertAt = tooltip.isEmpty() ? 0 : 1;
+            tooltip.add(insertAt, hint.copy().withStyle(ChatFormatting.DARK_GRAY));
+        } else if (!isHoveringCreativeTabSlot() && !showTooltip && !tooltip.isEmpty()) {
+            Component component = tooltip.get(0).copy().append(Component.literal(" [+]").withStyle(ChatFormatting.DARK_GRAY));
+            tooltip.remove(0);
+            tooltip.add(0, component);
         }
     }
 
     public static void onKeyInput(int keyCode, int action) {
         if (keyCode == shapeKey()) {
+            if (action == 1) keyHeld = true;
+            else if (action == 0) keyHeld = false;
             Minecraft minecraft = Minecraft.getInstance();
             if (minecraft.screen == null) {
                 Player player = minecraft.player;
@@ -97,65 +151,112 @@ public class ClutterNoMoreClient {
     }
 
     public static void onKeyPress(Screen screen, int button) {
-        if (button == shapeKey() && screen instanceof AbstractContainerScreen<?> containerScreen) {
-            Slot slot = ((ContainerScreenAccessor) screen).getSlotUnderMouse();
-            if (slot != null) {
+        if (button != shapeKey()) return;
+        if (keyHeld) return;
+        keyHeld = true;
+        switch (CLIENT_CONFIG.HOLD.value()) {
+            case HOLD -> showTooltip = true;
+            case TOGGLE -> showTooltip = !showTooltip;
+            case PRESS -> {
+                if (!(screen instanceof AbstractContainerScreen<?> containerScreen)) return;
+                Slot slot = ((ContainerScreenAccessor) screen).getSlotUnderMouse();
+                if (slot == null) return;
                 ItemStack heldStack = slot.getItem();
-                Player player = Minecraft.getInstance().player;
-
-                if (slot.allowModification(player) && (ShapeMap.contains(heldStack.getItem()))) {
-                    switch (CLIENT_CONFIG.HOLD.value()) {
-                        case HOLD -> showTooltip = true;
-                        case TOGGLE -> showTooltip = !showTooltip;
-                        case PRESS -> switchShapeInSlot(
-                                player,
-                                containerScreen.getMenu().containerId,
-                                ((SlotAccessor) slot).getSlotIndex(),
-                                heldStack,
-                                -1
-                        );
-                    }
-                }
+                if (!ShapeMap.contains(heldStack.getItem())) return;
+                if (!isCreativeTabSlot(slot) && !slot.allowModification(Minecraft.getInstance().player)) return;
+                switchShape(slot, containerScreen.getMenu().containerId, heldStack, -1, true);
             }
         }
     }
 
-    public static boolean onKeyReleased(int button) {
+    public static void onKeyReleased(int button) {
         if (button == shapeKey()) {
+            keyHeld = false;
             if (CLIENT_CONFIG.HOLD.value() == CNMConfig.InputType.HOLD) {
                 showTooltip = false;
             }
         }
-        return false;
     }
 
-    public static void switchShapeInSlot(Player player, int containerId, int slotId, ItemStack heldStack, int direction) {
-        Item item = ShapeMap.getParent(heldStack.getItem());
-        int count = heldStack.getCount();
+    public static int selectedSlot(Player player) {
+        return player.getInventory()
+                //? if >1.21.2 {
+                .getSelectedSlot();
+                //?} else {
+                /*.selected;
+                *///?}
+    }
 
-        List<Item> shapes = new ArrayList<>(ShapeMap.getShapes(item));
-        shapes.add(0, item);
-        int selectedIndex = shapes.indexOf(heldStack.getItem());
+    public static void renderOverlay(GuiGraphicsExtractor guiGraphics, float partialTick) {
+        if (OVERLAY != null) {
+            OVERLAY.tickLook();
+            if (OVERLAY.render) OVERLAY.render(guiGraphics, partialTick);
+        }
+    }
 
-        int maxIndex = shapes.size() - 1;
-        selectedIndex = selectedIndex - direction;
-        if (selectedIndex < 0) selectedIndex = maxIndex;
-        if (selectedIndex > maxIndex) selectedIndex = 0;
+    public static void switchShape(Slot slot, int containerId, ItemStack heldStack, int direction, boolean wrap) {
+        ItemStack next = nextShape(heldStack, direction, wrap);
+        if (next.getItem() == heldStack.getItem()) return;
+        Player player = Minecraft.getInstance().player;
+        playSwitchSound(player);
+        if (isCreativeTabSlot(slot)) {
+            slot.set(next);
+            return;
+        }
+        if (Minecraft.getInstance().screen instanceof CreativeModeInventoryScreen) {
+            if (slot instanceof CreativeSlotWrapperAccessor wrapper) {
+                Slot target = wrapper.cnm$getTarget();
+                if (target != null) {
+                    sendChangeStack(player.inventoryMenu.containerId, target.index, next);
+                    return;
+                }
+            }
+            if (slot.container == player.getInventory()) {
+                for (Slot s : player.inventoryMenu.slots) {
+                    if (s.container == slot.container && s.getContainerSlot() == slot.getContainerSlot()) {
+                        sendChangeStack(player.inventoryMenu.containerId, s.index, next);
+                        return;
+                    }
+                }
+            }
+        }
+        sendChangeStack(containerId, slot.index, next);
+    }
 
-        Item nextItem = shapes.get(selectedIndex);
-        ItemStack next = nextItem.getDefaultInstance();
-        next.setCount(count);
-        player.playSound(SoundEvents.UI_BUTTON_CLICK.value(), 0.3F, 1.5F);
-        if (slotId < 9) slotId += 36;
+    private static final long SEND_INTERVAL_MS = 50L;
+    private static long lastSendMs = 0L;
+    private static int pendingContainerId;
+    private static int pendingSlotId;
+    private static ItemStack pendingStack = null;
+
+    public static void sendChangeStack(int containerId, int slotId, ItemStack stack) {
+        long now = System.currentTimeMillis();
+        if (pendingStack != null && (pendingContainerId != containerId || pendingSlotId != slotId)) {
+            sendChangeStackNow(pendingContainerId, pendingSlotId, pendingStack);
+            lastSendMs = now;
+            pendingStack = null;
+        }
+        if (now - lastSendMs >= SEND_INTERVAL_MS) {
+            sendChangeStackNow(containerId, slotId, stack);
+            lastSendMs = now;
+            pendingStack = null;
+        } else {
+            pendingContainerId = containerId;
+            pendingSlotId = slotId;
+            pendingStack = stack;
+        }
+    }
+
+    private static void sendChangeStackNow(int containerId, int slotId, ItemStack stack) {
         //? if !forge {
-        var p = new ChangeStackPayload(containerId, slotId, next);
+        ChangeStackPayload p = new ChangeStackPayload(containerId, slotId, stack);
         //?}
         //? if fabric
         ClientPlayNetworking.send(p);
         //? if neoforge
         /*PacketDistributor.sendToServer(p);*/
         //? if forge && <1.21.1 {
-        /*ChangeStackPacket p = new ChangeStackPacket(containerId, slotId, next);
+        /*ChangeStackPacket p = new ChangeStackPacket(containerId, slotId, stack);
         ForgeNetworking.sendToServer(p);
         *///?}
     }
@@ -164,36 +265,53 @@ public class ClutterNoMoreClient {
         return Platform.INSTANCE.shapeKey();
     }
 
+    public static boolean isShapeKeyPhysicallyDown() {
+        int code = shapeKey();
+        if (code < 0) return false;
+        long window = Minecraft.getInstance().getWindow().getWindow();
+        if (code < GLFW.GLFW_KEY_SPACE) {
+            return GLFW.glfwGetMouseButton(window, code) == GLFW.GLFW_PRESS;
+        }
+        return GLFW.glfwGetKey(window, code) == GLFW.GLFW_PRESS;
+    }
+
     public static void onPlayerTick(Minecraft minecraft) {
-        if (OVERLAY != null) {
-            if (!OVERLAY.shouldStayOpenThisTick()) OVERLAY = null;
+        boolean physical = isShapeKeyPhysicallyDown();
+        boolean rising = physical && !keyHeld;
+        keyHeld = physical;
+
+        switch (CLIENT_CONFIG.HOLD.value()) {
+            case HOLD -> showTooltip = physical;
+            case TOGGLE -> { if (rising) showTooltip = !showTooltip; }
+            case PRESS -> showTooltip = false;
+        }
+
+        if (OVERLAY != null && !OVERLAY.shouldStayOpenThisTick()) OVERLAY = null;
+        if (pendingStack != null && System.currentTimeMillis() - lastSendMs >= SEND_INTERVAL_MS) {
+            sendChangeStackNow(pendingContainerId, pendingSlotId, pendingStack);
+            lastSendMs = System.currentTimeMillis();
+            pendingStack = null;
         }
     }
 
     //? if >1.21 {
     public static void onRenderGui(GuiGraphicsExtractor guiGraphics, DeltaTracker tracker) {
-        if (OVERLAY != null && OVERLAY.render) {
-            OVERLAY.render(guiGraphics, tracker.getGameTimeDeltaTicks());
-        }
+        renderOverlay(guiGraphics, tracker.getGameTimeDeltaTicks());
     }
     //?}
 
     public static boolean allowScreenScroll(Screen pScreen, double mouseX, double mouseY, double scrollX, double scrollY) {
-        if (showTooltip) {
-            if (pScreen instanceof AbstractContainerScreen<?> screen) {
-                Slot slot = ((ContainerScreenAccessor) screen).getSlotUnderMouse();
-                Player player = Minecraft.getInstance().player;
-                if (slot != null && slot.allowModification(player)) {
-                    ItemStack heldStack = slot.getItem();
-                    if (ShapeMap.contains(heldStack.getItem())) {
-                        switchShapeInSlot(player, screen.getMenu().containerId, ((SlotAccessor) slot).getSlotIndex(), heldStack, (int) scrollY);
-                        return false;
-                    }
-                }
-            }
-        }
+        if (!showTooltip) return true;
+        if (!(pScreen instanceof AbstractContainerScreen<?> screen)) return true;
 
-        return true;
+        Slot slot = ((ContainerScreenAccessor) screen).getSlotUnderMouse();
+        if (slot == null) return true;
+        ItemStack heldStack = slot.getItem();
+        if (!ShapeMap.contains(heldStack.getItem())) return true;
+        if (!isCreativeTabSlot(slot) && !slot.allowModification(Minecraft.getInstance().player)) return true;
+
+        switchShape(slot, screen.getMenu().containerId, heldStack, (int) scrollY, CLIENT_CONFIG.WRAP_SCROLLING.value());
+        return false;
     }
 
     public static boolean onMouseScrolling(double yOffset) {

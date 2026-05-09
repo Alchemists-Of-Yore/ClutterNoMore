@@ -5,11 +5,6 @@ import dev.tazer.clutternomore.CNMConfig;
 import dev.tazer.clutternomore.ClutterNoMore;
 import dev.tazer.clutternomore.ClutterNoMoreClient;
 import dev.tazer.clutternomore.common.shape_map.ShapeMap;
-//? if fabric || neoforge {
-import dev.tazer.clutternomore.common.networking.ChangeStackPayload;
-//?} else if forge && <1.21.1 {
-/*import dev.tazer.clutternomore.forge.networking.ChangeStackPacket;
-*///?}
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.resources.Identifier;
@@ -19,19 +14,14 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-//? if neoforge {
-/*import net.neoforged.neoforge.network.PacketDistributor;
- *///?} else if fabric {
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-//?} else if forge && <1.21.1 {
-/*import dev.tazer.clutternomore.forge.networking.ForgeNetworking;
-*///?}
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class ShapeSwitcherOverlay {
+
+    public static final float LOOK_DEGREES_PER_SWITCH = 25.0F;
 
     public final Minecraft minecraft;
     public final boolean render;
@@ -40,16 +30,13 @@ public class ShapeSwitcherOverlay {
     public final List<Item> shapes;
     public int selectedIndex;
     public float currentIndex;
+    public float lastYaw;
+    public float accumulatedYaw;
 
     public ShapeSwitcherOverlay(Minecraft minecraft, ItemStack heldStack, boolean render) {
         this.minecraft = minecraft;
         this.render = render;
-        selected = minecraft.player.getInventory()
-        //? if >1.21.2 {
-        .getSelectedSlot();
-        //?} else {
-        /*.selected;
-        *///?}
+        selected = ClutterNoMoreClient.selectedSlot(minecraft.player);
 
         Item item = ShapeMap.getParent(heldStack.getItem());
         count = heldStack.getCount();
@@ -59,6 +46,8 @@ public class ShapeSwitcherOverlay {
 
         selectedIndex = shapes.indexOf(heldStack.getItem());
         currentIndex = selectedIndex;
+        lastYaw = minecraft.player.getYRot();
+        accumulatedYaw = 0;
     }
 
     public void render(GuiGraphicsExtractor guiGraphics, float partialTick) {
@@ -101,8 +90,31 @@ public class ShapeSwitcherOverlay {
         changeSlot(selectedIndex-direction);
     }
 
+    public void tickLook() {
+        if (!ClutterNoMoreClient.CLIENT_CONFIG.LOOK_TO_SWITCH.value()) {
+            lastYaw = minecraft.player.getYRot();
+            accumulatedYaw = 0;
+            return;
+        }
+
+        float yaw = minecraft.player.getYRot();
+        float delta = Mth.wrapDegrees(yaw - lastYaw);
+        lastYaw = yaw;
+        accumulatedYaw += delta;
+
+        while (accumulatedYaw >= LOOK_DEGREES_PER_SWITCH) {
+            accumulatedYaw -= LOOK_DEGREES_PER_SWITCH;
+            changeSlot(selectedIndex + 1);
+        }
+        while (accumulatedYaw <= -LOOK_DEGREES_PER_SWITCH) {
+            accumulatedYaw += LOOK_DEGREES_PER_SWITCH;
+            changeSlot(selectedIndex - 1);
+        }
+    }
+
     public void changeSlot(int newIndex) {
         int maxIndex = shapes.size() - 1;
+        int previousIndex = selectedIndex;
         selectedIndex = newIndex;
         if (ClutterNoMoreClient.CLIENT_CONFIG.WRAP_SCROLLING.value()) {
             if (selectedIndex < 0) selectedIndex = maxIndex;
@@ -111,6 +123,7 @@ public class ShapeSwitcherOverlay {
             if (selectedIndex < 0) selectedIndex = 0;
             if (selectedIndex > maxIndex) selectedIndex = maxIndex;
         }
+        if (selectedIndex == previousIndex) return;
 
         Item nextItem = shapes.get(selectedIndex);
         ItemStack next = nextItem.getDefaultInstance();
@@ -119,22 +132,11 @@ public class ShapeSwitcherOverlay {
         player.playSound(SoundEvents.UI_BUTTON_CLICK.value(), 0.3F, 1.5F);
         player.setItemInHand(InteractionHand.MAIN_HAND, next);
 
-        //? if fabric {
-        ClientPlayNetworking.send(new ChangeStackPayload(-1, -1, next));
-        //?} else if neoforge {
-        /*PacketDistributor.sendToServer(new ChangeStackPayload(-1, -1, next));
-        *///?} else if forge && <1.21.1 {
-        /*ForgeNetworking.sendToServer(new ChangeStackPacket(-1, -1, next));
-        *///?}
+        ClutterNoMoreClient.sendChangeStack(-1, -1, next);
     }
 
     public boolean shouldStayOpenThisTick() {
-        int selected = minecraft.player.getInventory()
-        //? if >1.21.2 {
-        .getSelectedSlot();
-        //?} else {
-        /*.selected;
-        *///?}
+        int selected = ClutterNoMoreClient.selectedSlot(minecraft.player);
         ItemStack heldStack = minecraft.player.getItemInHand(InteractionHand.MAIN_HAND);
         count = heldStack.getCount();
         return shapes.contains(heldStack.getItem()) && selected == this.selected;

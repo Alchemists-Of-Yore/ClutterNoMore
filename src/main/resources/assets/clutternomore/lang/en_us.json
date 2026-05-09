@@ -11,5 +11,12 @@
   "key.clutternomore.menu_toggle": "Toggle",
   "key.clutternomore.menu_press": "Press",
   "key.clutternomore.enabled": "Enabled",
-  "key.clutternomore.disabled": "Disabled"
+  "key.clutternomore.disabled": "Disabled",
+  "key.clutternomore.look_to_switch": "Switch by Looking",
+  "key.clutternomore.shape_indicator": "Shape Indicator",
+  "key.clutternomore.detailed_tooltips": "Detailed Tooltips",
+  "tooltip.clutternomore.scroll_to_change": "%s to change shape",
+  "tooltip.clutternomore.scroll": "Scroll",
+  "tooltip.clutternomore.hold_to_change": "Hold [%s] to change shape",
+  "tooltip.clutternomore.press_to_change": "Press [%s] to change shape"
 }

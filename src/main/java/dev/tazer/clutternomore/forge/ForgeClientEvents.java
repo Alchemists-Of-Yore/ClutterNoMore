@@ -85,9 +85,7 @@ public class ForgeClientEvents {
 
     @SubscribeEvent
     public static void onRenderGui(RenderGuiEvent.Post event) {
-        if (OVERLAY != null && OVERLAY.render) {
-            OVERLAY.render(event.getGuiGraphics(), event.getPartialTick());
-        }
+        ClutterNoMoreClient.renderOverlay(event.getGuiGraphics(), event.getPartialTick());
     }
 
     @SubscribeEvent

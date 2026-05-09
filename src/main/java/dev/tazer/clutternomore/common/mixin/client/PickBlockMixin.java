@@ -1,22 +1,20 @@
 package dev.tazer.clutternomore.common.mixin.client;
 
 //? if >1.21.2 {
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.protocol.game.ClientboundSetPlayerInventoryPacket;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 //?} else {
 /*//? if forge {
 /^import dev.tazer.clutternomore.forge.networking.ForgeNetworking;
 ^///?}
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientPacketListener;
-import org.jetbrains.annotations.Nullable;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.Redirect;
-import java.util.Objects;
+//? if neoforge {
+/^import java.util.Objects;
+^///?}
 *///?}
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import dev.tazer.clutternomore.common.shape_map.ShapeMap;
 //? if >1.20.1 {
 import dev.tazer.clutternomore.common.networking.ChangeStackPayload;
@@ -24,18 +22,13 @@ import dev.tazer.clutternomore.common.networking.ChangeStackPayload;
 /*import dev.tazer.clutternomore.forge.networking.ChangeStackPacket;
  *///?}
 
-//? if fabric
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+//? if <1.21.2 && fabric
+/*import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;*/
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-//? if neoforge {
-/*import net.neoforged.neoforge.network.PacketDistributor;
-import java.util.Objects;
- *///?} else {
 
-//?}
 //? if >1.21.2 {
 @Mixin(ServerGamePacketListenerImpl.class)
 //?} else {
@@ -51,14 +44,16 @@ public abstract class PickBlockMixin {
         if (exactIndex != -1) {
             ItemStack slotStack = inventory.
             //? if >1.21.2 {
-            getNonEquipmentItems()
-            //?} else {
-            /^items
-            ^///?}
+            /^getNonEquipmentItems()
+            ^///?} else {
+            items
+            //?}
             .get(exactIndex);
 
-            if (ShapeMap.inSameShapeSet(targetStack.getItem(), slotStack.getItem())) {
+            if (slotStack.getItem() != targetStack.getItem() && ShapeMap.inSameShapeSet(targetStack.getItem(), slotStack.getItem())) {
                 ItemStack replaced = targetStack.copyWithCount(slotStack.getCount());
+                int menuSlot = exactIndex < 9 ? exactIndex + 36 : exactIndex;
+                int containerId = Minecraft.getInstance().player.inventoryMenu.containerId;
                 //? if fabric || neoforge {
 
                 //? if neoforge {
@@ -66,9 +61,9 @@ public abstract class PickBlockMixin {
                 ^///?} else {
                 ClientPlayNetworking
                 //?}
-                        .send(new ChangeStackPayload(-1, exactIndex, replaced));
+                        .send(new ChangeStackPayload(containerId, menuSlot, replaced));
                 //?} else if forge {
-                /^ForgeNetworking.INSTANCE.sendToServer(new ChangeStackPacket(-1, exactIndex, replaced));
+                /^ForgeNetworking.INSTANCE.sendToServer(new ChangeStackPacket(containerId, menuSlot, replaced));
                 ^///?}
             }
         }
@@ -76,22 +71,18 @@ public abstract class PickBlockMixin {
         return exactIndex;
     }
     *///?} else {
-    @WrapOperation(method = "tryPickItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Inventory;findSlotMatchingItem(Lnet/minecraft/world/item/ItemStack;)I"))
-    private int pickBlock(Inventory inventory, ItemStack targetStack, Operation<Integer> original) {
-        ServerGamePacketListenerImpl p = (ServerGamePacketListenerImpl) (Object) this;
-        int exactIndex = inventory.findSlotMatchingItem(targetStack);
-
-        if (exactIndex != -1) {
-            ItemStack slotStack = inventory.getNonEquipmentItems()
-                    .get(exactIndex);
-
-            if (ShapeMap.inSameShapeSet(targetStack.getItem(), slotStack.getItem())) {
-                ItemStack replaced = targetStack.copyWithCount(slotStack.getCount());
-                inventory.setItem(exactIndex, replaced);
-                p.send(new ClientboundSetPlayerInventoryPacket(exactIndex, replaced));
-            }
-        }
-        return exactIndex;
+    @Inject(method = "tryPickItem", at = @At("TAIL"))
+    private void convertPickedItem(ItemStack stack, CallbackInfo ci) {
+        if (!ShapeMap.contains(stack.getItem())) return;
+        ServerGamePacketListenerImpl self = (ServerGamePacketListenerImpl) (Object) this;
+        Inventory inventory = self.getPlayer().getInventory();
+        int selected = inventory.getSelectedSlot();
+        ItemStack slotStack = inventory.getItem(selected);
+        if (slotStack.getItem() == stack.getItem()) return;
+        if (!ShapeMap.inSameShapeSet(stack.getItem(), slotStack.getItem())) return;
+        ItemStack replaced = stack.copyWithCount(slotStack.getCount());
+        inventory.setItem(selected, replaced);
+        self.send(new ClientboundSetPlayerInventoryPacket(selected, replaced));
     }
     //?}
 }

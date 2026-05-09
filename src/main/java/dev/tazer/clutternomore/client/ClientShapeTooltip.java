@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import dev.tazer.clutternomore.ClutterNoMore;
 import dev.tazer.clutternomore.ClutterNoMoreClient;
 import dev.tazer.clutternomore.common.networking.ShapeTooltip;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
@@ -28,18 +29,22 @@ public class ClientShapeTooltip implements ClientTooltipComponent {
         selectedIndex = shapeTooltip.selectedIndex();
     }
 
+    private static boolean shouldRender() {
+        return ClutterNoMoreClient.isHoveringCreativeTabSlot() || ClutterNoMoreClient.showTooltip;
+    }
+
     @Override
     //? if >1.21.2 {
     public int getHeight(Font font) {
     //?} else {
     /*public int getHeight() {
     *///?}
-        return ClutterNoMoreClient.showTooltip ? 22 : 0;
+        return shouldRender() ? 22 : 0;
     }
 
     @Override
     public int getWidth(Font font) {
-        return ClutterNoMoreClient.showTooltip ? shapes.size() * 22 : 0;
+        return shouldRender() ? shapes.size() * 22 : 0;
     }
 
     @Override
@@ -48,7 +53,7 @@ public class ClientShapeTooltip implements ClientTooltipComponent {
     //?} else {
     /*public void renderImage(Font font, int mouseX, int mouseY, GuiGraphicsExtractor guiGraphics) {
     *///?}
-        if (ClutterNoMoreClient.showTooltip) {
+        if (shouldRender()) {
             Identifier selected = ClutterNoMore.location("textures/gui/selected_shape_inventory.png");
 
             int spacing = 22;

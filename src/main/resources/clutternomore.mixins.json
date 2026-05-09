@@ -30,6 +30,9 @@
     "registry.BuiltInRegistriesMixin"
   ],
   "client": [
+    "client.CreativeInventoryScreenAccessor",
+    "client.CreativeShapeIndicatorMixin",
+    "client.CreativeSlotWrapperAccessor",
     "client.HotbarMixin",
     "client.KeyboardHandlerMixin",
     "client.MouseHandlerMixin",

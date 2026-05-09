@@ -63,8 +63,32 @@ public class ShapeSwitcherOptionsScreen extends OptionsSubScreen {
                 ClutterNoMoreClient.CLIENT_CONFIG.WRAP_SCROLLING.value(),
                 ClutterNoMoreClient.CLIENT_CONFIG.WRAP_SCROLLING::setValue);
 
+        OptionInstance<?> lookToSwitch = new OptionInstance<>(
+                "key.clutternomore.look_to_switch",
+                OptionInstance.noTooltip(),
+                (component, value) -> value ? Component.translatable("key.clutternomore.enabled") : Component.translatable("key.clutternomore.disabled"),
+                OptionInstance.BOOLEAN_VALUES,
+                ClutterNoMoreClient.CLIENT_CONFIG.LOOK_TO_SWITCH.value(),
+                ClutterNoMoreClient.CLIENT_CONFIG.LOOK_TO_SWITCH::setValue);
 
-        if (list != null) list.addSmall(moving, toggleButton, overscroll);
+        OptionInstance<?> shapeIndicator = new OptionInstance<>(
+                "key.clutternomore.shape_indicator",
+                OptionInstance.noTooltip(),
+                (component, value) -> value ? Component.translatable("key.clutternomore.enabled") : Component.translatable("key.clutternomore.disabled"),
+                OptionInstance.BOOLEAN_VALUES,
+                ClutterNoMoreClient.CLIENT_CONFIG.SHAPE_INDICATOR.value(),
+                ClutterNoMoreClient.CLIENT_CONFIG.SHAPE_INDICATOR::setValue);
+
+        OptionInstance<?> detailedTooltips = new OptionInstance<>(
+                "key.clutternomore.detailed_tooltips",
+                OptionInstance.noTooltip(),
+                (component, value) -> value ? Component.translatable("key.clutternomore.enabled") : Component.translatable("key.clutternomore.disabled"),
+                OptionInstance.BOOLEAN_VALUES,
+                ClutterNoMoreClient.CLIENT_CONFIG.DETAILED_TOOLTIPS.value(),
+                ClutterNoMoreClient.CLIENT_CONFIG.DETAILED_TOOLTIPS::setValue);
+
+
+        if (list != null) list.addSmall(moving, toggleButton, overscroll, lookToSwitch, shapeIndicator, detailedTooltips);
     }//?} else {
     /*@Override
     protected void init() {
@@ -86,7 +110,31 @@ public class ShapeSwitcherOptionsScreen extends OptionsSubScreen {
                 ClutterNoMoreClient.CLIENT_CONFIG.HOLD.value(),
                 ClutterNoMoreClient.CLIENT_CONFIG.HOLD::setValue);
 
-        this.list.addSmall(moving, toggleButton);
+        OptionInstance<?> lookToSwitch = new OptionInstance<>(
+                "key.clutternomore.look_to_switch",
+                OptionInstance.noTooltip(),
+                (component, value) -> value ? Component.translatable("key.clutternomore.enabled") : Component.translatable("key.clutternomore.disabled"),
+                OptionInstance.BOOLEAN_VALUES,
+                ClutterNoMoreClient.CLIENT_CONFIG.LOOK_TO_SWITCH.value(),
+                ClutterNoMoreClient.CLIENT_CONFIG.LOOK_TO_SWITCH::setValue);
+
+        OptionInstance<?> shapeIndicator = new OptionInstance<>(
+                "key.clutternomore.shape_indicator",
+                OptionInstance.noTooltip(),
+                (component, value) -> value ? Component.translatable("key.clutternomore.enabled") : Component.translatable("key.clutternomore.disabled"),
+                OptionInstance.BOOLEAN_VALUES,
+                ClutterNoMoreClient.CLIENT_CONFIG.SHAPE_INDICATOR.value(),
+                ClutterNoMoreClient.CLIENT_CONFIG.SHAPE_INDICATOR::setValue);
+
+        OptionInstance<?> detailedTooltips = new OptionInstance<>(
+                "key.clutternomore.detailed_tooltips",
+                OptionInstance.noTooltip(),
+                (component, value) -> value ? Component.translatable("key.clutternomore.enabled") : Component.translatable("key.clutternomore.disabled"),
+                OptionInstance.BOOLEAN_VALUES,
+                ClutterNoMoreClient.CLIENT_CONFIG.DETAILED_TOOLTIPS.value(),
+                ClutterNoMoreClient.CLIENT_CONFIG.DETAILED_TOOLTIPS::setValue);
+
+        this.list.addSmall(moving, toggleButton, lookToSwitch, shapeIndicator, detailedTooltips);
         this.addRenderableWidget(this.list);
 
         this.addRenderableWidget(Button.builder(CommonComponents.GUI_DONE, (button) -> {

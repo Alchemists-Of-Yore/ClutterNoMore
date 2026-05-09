@@ -15,10 +15,11 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 public record ChangeStackPayload(int containerId, int slot, ItemStack stack) implements CustomPacketPayload {
@@ -46,24 +47,37 @@ public record ChangeStackPayload(int containerId, int slot, ItemStack stack) imp
                                           ServerPlayNetworking.Context
                                             //?}
                                                   context) {
-        if (ShapeMap.contains(data.stack.getItem())) {
-            Item main = ShapeMap.getParent(data.stack.getItem());
+        Player player = context.player();
+        applyChange(player, data.containerId, data.slot, data.stack);
+    }
 
-            if (data.slot == -1) {
-                Item item = context.player().getItemInHand(InteractionHand.MAIN_HAND).getItem();
-                if (ShapeMap.isParentOfShape(main, item)) {
-                    context.player().setItemInHand(InteractionHand.MAIN_HAND, data.stack);
-                }
-            } else {
-                InventoryMenu inventory = context.player().inventoryMenu;
-                Slot slot = inventory.getSlot(data.slot);
-                Item item = slot.getItem().getItem();
-                if (ShapeMap.isParentOfShape(main, item)) {
-                    slot.setByPlayer(data.stack);
-                    inventory.sendAllDataToRemote();
-                }
+    public static void applyChange(Player player, int containerId, int slotIndex, ItemStack stack) {
+        if (!ShapeMap.contains(stack.getItem())) return;
+
+        if (slotIndex == -1) {
+            ItemStack hand = player.getItemInHand(InteractionHand.MAIN_HAND);
+            if (hand.getItem() != stack.getItem() && ShapeMap.inSameShapeSet(stack.getItem(), hand.getItem())) {
+                player.setItemInHand(InteractionHand.MAIN_HAND, stack);
             }
+            return;
         }
+
+        AbstractContainerMenu menu = resolveMenu(player, containerId);
+        if (menu == null || slotIndex < 0 || slotIndex >= menu.slots.size()) return;
+        Slot slot = menu.getSlot(slotIndex);
+            ItemStack current = slot.getItem();
+        if (current.getItem() == stack.getItem()) return;
+        if (!ShapeMap.inSameShapeSet(stack.getItem(), current.getItem())) return;
+
+        ItemStack replaced = stack.copyWithCount(current.getCount());
+        slot.setByPlayer(replaced);
+        menu.sendAllDataToRemote();
+    }
+
+    private static AbstractContainerMenu resolveMenu(Player player, int containerId) {
+        if (player.containerMenu != null && player.containerMenu.containerId == containerId) return player.containerMenu;
+        if (player.inventoryMenu.containerId == containerId) return player.inventoryMenu;
+        return null;
     }
 }
 //?}

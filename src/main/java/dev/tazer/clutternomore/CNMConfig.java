@@ -21,13 +21,13 @@ public class CNMConfig {
         @Comment("If detailed warnings should be logged for development purposes")
         @SerializedName("detailed_logs")
         public final TrackedValue<Boolean> DETAILED_LOGS = this.value(false);
-        @Comment("Whether to generate a copy of the runtime datapack")
+        @Comment("If a copy of the runtime datapack should be generated")
         @SerializedName("runtime_data_generation")
         public final TrackedValue<Boolean> RUNTIME_DATA_GENERATION = this.value(false);
     }
 
     public static class ClientConfig extends ReflectiveConfig {
-        @Comment("Whether to wrap around to the beginning after scrolling past the end of the list")
+        @Comment("If scrolling past the end of the list should wrap around to the beginning")
         @SerializedName("wrap_scrolling")
         public final TrackedValue<Boolean> WRAP_SCROLLING = this.value(true);
         @Comment("If the shape switcher menu should be scrolling or static")
@@ -36,12 +36,18 @@ public class CNMConfig {
         @Comment("If the change block shape key should be held or toggled to open the menu")
         @SerializedName("hold")
         public final TrackedValue<InputType> HOLD = this.value(InputType.HOLD);
-        @Comment("Whether to generate a copy of the runtime resourcepack")
+        @Comment("If a copy of the runtime resourcepack should be generated")
         @SerializedName("runtime_asset_generation")
         public final TrackedValue<Boolean> RUNTIME_ASSET_GENERATION = this.value(false);
-        @Comment("Whether to show a small indicator on hotbar items that have shape variants")
+        @Comment("If a small indicator on menu items with shapes should be displayed")
         @SerializedName("shape_indicator")
         public final TrackedValue<Boolean> SHAPE_INDICATOR = this.value(true);
+        @Comment("If looking left/right in the shape switcher should switch shapes")
+        @SerializedName("look_to_switch")
+        public final TrackedValue<Boolean> LOOK_TO_SWITCH = this.value(false);
+        @Comment("If detailed tooltips for changing shapes should be displayed")
+        @SerializedName("detailed_tooltips")
+        public final TrackedValue<Boolean> DETAILED_TOOLTIPS = this.value(true);
     }
 
     public enum InputType implements StringRepresentable {
