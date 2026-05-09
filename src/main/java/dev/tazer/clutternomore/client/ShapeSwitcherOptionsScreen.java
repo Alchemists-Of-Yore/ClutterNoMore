@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import dev.tazer.clutternomore.CNMConfig;
 import dev.tazer.clutternomore.ClutterNoMore;
 import dev.tazer.clutternomore.ClutterNoMoreClient;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.OptionInstance;
 import net.minecraft.client.Options;
 import net.minecraft.client.gui.components.Button;
@@ -34,6 +35,10 @@ public class ShapeSwitcherOptionsScreen extends OptionsSubScreen {
 
     public ShapeSwitcherOptionsScreen(Screen lastScreen, Options options) {
         super(lastScreen, options, TITLE);
+    }
+
+    public ShapeSwitcherOptionsScreen(Screen lastScreen) {
+        super(lastScreen, Minecraft.getInstance().options, TITLE);
     }
 
     //? if >1.20.1 {

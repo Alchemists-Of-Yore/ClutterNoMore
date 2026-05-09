@@ -202,8 +202,8 @@ public class ShapeMap {
         //? if fabric
         ServerPlayNetworking.send(serverPlayer, new ShapeMapPayload(shapes, inverseShapes));
         //? if neoforge
-        /*PacketDistributor.sendToPlayer(serverPlayer, new ShapeMapPayload(shapes, inverseShapes));*/
+        //PacketDistributor.sendToPlayer(serverPlayer, new ShapeMapPayload(shapes, inverseShapes));
         //? if forge
-        /*ForgeNetworking.sendToPlayer(serverPlayer, new ShapeMapPacket(shapes, inverseShapes));*/
+        //ForgeNetworking.sendToPlayer(serverPlayer, new ShapeMapPacket(shapes, inverseShapes));
     }
 }

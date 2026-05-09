@@ -27,6 +27,9 @@
     ],
     "jei_mod_plugin": [
       "dev.tazer.clutternomore.common.compat.JEICompat"
+    ],
+    "modmenu": [
+      "dev.tazer.clutternomore.common.compat.ModMenuCompat"
     ]
   },
   "mixins": [

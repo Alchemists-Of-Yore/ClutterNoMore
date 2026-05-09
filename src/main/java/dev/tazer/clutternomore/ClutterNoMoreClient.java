@@ -1,5 +1,6 @@
 package dev.tazer.clutternomore;
 
+import dev.tazer.clutternomore.client.ShapeSwitcherOptionsScreen;
 import dev.tazer.clutternomore.client.ShapeSwitcherOverlay;
 import dev.tazer.clutternomore.common.shape_map.ShapeMap;
 import dev.tazer.clutternomore.common.mixin.client.CreativeInventoryScreenAccessor;
@@ -8,13 +9,20 @@ import dev.tazer.clutternomore.common.mixin.screen.ContainerScreenAccessor;
 //? if !forge {
  import dev.tazer.clutternomore.common.networking.ChangeStackPayload;
  import net.minecraft.client.DeltaTracker;
-//?} else if forge && <1.21.1 {
+//?} else {
 /*import dev.tazer.clutternomore.forge.networking.ChangeStackPacket;
 import dev.tazer.clutternomore.forge.networking.ForgeNetworking;
+import net.minecraftforge.client.ConfigScreenHandler;
+import net.minecraftforge.fml.ModLoadingContext;
 *///?}
 //? if fabric {
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 //?}
+//? if neoforge {
+/*import net.neoforged.fml.ModLoadingContext;
+import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
+import net.neoforged.neoforge.network.PacketDistributor;
+*///?}
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
@@ -28,9 +36,6 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-//? if neoforge {
-/*import net.neoforged.neoforge.network.PacketDistributor;
-*///?}
 import net.minecraft.ChatFormatting;
 import org.lwjgl.glfw.GLFW;
 import java.util.ArrayList;
@@ -45,6 +50,10 @@ public class ClutterNoMoreClient {
     public static final CNMConfig.ClientConfig CLIENT_CONFIG = CNMConfig.ClientConfig.createToml(Platform.INSTANCE.configPath(), MODID,  "client", CNMConfig.ClientConfig.class);
 
     public static void init() {
+        //? neoforge
+        //ModLoadingContext.get().registerExtensionPoint(IConfigScreenFactory.class, ()-> (mod, screen) -> new ShapeSwitcherOptionsScreen(screen));
+        //? forge
+        //ModLoadingContext.get().registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class, () -> new ConfigScreenHandler.ConfigScreenFactory((minecraft, parent)-> new ShapeSwitcherOptionsScreen(parent, minecraft.options)));
     }
 
     public static boolean isCreativeTabSlot(Slot slot) {
@@ -87,7 +96,7 @@ public class ClutterNoMoreClient {
                                       //? if >1.21 {
                                       Item.TooltipContext
                                               //?} else
-                                              /*Object*/
+                                              //Object
                                               tooltipContext, TooltipFlag tooltipFlag, List<Component> tooltip) {
         if (!ShapeMap.contains(stack.getItem())) return;
 
@@ -257,7 +266,7 @@ public class ClutterNoMoreClient {
         //? if fabric
         ClientPlayNetworking.send(p);
         //? if neoforge
-        /*PacketDistributor.sendToServer(p);*/
+        //PacketDistributor.sendToServer(p);
         //? if forge && <1.21.1 {
         /*ChangeStackPacket p = new ChangeStackPacket(containerId, slotId, stack);
         ForgeNetworking.sendToServer(p);

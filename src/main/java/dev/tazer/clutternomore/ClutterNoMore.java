@@ -83,7 +83,7 @@ public class ClutterNoMore {
         //? if >1.21
         return Identifier.fromNamespaceAndPath(namespace, path);
         //? if <1.21
-        /*return new Identifier(namespace, path);*/
+        //return new Identifier(namespace, path);
     }
 
 
@@ -91,7 +91,7 @@ public class ClutterNoMore {
         //? if >1.21
         return Identifier.parse(id);
         //? if <1.21
-        /*return new Identifier(id);*/
+        //return new Identifier(id);
     }
 
     public static void modifyRecipes(
@@ -314,7 +314,7 @@ public class ClutterNoMore {
         //? if >1.21
         return BlockBehaviour.Properties.ofFullCopy(block);
         //? if <1.21
-        /*return BlockBehaviour.Properties.copy(block);*/
+        //return BlockBehaviour.Properties.copy(block);
     }
 
 }

@@ -109,9 +109,7 @@ dependencies {
     modImplementation("net.fabricmc:fabric-loader:${dep("fabric-loader")}")
     modImplementation("net.fabricmc.fabric-api:fabric-api:${dep("fabric-api")}")
 
-    if (hasProperty("deps.modmenu")) {
-        modLocalRuntime("com.terraformersmc:modmenu:${dep("modmenu")}")
-    }
+    modImplementation("com.terraformersmc:modmenu:${dep("modmenu")}")
 
     // YACL - required by McQoy
     if (hasProperty("deps.yacl")) {

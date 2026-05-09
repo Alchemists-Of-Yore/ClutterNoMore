@@ -14,7 +14,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 //? if neoforge
-/*import net.neoforged.neoforge.network.handling.IPayloadContext;*/
+//import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -62,9 +62,9 @@ public record ShapeMapPayload(Map<Identifier, List<Identifier>> shapes, Map<Iden
                                           //? if fabric
                                           ClientPlayNetworking.Context
                                           //? if neoforge
-                                          /*IPayloadContext*/
+                                          //IPayloadContext
                                           //? if forge
-                                          /*Object*/
+                                          //Object
                                           context) {
         final Map<Item, List<Item>> SHAPES_DATAMAP = new HashMap<>();
         data.shapes.forEach((parentId, shapeIds) -> {
