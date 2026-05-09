@@ -75,32 +75,6 @@ public class ClutterNoMore {
         LOGGER.info("Initializing {} on {}", MODID, Platform.INSTANCE.loader());
     }
 
-    public static Pack createPack(PackType type) {
-        //? if >1.21 {
-        return Pack.readMetaAndCreate(
-                PACK_INFO,
-                new PackResourcesSupplier(),
-                type,
-                new PackSelectionConfig(
-                        true,
-                        Pack.Position.BOTTOM,
-                        true
-                )
-        );
-        //?} else {
-        /*return Pack.readMetaAndCreate(
-                PACK_INFO,
-                Component.literal("ClutterNoMore"),
-                true,
-                new PackResourcesSupplier(),
-                type,
-                Pack.Position.BOTTOM,
-                PackSource.BUILT_IN
-        );
-        *///?}
-
-    }
-
     public static Identifier location(String path) {
         return location(MODID, path);
     }
@@ -213,8 +187,8 @@ public class ClutterNoMore {
 
             for (Map.Entry<ResourceKey<Item>, Item> resourceKeyItemEntry : BuiltInRegistries.ITEM.entrySet()) {
                 if (resourceKeyItemEntry.getValue().asItem() instanceof BlockItem blockItem) {
-                    var blockId = resourceKeyItemEntry.getKey().identifier();
-                    var blockNamespace = blockId.getNamespace() + "/";
+                    Identifier blockId = resourceKeyItemEntry.getKey().identifier();
+                    String blockNamespace = blockId.getNamespace() + "/";
                     if (blockId.getNamespace().equals("minecraft")) {
                         blockNamespace = "";
                     }
@@ -244,7 +218,7 @@ public class ClutterNoMore {
 
 //                        DataGenerator.addLootTable(blockId, shapeId);
 
-                        var soundType = ((BlockBehaviorAccessor) slabBlock).getSoundType();
+                        SoundType soundType = ((BlockBehaviorAccessor) slabBlock).getSoundType();
                         if (woodenSoundTypes.contains(soundType)) {
                             DataGenerator.addToTag(path, woodenVerticalSlabsArray);
                         } else {
@@ -280,7 +254,7 @@ public class ClutterNoMore {
 
 //                        DataGenerator.addLootTable(blockId, shapeId);
 
-                        var soundType = ((BlockBehaviorAccessor) stairBlock).getSoundType();
+                        SoundType soundType = ((BlockBehaviorAccessor) stairBlock).getSoundType();
                         if (woodenSoundTypes.contains(soundType)) {
                             DataGenerator.addToTag(path, woodenStepsArray);
                         } else {
@@ -309,15 +283,15 @@ public class ClutterNoMore {
 
     private static void matchCopperBlock(Identifier id) {
         if (id.getPath().contains("oxidized")) {
-            var weatheredPath = ClutterNoMore.location(id.getNamespace(), id.getPath().replace("oxidized", "weathered"));
+            Identifier weatheredPath = ClutterNoMore.location(id.getNamespace(), id.getPath().replace("oxidized", "weathered"));
             COPPER_BLOCKS.put(weatheredPath, id);
         }
         if (id.getPath().contains("weathered")) {
-            var exposed = ClutterNoMore.location(id.getNamespace(), id.getPath().replace("weathered", "exposed"));
+            Identifier exposed = ClutterNoMore.location(id.getNamespace(), id.getPath().replace("weathered", "exposed"));
             COPPER_BLOCKS.put(exposed, id);
         }
         if (id.getPath().contains("exposed")) {
-            var unaffected = ClutterNoMore.location(id.getNamespace(), id.getPath().replace("exposed_", ""));
+            Identifier unaffected = ClutterNoMore.location(id.getNamespace(), id.getPath().replace("exposed_", ""));
             COPPER_BLOCKS.put(unaffected, id);
         }
     }

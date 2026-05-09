@@ -55,8 +55,8 @@ public class NeoForgeClientEvents {
     }
 
     @SubscribeEvent
-    public static void onScreenScroll(ScreenEvent.MouseScrolled.Post event) {
-        ClutterNoMoreClient.allowScreenScroll(event.getScreen(), event.getMouseX(), event.getMouseY(), event.getScrollDeltaX(), event.getScrollDeltaY());
+    public static void onScreenScroll(ScreenEvent.MouseScrolled.Pre event) {
+        event.setCanceled(!ClutterNoMoreClient.allowScreenScroll(event.getScreen(), event.getMouseX(), event.getMouseY(), event.getScrollDeltaX(), event.getScrollDeltaY()));
     }
 
     @SubscribeEvent

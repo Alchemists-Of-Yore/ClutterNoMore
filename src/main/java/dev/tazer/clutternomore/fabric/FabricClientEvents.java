@@ -94,7 +94,8 @@ public class FabricClientEvents {
              *///?}
     ) {
         //? if >1.21.8 {
-        return ClutterNoMoreClient.onKeyReleased(event.button());
+        ClutterNoMoreClient.onKeyReleased(event.button());
+        return false;
         //?} else {
         /*ClutterNoMoreClient.onKeyReleased(button);
         *///?}

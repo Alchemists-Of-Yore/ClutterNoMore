@@ -65,7 +65,7 @@ public class AssetGenerator {
             //?}
             object.add("min_format", new JsonPrimitive(minFormat));
             object.add("max_format", new JsonPrimitive(maxFormat));
-            var supportedFormats = new JsonArray(2);
+            JsonArray supportedFormats = new JsonArray(2);
             supportedFormats.add(minFormat);
             supportedFormats.add(maxFormat);
             object.add("supported_formats", supportedFormats);
@@ -152,7 +152,7 @@ public class AssetGenerator {
     }
 
     public static void generateItem(Identifier shape, ResourceManager manager) {
-        var modelString = shape.getPath();
+        String modelString = shape.getPath();
         modelString = modelString.replace("waxed_", "");
         //? if >1.21.4 {
         Optional<Resource> existingItemState = manager.getResource(shape.withPrefix("items/").withSuffix(".json"));

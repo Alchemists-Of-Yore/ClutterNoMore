@@ -3,14 +3,9 @@ package dev.tazer.clutternomore.forge;
 /*import dev.tazer.clutternomore.ClutterNoMore;
 import dev.tazer.clutternomore.ClutterNoMoreClient;
 import dev.tazer.clutternomore.client.ClientShapeTooltip;
-import dev.tazer.clutternomore.common.shape_map.ShapeMap;
 import dev.tazer.clutternomore.common.networking.ShapeTooltip;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.common.util.Lazy;
@@ -64,19 +59,8 @@ public class ForgeClientEvents {
     }
 
     @SubscribeEvent
-    public static void onScreenScroll(ScreenEvent.MouseScrolled.Post event) {
-        if (showTooltip) {
-            if (event.getScreen() instanceof AbstractContainerScreen<?> screen) {
-                Slot slot = screen.getSlotUnderMouse();
-                Player player = screen.getMinecraft().player;
-                if (slot != null && slot.allowModification(player)) {
-                    ItemStack heldStack = slot.getItem();
-                    if (ShapeMap.contains(heldStack.getItem())) {
-                        switchShapeInSlot(player, screen.getMenu().containerId, slot.getSlotIndex(), heldStack, (int) event.getScrollDelta());
-                    }
-                }
-            }
-        }
+    public static void onScreenScroll(ScreenEvent.MouseScrolled.Pre event) {
+        event.setCanceled(!ClutterNoMoreClient.allowScreenScroll(event.getScreen(), event.getMouseX(), event.getMouseY(), 0, event.getScrollDelta()));
     }
 
     @SubscribeEvent

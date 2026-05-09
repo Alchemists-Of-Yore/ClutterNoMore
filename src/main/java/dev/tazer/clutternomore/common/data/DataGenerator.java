@@ -44,18 +44,18 @@ public class DataGenerator {
 
     private static void itemTag(String namespace, String s, JsonArray tagValues) {
         //? if >1.21 {
-        var location = ClutterNoMore.location(namespace, "tags/item/" +s + ".json");
+        Identifier location = ClutterNoMore.location(namespace, "tags/item/" +s + ".json");
          //?} else {
-        /*var location = ClutterNoMore.location(namespace, "tags/items/" +s + ".json");
+        /*Identifier location = ClutterNoMore.location(namespace, "tags/items/" +s + ".json");
         *///?}
         writeServerData(location, generateTagFile(tagValues));
     }
 
     private static void blockTag(String namespace, String s, JsonArray tagValues) {
         //? if >1.21 {
-        var location = ClutterNoMore.location(namespace, "tags/block/" +s + ".json");
+        Identifier location = ClutterNoMore.location(namespace, "tags/block/" +s + ".json");
          //?} else {
-        /*var location = ClutterNoMore.location(namespace, "tags/blocks/" +s + ".json");
+        /*Identifier location = ClutterNoMore.location(namespace, "tags/blocks/" +s + ".json");
         *///?}
         writeServerData(location, generateTagFile(tagValues));
     }
@@ -78,7 +78,7 @@ public class DataGenerator {
         JsonObject tag = new JsonObject();
         JsonArray values = new JsonArray();
         tagValues.forEach((value)->{
-            var tagElement = new JsonObject();
+            JsonObject tagElement = new JsonObject();
             tagElement.add("id", value);
             tagElement.addProperty("required", false);
             values.add(tagElement);
@@ -97,9 +97,9 @@ public class DataGenerator {
         JsonObject entry = new JsonObject();
         entry.add("type", new JsonPrimitive("loot_table"));
         //? if >1.21 {
-        var value = "value";
+        String value = "value";
         //?} else {
-        /*var value = "name";
+        /*String value = "name";
          *///?}
         entry.add(value, new JsonPrimitive(block.withPrefix("blocks/").toString()));
         entries.add(entry);
@@ -107,9 +107,9 @@ public class DataGenerator {
         pools.add(pool);
         lootTable.add("pools", pools);
         //? if >1.21 {
-        var path = "loot_table";
+        String path = "loot_table";
          //?} else {
-        /*var path = "loot_tables";
+        /*String path = "loot_tables";
         *///?}
         writeServerData(("%s/blocks/%s.json".formatted(path, shape.getPath())), lootTable);
     }

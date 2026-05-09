@@ -13,10 +13,7 @@ import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.item.crafting.ShapelessRecipe;
 import net.minecraft.world.item.crafting.SingleItemRecipe;
-
-//? if <26 {
-/*import java.util.ArrayList;
-*///?}
+import java.util.ArrayList;
 
 public class RecipeRemover {
 
