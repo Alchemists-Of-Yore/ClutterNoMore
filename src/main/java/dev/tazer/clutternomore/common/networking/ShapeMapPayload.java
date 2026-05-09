@@ -7,14 +7,12 @@ import dev.tazer.clutternomore.common.shape_map.ShapeMap;
 //? if fabric
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 //? if neoforge
 /*import net.neoforged.neoforge.network.handling.IPayloadContext;*/
 
@@ -23,15 +21,28 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public record ShapeMapPayload(Map<ItemStack, List<ItemStack>> shapes, Map<ItemStack, ItemStack> inverseShapes) implements CustomPacketPayload {
+public record ShapeMapPayload(Map<Identifier, List<Identifier>> shapes, Map<Identifier, Identifier> inverseShapes) implements CustomPacketPayload {
     public static final Type<ShapeMapPayload> TYPE = new Type<>(Identifier.fromNamespaceAndPath(ClutterNoMore.MODID, "shapes"));
 
-    private static final StreamCodec<RegistryFriendlyByteBuf, Map<ItemStack, List<ItemStack>>> SHAPE_MAP_CODEC = ByteBufCodecs.map(
-            HashMap::new, ItemStack.STREAM_CODEC, ItemStack.OPTIONAL_LIST_STREAM_CODEC, BuiltInRegistries.ITEM.size()
+    private static final StreamCodec<RegistryFriendlyByteBuf, List<Identifier>> ID_LIST_CODEC = StreamCodec.of(
+            (buf, list) -> {
+                buf.writeVarInt(list.size());
+                for (Identifier id : list) Identifier.STREAM_CODEC.encode(buf, id);
+            },
+            buf -> {
+                int size = buf.readVarInt();
+                List<Identifier> list = new ArrayList<>(size);
+                for (int i = 0; i < size; i++) list.add(Identifier.STREAM_CODEC.decode(buf));
+                return list;
+            }
     );
 
-    private static final StreamCodec<RegistryFriendlyByteBuf, Map<ItemStack, ItemStack>> INVERSE_SHAPE_MAP_CODEC = ByteBufCodecs.map(
-            HashMap::new, ItemStack.STREAM_CODEC, ItemStack.STREAM_CODEC, BuiltInRegistries.ITEM.size()
+    private static final StreamCodec<RegistryFriendlyByteBuf, Map<Identifier, List<Identifier>>> SHAPE_MAP_CODEC = ByteBufCodecs.map(
+            HashMap::new, Identifier.STREAM_CODEC, ID_LIST_CODEC, BuiltInRegistries.ITEM.size()
+    );
+
+    private static final StreamCodec<RegistryFriendlyByteBuf, Map<Identifier, Identifier>> INVERSE_SHAPE_MAP_CODEC = ByteBufCodecs.map(
+            HashMap::new, Identifier.STREAM_CODEC, Identifier.STREAM_CODEC, BuiltInRegistries.ITEM.size()
     );
 
     public static final StreamCodec<RegistryFriendlyByteBuf, ShapeMapPayload> STREAM_CODEC = StreamCodec.composite(
@@ -56,15 +67,21 @@ public record ShapeMapPayload(Map<ItemStack, List<ItemStack>> shapes, Map<ItemSt
                                           /*Object*/
                                           context) {
         final Map<Item, List<Item>> SHAPES_DATAMAP = new HashMap<>();
-        data.shapes.forEach(((item, items) -> {
-            ArrayList<Item> objects = new ArrayList<>();
-            items.forEach((stack -> objects.add(stack.getItem())));
-            SHAPES_DATAMAP.put(item.getItem(), objects);
-        }));
+        data.shapes.forEach((parentId, shapeIds) -> {
+            Item parent = BuiltInRegistries.ITEM.getOptional(parentId).orElse(null);
+            if (parent == null) return;
+            ArrayList<Item> shapes = new ArrayList<>(shapeIds.size());
+            for (Identifier shapeId : shapeIds) {
+                BuiltInRegistries.ITEM.getOptional(shapeId).ifPresent(shapes::add);
+            }
+            SHAPES_DATAMAP.put(parent, shapes);
+        });
         final Map<Item, Item> INVERSE_SHAPES_DATAMAP = new HashMap<>();
-        data.inverseShapes.forEach(((item, items) -> {
-            INVERSE_SHAPES_DATAMAP.put(item.getItem(), items.getItem());
-        }));
+        data.inverseShapes.forEach((shapeId, parentId) -> {
+            Item shape = BuiltInRegistries.ITEM.getOptional(shapeId).orElse(null);
+            Item parent = BuiltInRegistries.ITEM.getOptional(parentId).orElse(null);
+            if (shape != null && parent != null) INVERSE_SHAPES_DATAMAP.put(shape, parent);
+        });
         ShapeMap.setShapeMaps(SHAPES_DATAMAP, INVERSE_SHAPES_DATAMAP);
     }
 }

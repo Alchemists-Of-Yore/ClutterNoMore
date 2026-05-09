@@ -9,12 +9,18 @@ import net.minecraft.util.StringRepresentable;
 
 public class CNMConfig {
     public static class StartupConfig extends ReflectiveConfig {
+        @Comment("If shape maps (grouping) should be loaded")
+        @SerializedName("shape_maps")
+        public final TrackedValue<Boolean> SHAPE_MAPS = this.value(true);
         @Comment("If vertical slabs should be added to all existing slabs")
         @SerializedName("vertical_slabs")
         public final TrackedValue<Boolean> VERTICAL_SLABS = this.value(true);
         @Comment("If steps should be added to all existing stairs")
         @SerializedName("steps")
         public final TrackedValue<Boolean> STEPS = this.value(true);
+        @Comment("If detailed warnings should be logged for development purposes")
+        @SerializedName("detailed_logs")
+        public final TrackedValue<Boolean> DETAILED_LOGS = this.value(false);
         @Comment("Whether to generate a copy of the runtime datapack")
         @SerializedName("runtime_data_generation")
         public final TrackedValue<Boolean> RUNTIME_DATA_GENERATION = this.value(false);

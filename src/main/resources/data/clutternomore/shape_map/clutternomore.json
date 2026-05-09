@@ -1,0 +1,51 @@
+{
+  "priority": 500,
+  "add": {
+    "/(?<ns>[^:]+):(?<stem>.+)_log/": [
+      "${ns}:${stem}_wood",
+      "wilderwild:hollowed_${stem}_log"
+    ],
+
+    "/(?<ns>[^:]+):stripped_(?<stem>.+)_log/": [
+      "wilderwild:stripped_hollowed_${stem}_log"
+    ],
+
+    "/minecraft:(?<stem>.+?)(?<end>_planks|_block|s|)/": [
+      "/[^:]+:${stem}_slab/",
+      "/[^:]+:${stem}_stairs/",
+      "/[^:]+:${stem}_wall/",
+      "/[^:]+:${stem}${end}_slab/",
+      "/[^:]+:${stem}${end}_stairs/",
+      "/[^:]+:${stem}${end}_wall/"
+    ],
+
+    "/(?<ns>[^:]+):(?<stem>.+?)(?<end>_planks|_block|s|)/": [
+      "${ns}:${stem}_slab",
+      "${ns}:${stem}_stairs",
+      "${ns}:${stem}_wall",
+      "${ns}:${stem}${end}_slab",
+      "${ns}:${stem}${end}_stairs",
+      "${ns}:${stem}${end}_wall",
+
+      "${ns}:spiked_${stem}",
+      "${ns}:spiked_${stem}${end}"
+    ],
+
+    "/(?<ns>[^:]+):(?<stem>.+)_slab/": [
+      "clutternomore:${ns}/vertical_${stem}_slab",
+      "clutternomore:vertical_${stem}_slab",
+      "${ns}:vertical_${stem}_slab"
+    ],
+
+    "/(?<ns>[^:]+):(?<stem>.+)_stairs/": [
+      "clutternomore:${ns}/${stem}_step",
+      "clutternomore:${stem}_step",
+      "${ns}:${stem}_step"
+    ],
+
+    "crimson_stem": ["crimson_hyphae"],
+    "warped_stem": ["warped_hyphae"],
+    "stripped_crimson_stem": ["stripped_crimson_hyphae"],
+    "stripped_warped_stem": ["stripped_warped_hyphae"]
+  }
+}
