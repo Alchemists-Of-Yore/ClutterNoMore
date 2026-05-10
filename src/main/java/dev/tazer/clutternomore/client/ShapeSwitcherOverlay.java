@@ -62,6 +62,8 @@ public class ShapeSwitcherOverlay {
         float smoothing = 1 - (float) Math.exp(-5 * partialTick);
         currentIndex = Mth.lerp(smoothing, currentIndex, selectedIndex);
 
+        ItemStack heldStack = minecraft.player.getItemInHand(InteractionHand.MAIN_HAND);
+
         if (ClutterNoMoreClient.CLIENT_CONFIG.SCROLLING.value()) {
             startX = Mth.floor(centreX - currentIndex * spacing);
             RenderHelper.blit(guiGraphics, selected, centreX - 3, y - 3, 0, 0, 22, 22, 22, 22);
@@ -69,7 +71,7 @@ public class ShapeSwitcherOverlay {
             for (int index = 0; index < shapes.size(); index++) {
                 int x = startX + index * spacing;
                 RenderHelper.blit(guiGraphics, background, x, y, 0, 0, 16, 16, 16, 16);
-                RenderHelper.item(guiGraphics, shapes.get(index).getDefaultInstance(), x, y);
+                RenderHelper.item(guiGraphics, ShapeMap.transferStack(heldStack, shapes.get(index)), x, y);
             }
 
         } else {
@@ -79,7 +81,7 @@ public class ShapeSwitcherOverlay {
             for (int index = 0; index < shapes.size(); index++) {
                 int x = startX + index * spacing;
                 RenderHelper.blit(guiGraphics, background, x, y, 0, 0, 16, 16, 16, 16);
-                RenderHelper.item(guiGraphics, shapes.get(index).getDefaultInstance(), x, y);
+                RenderHelper.item(guiGraphics, ShapeMap.transferStack(heldStack, shapes.get(index)), x, y);
             }
             //? if <26
             //RenderHelper.blit(guiGraphics, selected, Mth.floor(startX + currentIndex * spacing) - 3, y - 3, 0, 0, 22, 22, 22, 22);
@@ -130,9 +132,8 @@ public class ShapeSwitcherOverlay {
         if (selectedIndex == previousIndex) return;
 
         Item nextItem = shapes.get(selectedIndex);
-        ItemStack next = nextItem.getDefaultInstance();
-        next.setCount(count);
         Player player = Objects.requireNonNull(minecraft.player);
+        ItemStack next = ShapeMap.transferStack(player.getItemInHand(InteractionHand.MAIN_HAND), nextItem);
         player.playSound(SoundEvents.UI_BUTTON_CLICK.value(), 0.3F, 1.5F);
         player.setItemInHand(InteractionHand.MAIN_HAND, next);
 

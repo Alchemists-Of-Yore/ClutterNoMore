@@ -40,8 +40,7 @@ public class ItemRequirementMixin {
             }
 
             ItemStack originalStack = sReq.stack;
-            ItemStack parentStack = ShapeMap.getParent(originalStack.getItem()).getDefaultInstance();
-            parentStack.setCount(originalStack.getCount());
+            ItemStack parentStack = ShapeMap.transferStack(originalStack, ShapeMap.getParent(originalStack.getItem()));
 
             newRequired.add(new StackRequirement(parentStack, sReq.usage));
         }

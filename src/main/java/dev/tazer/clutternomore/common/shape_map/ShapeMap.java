@@ -188,6 +188,17 @@ public class ShapeMap {
         if (!ra.equals(rb)) parent.put(ra, rb);
     }
 
+    public static ItemStack transferStack(ItemStack from, Item toItem) {
+        //? if >1.20.4 {
+        return from.transmuteCopy(toItem, from.getCount());
+        //?} else {
+        /*ItemStack result = new ItemStack(toItem, from.getCount());
+        net.minecraft.nbt.CompoundTag tag = from.getTag();
+        if (tag != null) result.setTag(tag.copy());
+        return result;
+        *///?}
+    }
+
     public static void sendShapeMap(ServerPlayer serverPlayer) {
         if (serverPlayer == null) return;
         final Map<Identifier, List<Identifier>> shapes = new HashMap<>();

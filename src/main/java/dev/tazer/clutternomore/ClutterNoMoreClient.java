@@ -116,9 +116,7 @@ public class ClutterNoMoreClient {
             if (idx < 0) idx = 0;
             if (idx > max) idx = max;
         }
-        ItemStack next = shapes.get(idx).getDefaultInstance();
-        next.setCount(heldStack.getCount());
-        return next;
+        return ShapeMap.transferStack(heldStack, shapes.get(idx));
     }
 
     private static void playSwitchSound(Player player) {

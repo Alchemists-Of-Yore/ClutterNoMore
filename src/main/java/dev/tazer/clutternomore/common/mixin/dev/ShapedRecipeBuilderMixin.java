@@ -1,7 +1,7 @@
 package dev.tazer.clutternomore.common.mixin.dev;
 
-//? fabric {
 import dev.tazer.clutternomore.common.mixin.annotation.IfDevEnvironment;
+//? fabric {
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.data.recipes.RecipeCategory;

@@ -16,16 +16,16 @@ import net.minecraft.client.renderer.RenderPipelines;
 *///?}
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
-import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 
 public class ClientShapeTooltip implements ClientTooltipComponent {
-    public final List<Item> shapes;
+    public final List<ItemStack> stacks;
     public int selectedIndex;
 
     public ClientShapeTooltip(ShapeTooltip shapeTooltip) {
-        shapes = shapeTooltip.shapes();
+        stacks = shapeTooltip.stacks();
         selectedIndex = shapeTooltip.selectedIndex();
     }
 
@@ -40,7 +40,7 @@ public class ClientShapeTooltip implements ClientTooltipComponent {
 
     @Override
     public int getWidth(Font font) {
-        return ClutterNoMoreClient.iconsRendering() ? shapes.size() * 22 : 0;
+        return ClutterNoMoreClient.iconsRendering() ? stacks.size() * 22 : 0;
     }
 
     @Override
@@ -55,9 +55,9 @@ public class ClientShapeTooltip implements ClientTooltipComponent {
             int spacing = 22;
             int startX = mouseX + 2;
 
-            for (int index = 0; index < shapes.size(); index++) {
+            for (int index = 0; index < stacks.size(); index++) {
                 int x = startX + index * spacing;
-                RenderHelper.item(guiGraphics, shapes.get(index).getDefaultInstance(), x, mouseY);
+                RenderHelper.item(guiGraphics, stacks.get(index), x, mouseY);
             }
             RenderHelper.blit(
                     guiGraphics, selected, Mth.floor(startX + selectedIndex * spacing) - 3, mouseY - 3, 0, 0, 22, 22, 22, 22);

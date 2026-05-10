@@ -24,7 +24,11 @@ public class ItemMixin {
             Item originalItem = ShapeMap.getParent(item);
             List<Item> shapes = new ArrayList<>(ShapeMap.getShapes(originalItem));
             shapes.add(0, originalItem);
-            cir.setReturnValue(Optional.of(new ShapeTooltip(shapes, shapes.indexOf(item))));
+            List<ItemStack> stacks = new ArrayList<>(shapes.size());
+            for (Item shape : shapes) {
+                stacks.add(ShapeMap.transferStack(stack, shape));
+            }
+            cir.setReturnValue(Optional.of(new ShapeTooltip(stacks, shapes.indexOf(item))));
         }
     }
 }

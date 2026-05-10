@@ -322,9 +322,7 @@ public class RecipeRemover {
             if (ShapeMap.isShape(item)) {
                 Item parent = ShapeMap.getParent(item);
                 if (parent == resultItem) { removeOut[0] = true; return null; }
-                ItemStack copy = parent.getDefaultInstance();
-                copy.setCount(stack.getCount());
-                kept.add(copy);
+                kept.add(ShapeMap.transferStack(stack, parent));
                 changed = true;
             } else {
                 kept.add(stack);
