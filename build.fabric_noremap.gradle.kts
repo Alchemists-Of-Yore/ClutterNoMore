@@ -91,7 +91,7 @@ dependencies {
 
     implementation("folk.sisby:kaleido-config:${dep("kaleido")}")
     include("folk.sisby:kaleido-config:${dep("kaleido")}")
-    compileOnly("mezz.jei:jei-1.21.11-neoforge-api:${dep("jei")}")
+    compileOnly("mezz.jei:jei-${mc}-fabric:${dep("jei")}")
     implementation("cc.cassian.rrv:reliable-recipe-viewer-fabric:${dep("rrv")}")
 
     implementation("com.terraformersmc:modmenu:${dep("modmenu")}")
