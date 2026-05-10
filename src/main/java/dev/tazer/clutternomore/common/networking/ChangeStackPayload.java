@@ -15,7 +15,6 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -65,7 +64,7 @@ public record ChangeStackPayload(int containerId, int slot, ItemStack stack) imp
         AbstractContainerMenu menu = resolveMenu(player, containerId);
         if (menu == null || slotIndex < 0 || slotIndex >= menu.slots.size()) return;
         Slot slot = menu.getSlot(slotIndex);
-            ItemStack current = slot.getItem();
+        ItemStack current = slot.getItem();
         if (current.getItem() == stack.getItem()) return;
         if (!ShapeMap.inSameShapeSet(stack.getItem(), current.getItem())) return;
 

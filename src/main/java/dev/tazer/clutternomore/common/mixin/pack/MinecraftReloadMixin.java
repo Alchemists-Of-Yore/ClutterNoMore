@@ -23,7 +23,7 @@ public class MinecraftReloadMixin {
     @Shadow @Final private PackType type;
 
     @Inject(method = "createReload", at = @At("HEAD"))
-    private void clutternomore$populateRuntimePack(Executor backgroundExecutor, Executor gameExecutor, CompletableFuture<Unit> waitable, List<PackResources> packs, CallbackInfoReturnable<?> cir) {
+    private void cnm$populateRuntimePack(Executor backgroundExecutor, Executor gameExecutor, CompletableFuture<Unit> waitable, List<PackResources> packs, CallbackInfoReturnable<?> cir) {
         if (this.type != PackType.CLIENT_RESOURCES) return;
         ResourceManager temp = new MultiPackResourceManager(PackType.CLIENT_RESOURCES, packs);
         AssetGenerator.generate(temp);

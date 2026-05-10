@@ -11,21 +11,9 @@ import dev.tazer.clutternomore.common.data.CNMPackResources;
 import dev.tazer.clutternomore.common.data.DataGenerator;
 import dev.tazer.clutternomore.common.registry.CBlocks;
 import dev.tazer.clutternomore.common.mixin.access.BlockBehaviorAccessor;
-//? if <1.21 {
-/*import net.minecraft.core.RegistryAccess;
-*///?} else {
-import net.minecraft.core.HolderLookup;
+//? if >=1.21 {
 import net.minecraft.server.packs.PackLocationInfo;
 //?}
-
-//? if <1.21.4 {
-/*import net.minecraft.core.NonNullList;
-import net.minecraft.world.item.crafting.Ingredient;
-import dev.tazer.clutternomore.common.shape_map.ShapeMap;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Recipe;
-import java.util.stream.Stream;
-*///?}
 
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
@@ -34,10 +22,6 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.repository.PackSource;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
-//? if =1.21.1 {
-/*import net.minecraft.world.item.crafting.RecipeHolder;
-*///?}
-import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 //? if forge {
@@ -92,75 +76,6 @@ public class ClutterNoMore {
         return Identifier.parse(id);
         //? if <1.21
         //return new Identifier(id);
-    }
-
-    public static void modifyRecipes(
-            //? if >1.21 {
-            HolderLookup.Provider
-            //?} else {
-            /*RegistryAccess
-            *///?}
-                    registries, RecipeManager recipeManager) {
-        //? if <1.21.2 {
-        /*boolean changed = false;
-        var originalRecipes = recipeManager.getRecipes();
-        ArrayList<
-        //? if >1.21 {
-        RecipeHolder<?>
-         //?} else {
-        /^Recipe<?>
-        ^///?}
-        > newRecipes = new ArrayList<>();
-
-        for (
-                //? if >1.21 {
-                RecipeHolder<?> recipeHolder
-                //?} else {
-                /^Recipe<?> recipe
-                ^///?}
-                        : originalRecipes) {
-            //? if >1.21
-            Recipe<?> recipe = recipeHolder.value();
-
-            Item result = recipe.getResultItem(registries).getItem();
-
-            if (ShapeMap.isShape(result)) continue;
-
-            NonNullList<Ingredient> ingredients = recipe.getIngredients();
-            for (Ingredient ingredient : new ArrayList<>(ingredients)) {
-                ArrayList<ItemStack> stacks = new ArrayList<>();
-                for (ItemStack stack : ingredient.getItems()) {
-                    Item item = stack.getItem();
-                    if (ShapeMap.isShape(item)) {
-                        ItemStack originalStack = ShapeMap.getParent(item).getDefaultInstance();
-                        originalStack.setCount(stack.getCount());
-                        stacks.add(originalStack);
-                        changed = true;
-                    } else stacks.add(stack);
-                }
-
-                Stream<ItemStack> newStacks = stacks.stream();
-                if (changed) {
-                    try {
-                        int index = ingredients.indexOf(ingredient);
-                        ingredients.set(index, Ingredient.of(newStacks));
-                    } catch (Exception ignored) {}
-                }
-            }
-
-
-            //? if >1.21 {
-            RecipeHolder<?> newHolder = new RecipeHolder<>(recipeHolder.id(), recipe);
-            newRecipes.add(newHolder);
-            //?} else {
-            /^newRecipes.add(recipe);
-            ^///?}
-        }
-
-        if (changed) {
-            recipeManager.replaceRecipes(newRecipes);
-        }
-        *///?}
     }
 
     public static void registerVariants() {

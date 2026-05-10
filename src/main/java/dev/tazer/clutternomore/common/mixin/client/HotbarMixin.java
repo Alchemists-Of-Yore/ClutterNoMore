@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.At;
 public class HotbarMixin {
     //? if >1.21.8 {
     @WrapOperation(method = "handleKeybinds", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Inventory;setSelectedSlot(I)V"))
-    private void pickBlock(Inventory instance, int selectedIndex, Operation<Void> original) {
+    private void cnm$handleHotbar(Inventory instance, int selectedIndex, Operation<Void> original) {
         if (ClutterNoMoreClient.OVERLAY != null) {
             int maxIndex = ClutterNoMoreClient.OVERLAY.shapes.size() - 1;
             if (selectedIndex < 0) selectedIndex = 0;
@@ -27,7 +27,7 @@ public class HotbarMixin {
 
     //?} else {
     /*@WrapOperation(method = "handleKeybinds", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/KeyMapping;consumeClick()Z", ordinal = 2))
-    private boolean pickBlock(KeyMapping instance, Operation<Boolean> original, @Local int selectedIndex) {
+    private boolean cnm$handleHotbar(KeyMapping instance, Operation<Boolean> original, @Local int selectedIndex) {
         boolean b = original.call(instance);
         if (ClutterNoMoreClient.OVERLAY != null && b) {
             int maxIndex = ClutterNoMoreClient.OVERLAY.shapes.size() - 1;

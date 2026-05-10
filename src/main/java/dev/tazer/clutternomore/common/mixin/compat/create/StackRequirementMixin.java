@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.Pseudo;
 public class StackRequirementMixin {
     //? if =1.20.1 && forge || =1.21.1 && neoforge {
     /*@WrapOperation(method = "matches", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;isSameItem(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemStack;)Z"))
-    public boolean alsoIfInSameSet(ItemStack first, ItemStack second, Operation<Boolean> original) {
+    public boolean cnm$alsoIfInSameSet(ItemStack first, ItemStack second, Operation<Boolean> original) {
         return original.call(first, second) || ShapeMap.inSameShapeSet(first.getItem(), second.getItem());
     }
     *///?}

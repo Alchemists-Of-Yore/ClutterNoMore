@@ -47,11 +47,6 @@ public class ForgeEntrypoint {
         modEventBus.addListener(ForgeEntrypoint::registerBlocks);
     }
 
-//    private static void onServerStarted(ServerStartedEvent event) {
-//        MinecraftServer server = event.getServer();
-//        ClutterNoMore.modifyRecipes(server.registryAccess(), server.getRecipeManager());
-//    }
-
     static void syncShapeMapWhenChanged(OnDatapackSyncEvent event) {
         ClutterNoMore.LOGGER.info("Attempting to send shape map!");
         for (ServerPlayer serverPlayer : event.getPlayerList().getPlayers()) {

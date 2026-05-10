@@ -22,6 +22,9 @@
     "create:gearbox": [
       "create:vertical_gearbox"
     ],
+    "create:linear_chassis": [
+      "create:secondary_linear_chassis"
+    ],
     "/create:(?<color>.+?)_sail/": [
       "simulated:${color}_symmetric_sail"
     ],
@@ -43,8 +46,14 @@
     ]
   },
   "remove": {
-    "/.*?copycat.*/": [
+    "/.*copycat.*/": [
       "/.*?copycat.*/"
+    ],
+    "nomansland:walnuts": [
+      "/.*/"
+    ],
+    "/.*/": [
+      "nomansland:walnuts"
     ]
   }
 }

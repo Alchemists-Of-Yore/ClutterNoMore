@@ -29,6 +29,14 @@ stonecutterBuild.replacements.string {
     replace("GuiGraphics ", "GuiGraphicsExtractor ")
 }
 stonecutterBuild.replacements.string {
+    direction = stonecutterBuild.eval(mc, ">26")
+    replace("GuiGraphics.", "GuiGraphicsExtractor.")
+}
+stonecutterBuild.replacements.string {
+    direction = stonecutterBuild.eval(mc, ">26")
+    replace("GuiGraphics)", "GuiGraphicsExtractor)")
+}
+stonecutterBuild.replacements.string {
     direction = stonecutterBuild.eval(mc, ">1.21.10")
     replace("getKey().location()", "getKey().identifier()")
 }

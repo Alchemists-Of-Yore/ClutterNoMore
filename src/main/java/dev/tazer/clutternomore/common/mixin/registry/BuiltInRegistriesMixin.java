@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class BuiltInRegistriesMixin {
     //? if fabric {
     @Inject(method = "bootStrap", at = @At(value = "INVOKE", target = "Lnet/minecraft/core/registries/BuiltInRegistries;freeze()V", shift = At.Shift.BEFORE))
-    private static void accept(CallbackInfo ci) {
+    private static void cnm$registerVariants(CallbackInfo ci) {
         ClutterNoMore.registerVariants();
     }
     //?}

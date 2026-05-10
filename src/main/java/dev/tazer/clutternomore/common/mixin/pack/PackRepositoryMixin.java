@@ -14,7 +14,7 @@ import java.util.List;
 @Mixin(PackRepository.class)
 public class PackRepositoryMixin {
     @Inject(method = "openAllSelected", at = @At("RETURN"), cancellable = true)
-    private void clutternomore$injectRuntimePack(CallbackInfoReturnable<List<PackResources>> cir) {
+    private void cnm$injectRuntimePack(CallbackInfoReturnable<List<PackResources>> cir) {
         List<PackResources> opened = new ArrayList<>(cir.getReturnValue());
         if (!opened.contains(ClutterNoMore.RESOURCES)) {
             opened.add(ClutterNoMore.RESOURCES);

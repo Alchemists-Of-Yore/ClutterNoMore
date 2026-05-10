@@ -31,7 +31,7 @@ public class ItemRequirementMixin {
     protected List<StackRequirement> requiredItems;
 
     @Inject(method = "<init>(Ljava/util/List;)V", at = @At(value = "RETURN"))
-    private void replaceWithParentBlocks(List<StackRequirement> requiredItems, CallbackInfo ci) {
+    private void cnm$replaceWithParentBlocks(List<StackRequirement> requiredItems, CallbackInfo ci) {
         ArrayList<StackRequirement> newRequired = new ArrayList<>();
         for (StackRequirement sReq : requiredItems) {
             if (sReq.usage == ItemRequirement.ItemUseType.DAMAGE || sReq instanceof ItemRequirement.StrictNbtStackRequirement) {
@@ -49,7 +49,7 @@ public class ItemRequirementMixin {
     }
 
     @WrapOperation(method = "defaultOf", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;hasProperty(Lnet/minecraft/world/level/block/state/properties/Property;)Z"))
-    private static boolean allSlabsCostOne(BlockState instance, Property<SlabType> property, Operation<Boolean> original) {
+    private static boolean cnm$allSlabsCostOne(BlockState instance, Property<SlabType> property, Operation<Boolean> original) {
         return false;
     }
     *///?}

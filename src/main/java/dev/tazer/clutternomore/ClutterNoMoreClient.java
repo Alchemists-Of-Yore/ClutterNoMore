@@ -2,6 +2,11 @@ package dev.tazer.clutternomore;
 
 import dev.tazer.clutternomore.client.ShapeSwitcherOptionsScreen;
 import dev.tazer.clutternomore.client.ShapeSwitcherOverlay;
+import dev.tazer.clutternomore.common.compat.JEICompat;
+//? if <1.21.4
+/*import dev.tazer.clutternomore.common.compat.EMICompat;*/
+//? if >1.21.9
+import dev.tazer.clutternomore.common.compat.RRVCompat;
 import dev.tazer.clutternomore.common.shape_map.ShapeMap;
 import dev.tazer.clutternomore.common.mixin.client.CreativeInventoryScreenAccessor;
 import dev.tazer.clutternomore.common.mixin.client.CreativeSlotWrapperAccessor;
@@ -71,6 +76,32 @@ public class ClutterNoMoreClient {
         return isCreativeTabSlot(hoveredSlot());
     }
 
+    public static boolean isHoveringSwitchableSlot() {
+        Slot slot = hoveredSlot();
+        if (slot == null) return false;
+        if (isCreativeTabSlot(slot)) return true;
+        Player player = Minecraft.getInstance().player;
+        if (player == null) return false;
+        return slot.allowModification(player);
+    }
+
+    public static boolean isHoveringRecipeViewer() {
+        try {
+            if (Platform.INSTANCE.isModLoaded("jei") && JEICompat.isHoveringIngredient()) return true;
+            //? if <1.21.4 {
+            /*if (Platform.INSTANCE.isModLoaded("emi") && EMICompat.isHoveringIngredient()) return true;
+            *///?}
+            //? if >1.21.9 {
+            if (Platform.INSTANCE.isModLoaded("rrv") && RRVCompat.isHoveringIngredient()) return true;
+            //?}
+        } catch (Throwable ignored) {}
+        return false;
+    }
+
+    public static boolean iconsRendering() {
+        return isHoveringCreativeTabSlot() || showTooltip || isHoveringRecipeViewer();
+    }
+
     private static ItemStack nextShape(ItemStack heldStack, int direction, boolean wrap) {
         Item parent = ShapeMap.getParent(heldStack.getItem());
         List<Item> shapes = new ArrayList<>(ShapeMap.getShapes(parent));
@@ -100,16 +131,19 @@ public class ClutterNoMoreClient {
                                               //Object
                                               tooltipContext, TooltipFlag tooltipFlag, List<Component> tooltip) {
         if (!ShapeMap.contains(stack.getItem())) return;
+        if (tooltip.isEmpty()) return;
 
         if (CLIENT_CONFIG.DETAILED_TOOLTIPS.value()) {
-            if (Minecraft.getInstance().screen instanceof CreativeModeInventoryScreen) return;
-            int insertAt = tooltip.isEmpty() ? 0 : 1;
-            tooltip.add(insertAt, hintComponent());
-        } else if (!isHoveringCreativeTabSlot() && !showTooltip && !tooltip.isEmpty()) {
-            Component component = tooltip.get(0).copy().append(Component.literal(" [+]").withStyle(ChatFormatting.DARK_GRAY));
-            tooltip.remove(0);
-            tooltip.add(0, component);
+            if (Minecraft.getInstance().screen instanceof CreativeModeInventoryScreen && hoveredSlot() != null) return;
+            if (isHoveringSwitchableSlot()) {
+                tooltip.add(1, hintComponent());
+                return;
+            }
         }
+
+        if (iconsRendering()) return;
+
+        tooltip.set(0, tooltip.get(0).copy().append(Component.literal(" [+]").withStyle(ChatFormatting.DARK_GRAY)));
     }
 
     public static Component hintComponent() {

@@ -29,22 +29,18 @@ public class ClientShapeTooltip implements ClientTooltipComponent {
         selectedIndex = shapeTooltip.selectedIndex();
     }
 
-    private static boolean shouldRender() {
-        return ClutterNoMoreClient.isHoveringCreativeTabSlot() || ClutterNoMoreClient.showTooltip;
-    }
-
     @Override
     //? if >1.21.2 {
     public int getHeight(Font font) {
     //?} else {
     /*public int getHeight() {
     *///?}
-        return shouldRender() ? 22 : 0;
+        return ClutterNoMoreClient.iconsRendering() ? 22 : 0;
     }
 
     @Override
     public int getWidth(Font font) {
-        return shouldRender() ? shapes.size() * 22 : 0;
+        return ClutterNoMoreClient.iconsRendering() ? shapes.size() * 22 : 0;
     }
 
     @Override
@@ -53,7 +49,7 @@ public class ClientShapeTooltip implements ClientTooltipComponent {
     //?} else {
     /*public void renderImage(Font font, int mouseX, int mouseY, GuiGraphicsExtractor guiGraphics) {
     *///?}
-        if (shouldRender()) {
+        if (ClutterNoMoreClient.iconsRendering()) {
             Identifier selected = ClutterNoMore.location("textures/gui/selected_shape_inventory.png");
 
             int spacing = 22;

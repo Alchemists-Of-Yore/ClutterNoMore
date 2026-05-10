@@ -8,5 +8,12 @@
   "key.clutternomore.open_menu": "Ouvrir le menu",
   "key.clutternomore.menu_hold": "Basculer",
   "key.clutternomore.menu_toggle": "Maintenir",
-  "key.clutternomore.menu_press": "Appuyer"
+  "key.clutternomore.menu_press": "Appuyer",
+  "key.clutternomore.look_to_switch": "Changer avec le regard",
+  "key.clutternomore.shape_indicator": "Indicateur de forme",
+  "key.clutternomore.detailed_tooltips": "Infobulles détaillées",
+  "tooltip.clutternomore.scroll_to_change": "%s pour changer de forme",
+  "tooltip.clutternomore.scroll": "Faites défiler",
+  "tooltip.clutternomore.hold_to_change": "Maintenez [%s] pour changer de forme",
+  "tooltip.clutternomore.press_to_change": "Appuyez sur [%s] pour changer de forme"
 }

@@ -1,19 +1,23 @@
 package dev.tazer.clutternomore.common.mixin.recipe;
 
-import net.minecraft.world.item.ItemStack;
-//? if >26
-import net.minecraft.world.item.ItemStackTemplate;
+//? if <1.21 {
+/*import net.minecraft.world.item.crafting.Ingredient;
+*///?}
 import net.minecraft.world.item.crafting.SingleItemRecipe;
 import org.spongepowered.asm.mixin.Mixin;
+//? if <1.21 {
+/*import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.gen.Accessor;
+*///?}
 
 @Mixin(SingleItemRecipe.class)
 public interface SingleItemRecipeAccessor {
-    //? if >26 {
-    @Accessor
-    ItemStackTemplate getResult();
-    //?} else {
-    /*@Accessor
-    ItemStack getResult();
+    //? if <1.21 {
+    /*@Accessor("ingredient")
+    Ingredient getInput();
+
+    @Accessor("ingredient")
+    @Mutable
+    void setInput(Ingredient ingredient);
     *///?}
 }

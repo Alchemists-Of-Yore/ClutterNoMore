@@ -22,17 +22,17 @@ public class ReloadableServerResourcesMixin {
 
     //? if >=26 {
     @Inject(method = "updateComponentsAndStaticRegistryTags", at = @At("RETURN"))
-    private void removeShapeRecipes(CallbackInfo ci) {
+    private void cnm$removeShapeRecipes(CallbackInfo ci) {
         RecipeRemover.removeShapeRecipes(this.recipes);
     }
     //?} else if >1.21 {
     /*@Inject(method = "updateRegistryTags()V", at = @At("RETURN"))
-    private void removeShapeRecipes(CallbackInfo ci) {
+    private void cnm$removeShapeRecipes(CallbackInfo ci) {
         RecipeRemover.removeShapeRecipes(this.recipes);
     }
     *///?} else {
     /*@Inject(method = "updateRegistryTags(Lnet/minecraft/core/RegistryAccess;)V", at = @At("RETURN"))
-    private void removeShapeRecipes(RegistryAccess registryAccess, CallbackInfo ci) {
+    private void cnm$removeShapeRecipes(RegistryAccess registryAccess, CallbackInfo ci) {
         RecipeRemover.removeShapeRecipes(this.recipes);
     }
     *///?}
