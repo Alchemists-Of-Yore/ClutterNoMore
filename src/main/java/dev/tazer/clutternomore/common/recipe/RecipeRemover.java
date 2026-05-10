@@ -7,6 +7,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
 import dev.tazer.clutternomore.common.mixin.recipe.RecipeManagerAccessor;
 import net.minecraft.core.Holder;
@@ -48,9 +49,9 @@ public class RecipeRemover {
         RecipeManagerAccessor accessor = (RecipeManagerAccessor) manager;
 
         Map<String, JsonElement> shapeToParentJson = new HashMap<>();
-        for (Map.Entry<Item, Item> e : ShapeMap.inverseView().entrySet()) {
-            String shapeId = BuiltInRegistries.ITEM.getKey(e.getKey()).toString();
-            String parentId = BuiltInRegistries.ITEM.getKey(e.getValue()).toString();
+        for (Map.Entry<Item, Item> entry : ShapeMap.inverseView().entrySet()) {
+            String shapeId = BuiltInRegistries.ITEM.getKey(entry.getKey()).toString();
+            String parentId = BuiltInRegistries.ITEM.getKey(entry.getValue()).toString();
             shapeToParentJson.put(shapeId, new JsonPrimitive(parentId));
         }
 
@@ -67,11 +68,6 @@ public class RecipeRemover {
         *///?}
 
         List<RecipeHolder<?>> kept = new ArrayList<>();
-        int removed = 0, replaced = 0;
-        int dumped = 0;
-
-        ClutterNoMore.LOGGER.info("[CNM] removeShapeRecipes start, tagCache size={}, shapeReplacements size={}",
-                tagCache.size(), shapeToParentJson.size());
 
         for (RecipeHolder<?> holder : source) {
             try {
@@ -84,11 +80,10 @@ public class RecipeRemover {
                 *///?}
 
                 if (resultItem != null && ShapeMap.isShape(resultItem)) {
-                    removed++;
                     continue;
                 }
 
-                var encodeResult = Recipe.CODEC.encodeStart(ops, recipe);
+                DataResult<JsonElement> encodeResult = Recipe.CODEC.encodeStart(ops, recipe);
                 Optional<JsonElement> encoded = encodeResult.result();
                 if (encoded.isEmpty()) {
                     if (encodeResult.error().isPresent()) {
@@ -99,19 +94,11 @@ public class RecipeRemover {
                 }
                 JsonElement json = encoded.get();
 
-                String jsonStr = json.toString();
-                boolean mentionsTag = jsonStr.contains("wooden_slabs") && jsonStr.contains("\"tag\"");
-                boolean shouldDump = mentionsTag && dumped < 5;
-                if (shouldDump) {
-                    ClutterNoMore.LOGGER.info("[CNM dump pre] {} -> {}", holder.id(), jsonStr);
-                    dumped++;
-                }
-
                 if (resultItem != null) {
                     Set<String> dangerousIds = new HashSet<>();
-                    for (Item s : ShapeMap.getShapes(resultItem)) {
-                        if (ShapeMap.inSameShapeSet(s, resultItem)) {
-                            dangerousIds.add(BuiltInRegistries.ITEM.getKey(s).toString());
+                    for (Item shape : ShapeMap.getShapes(resultItem)) {
+                        if (ShapeMap.inSameShapeSet(shape, resultItem)) {
+                            dangerousIds.add(BuiltInRegistries.ITEM.getKey(shape).toString());
                         }
                     }
                     Set<String> dangerousTags = new HashSet<>();
@@ -124,29 +111,22 @@ public class RecipeRemover {
                         }
                     }
                     if (jsonContainsAnyId(json, dangerousIds, dangerousTags)) {
-                        removed++;
                         continue;
                     }
                 }
 
                 if (mutateRecipeJson(json, shapeToParentJson, tagCache)) {
-                    if (shouldDump) {
-                        ClutterNoMore.LOGGER.info("[CNM dump post] {} -> {}", holder.id(), json);
-                    }
-                    var decodeResult = Recipe.CODEC.parse(ops, json);
+                    DataResult<Recipe<?>> decodeResult = Recipe.CODEC.parse(ops, json);
                     Optional<Recipe<?>> decoded = decodeResult.result();
                     if (decoded.isPresent()) {
                         kept.add(new RecipeHolder<>(holder.id(), decoded.get()));
-                        replaced++;
                         continue;
                     }
-                    ClutterNoMore.LOGGER.warn("[CNM] decode fail for {}: {}", holder.id(),
-                            decodeResult.error().map(com.mojang.serialization.DataResult.Error::message).orElse("(no error)"));
                 }
 
                 kept.add(holder);
-            } catch (Exception e) {
-                ClutterNoMore.LOGGER.error("Error processing recipe {}: {}", holder.id(), e.getMessage());
+            } catch (Exception exception) {
+                ClutterNoMore.LOGGER.error("Error processing recipe {}: {}", holder.id(), exception.getMessage());
                 kept.add(holder);
             }
         }
@@ -156,9 +136,6 @@ public class RecipeRemover {
         //?} else {
         /*manager.replaceRecipes(kept);
         *///?}
-
-        ClutterNoMore.LOGGER.info("[CNM] removeShapeRecipes done. removed={}, replaced={}, kept={}",
-                removed, replaced, kept.size());
     }
 
     private static Map<String, TagInfo> buildTagCache() {
@@ -176,8 +153,8 @@ public class RecipeRemover {
         Set<String> seen = new LinkedHashSet<>();
         JsonArray expanded = new JsonArray();
 
-        for (Holder<Item> h : tag) {
-            Item item = h.value();
+        for (Holder<Item> holder : tag) {
+            Item item = holder.value();
             String id;
             if (ShapeMap.isShape(item)) {
                 shapes.add(item);
@@ -186,9 +163,9 @@ public class RecipeRemover {
                 id = BuiltInRegistries.ITEM.getKey(item).toString();
             }
             if (seen.add(id)) {
-                JsonObject itemObj = new JsonObject();
-                itemObj.addProperty("item", id);
-                expanded.add(itemObj);
+                JsonObject itemObject = new JsonObject();
+                itemObject.addProperty("item", id);
+                expanded.add(itemObject);
             }
         }
 
@@ -201,8 +178,7 @@ public class RecipeRemover {
     private static Item getResultItem(Recipe<?> recipe, ContextMap context) {
         try {
             for (RecipeDisplay display : recipe.display()) {
-                var stacks = display.result().resolveForStacks(context);
-                for (var stack : stacks) {
+                for (var stack : display.result().resolveForStacks(context)) {
                     if (!stack.isEmpty()) return stack.getItem();
                 }
             }
@@ -212,16 +188,16 @@ public class RecipeRemover {
     }
     //?}
 
-    private static String tagIdOf(JsonElement el) {
-        if (el.isJsonObject()) {
-            JsonObject obj = el.getAsJsonObject();
-            JsonElement t = obj.get("tag");
-            if (t != null && t.isJsonPrimitive() && t.getAsJsonPrimitive().isString()) {
-                return t.getAsString();
+    private static String tagIdOf(JsonElement element) {
+        if (element.isJsonObject()) {
+            JsonObject object = element.getAsJsonObject();
+            JsonElement tagField = object.get("tag");
+            if (tagField != null && tagField.isJsonPrimitive() && tagField.getAsJsonPrimitive().isString()) {
+                return tagField.getAsString();
             }
-        } else if (el.isJsonPrimitive() && el.getAsJsonPrimitive().isString()) {
-            String s = el.getAsString();
-            if (s.startsWith("#")) return s.substring(1);
+        } else if (element.isJsonPrimitive() && element.getAsJsonPrimitive().isString()) {
+            String text = element.getAsString();
+            if (text.startsWith("#")) return text.substring(1);
         }
         return null;
     }
@@ -230,94 +206,92 @@ public class RecipeRemover {
         return "result".equals(key) || "results".equals(key);
     }
 
-    private static boolean jsonContainsAnyId(JsonElement el, Set<String> dangerousLiterals, Set<String> dangerousTags) {
-        String tagId = tagIdOf(el);
+    private static boolean jsonContainsAnyId(JsonElement element, Set<String> dangerousLiterals, Set<String> dangerousTags) {
+        String tagId = tagIdOf(element);
         if (tagId != null && dangerousTags.contains(tagId)) return true;
 
-        if (el.isJsonObject()) {
-            for (Map.Entry<String, JsonElement> e : el.getAsJsonObject().entrySet()) {
-                if ("type".equals(e.getKey()) || isResultKey(e.getKey())) continue;
-                if (jsonContainsAnyId(e.getValue(), dangerousLiterals, dangerousTags)) return true;
+        if (element.isJsonObject()) {
+            for (Map.Entry<String, JsonElement> entry : element.getAsJsonObject().entrySet()) {
+                if ("type".equals(entry.getKey()) || isResultKey(entry.getKey())) continue;
+                if (jsonContainsAnyId(entry.getValue(), dangerousLiterals, dangerousTags)) return true;
             }
-        } else if (el.isJsonArray()) {
-            for (JsonElement child : el.getAsJsonArray()) {
+        } else if (element.isJsonArray()) {
+            for (JsonElement child : element.getAsJsonArray()) {
                 if (jsonContainsAnyId(child, dangerousLiterals, dangerousTags)) return true;
             }
-        } else if (el.isJsonPrimitive() && el.getAsJsonPrimitive().isString()) {
-            return dangerousLiterals.contains(el.getAsString());
+        } else if (element.isJsonPrimitive() && element.getAsJsonPrimitive().isString()) {
+            return dangerousLiterals.contains(element.getAsString());
         }
         return false;
     }
 
-    private static JsonElement tryReplaceValue(JsonElement val, Map<String, JsonElement> replacements, Map<String, TagInfo> tagCache) {
-        String tagId = tagIdOf(val);
+    private static JsonElement tryReplaceValue(JsonElement value, Map<String, JsonElement> replacements, Map<String, TagInfo> tagCache) {
+        String tagId = tagIdOf(value);
         if (tagId != null) {
             TagInfo info = tagCache.get(tagId);
             if (info != null) return info.expandedItems().deepCopy();
             return null;
         }
-        if (val.isJsonPrimitive() && val.getAsJsonPrimitive().isString()) {
-            JsonElement repl = replacements.get(val.getAsString());
-            if (repl != null) return repl.deepCopy();
+        if (value.isJsonPrimitive() && value.getAsJsonPrimitive().isString()) {
+            JsonElement replacement = replacements.get(value.getAsString());
+            if (replacement != null) return replacement.deepCopy();
         }
         return null;
     }
 
-    private static boolean mutateRecipeJson(JsonElement el, Map<String, JsonElement> replacements, Map<String, TagInfo> tagCache) {
+    private static boolean mutateRecipeJson(JsonElement element, Map<String, JsonElement> replacements, Map<String, TagInfo> tagCache) {
         boolean changed = false;
-        if (el.isJsonObject()) {
-            var obj = el.getAsJsonObject();
-            for (Map.Entry<String, JsonElement> e : obj.entrySet()) {
-                if ("type".equals(e.getKey()) || isResultKey(e.getKey())) continue;
-                JsonElement val = e.getValue();
-                JsonElement repl = tryReplaceValue(val, replacements, tagCache);
-                if (repl != null) {
-                    obj.add(e.getKey(), repl);
+        if (element.isJsonObject()) {
+            JsonObject object = element.getAsJsonObject();
+            for (Map.Entry<String, JsonElement> entry : object.entrySet()) {
+                if ("type".equals(entry.getKey()) || isResultKey(entry.getKey())) continue;
+                JsonElement value = entry.getValue();
+                JsonElement replacement = tryReplaceValue(value, replacements, tagCache);
+                if (replacement != null) {
+                    object.add(entry.getKey(), replacement);
                     changed = true;
                 } else {
-                    changed |= mutateRecipeJson(val, replacements, tagCache);
+                    changed |= mutateRecipeJson(value, replacements, tagCache);
                 }
             }
-        } else if (el.isJsonArray()) {
-            var arr = el.getAsJsonArray();
-            for (int i = 0; i < arr.size(); i++) {
-                JsonElement val = arr.get(i);
-                JsonElement repl = tryReplaceValue(val, replacements, tagCache);
-                if (repl != null) {
-                    arr.set(i, repl);
+        } else if (element.isJsonArray()) {
+            JsonArray array = element.getAsJsonArray();
+            for (int i = 0; i < array.size(); i++) {
+                JsonElement value = array.get(i);
+                JsonElement replacement = tryReplaceValue(value, replacements, tagCache);
+                if (replacement != null) {
+                    array.set(i, replacement);
                     changed = true;
                 } else {
-                    changed |= mutateRecipeJson(val, replacements, tagCache);
+                    changed |= mutateRecipeJson(value, replacements, tagCache);
                 }
             }
         }
         return changed;
     }
     //?} else {
-    /*public static void removeShapeRecipes(RecipeManager manager) {
+    /*public static void removeShapeRecipes(RecipeManager manager, RegistryAccess registries) {
         if (ShapeMap.inverseView().isEmpty()) return;
 
-        int removed = 0, rewritten = 0;
+        boolean removed = false;
         ArrayList<Recipe<?>> kept = new ArrayList<>();
 
         for (Recipe<?> recipe : manager.getRecipes()) {
-            int outcome = processRecipe(recipe);
-            if (outcome == 2) { removed++; continue; }
-            if (outcome == 1) rewritten++;
+            int outcome = processRecipe(recipe, registries);
+            if (outcome == 2) {
+                removed = true;
+                continue;
+            }
             kept.add(recipe);
         }
 
-        if (removed > 0) manager.replaceRecipes(kept);
-
-        if (removed > 0 || rewritten > 0) {
-            ClutterNoMore.LOGGER.info("Removed {} shape recipes, rewrote {} ingredient lists", removed, rewritten);
-        }
+        if (removed) manager.replaceRecipes(kept);
     }
 
-    private static Ingredient rewriteOrNull(Ingredient ing, Item resultItem, boolean[] removeOut) {
+    private static Ingredient rewriteOrNull(Ingredient ingredient, Item resultItem, boolean[] removeOut) {
         boolean changed = false;
         List<ItemStack> kept = new ArrayList<>();
-        for (ItemStack stack : ing.getItems()) {
+        for (ItemStack stack : ingredient.getItems()) {
             Item item = stack.getItem();
             if (ShapeMap.isShape(item)) {
                 Item parent = ShapeMap.getParent(item);
@@ -332,25 +306,32 @@ public class RecipeRemover {
         return Ingredient.of(kept.stream());
     }
 
-    private static int processRecipe(Recipe<?> recipe) {
-        Item result = recipe.getResultItem(RegistryAccess.EMPTY).getItem();
-        if (ShapeMap.isShape(result)) return 2;
+    private static int processRecipe(Recipe<?> recipe, RegistryAccess registries) {
+        Item result = null;
+        try {
+            ItemStack resultStack = recipe.getResultItem(registries);
+            if (resultStack != null && !resultStack.isEmpty()) result = resultStack.getItem();
+        } catch (Throwable throwable) {
+            ClutterNoMore.LOGGER.debug("getResultItem failed for {}: {}", recipe.getClass().getSimpleName(), throwable.getMessage());
+        }
+
+        if (result != null && ShapeMap.isShape(result)) return 2;
 
         boolean[] remove = new boolean[1];
         boolean changed = false;
 
         if (recipe instanceof ShapedRecipe || recipe instanceof ShapelessRecipe) {
-            NonNullList<Ingredient> ings = recipe.getIngredients();
-            for (int i = 0; i < ings.size(); i++) {
-                Ingredient rewritten = rewriteOrNull(ings.get(i), result, remove);
+            NonNullList<Ingredient> ingredients = recipe.getIngredients();
+            for (int i = 0; i < ingredients.size(); i++) {
+                Ingredient rewritten = rewriteOrNull(ingredients.get(i), result, remove);
                 if (remove[0]) return 2;
-                if (rewritten != null) { ings.set(i, rewritten); changed = true; }
+                if (rewritten != null) { ingredients.set(i, rewritten); changed = true; }
             }
         } else if (recipe instanceof SingleItemRecipe single) {
-            SingleItemRecipeAccessor acc = (SingleItemRecipeAccessor) single;
-            Ingredient rewritten = rewriteOrNull(acc.getInput(), result, remove);
+            SingleItemRecipeAccessor accessor = (SingleItemRecipeAccessor) single;
+            Ingredient rewritten = rewriteOrNull(accessor.getInput(), result, remove);
             if (remove[0]) return 2;
-            if (rewritten != null) { acc.setInput(rewritten); changed = true; }
+            if (rewritten != null) { accessor.setInput(rewritten); changed = true; }
         }
 
         return changed ? 1 : 0;

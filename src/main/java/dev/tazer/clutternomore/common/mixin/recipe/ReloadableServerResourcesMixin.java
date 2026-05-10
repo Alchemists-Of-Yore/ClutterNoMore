@@ -33,7 +33,7 @@ public class ReloadableServerResourcesMixin {
     *///?} else {
     /*@Inject(method = "updateRegistryTags(Lnet/minecraft/core/RegistryAccess;)V", at = @At("RETURN"))
     private void cnm$removeShapeRecipes(RegistryAccess registryAccess, CallbackInfo ci) {
-        RecipeRemover.removeShapeRecipes(this.recipes);
+        RecipeRemover.removeShapeRecipes(this.recipes, registryAccess);
     }
     *///?}
 }

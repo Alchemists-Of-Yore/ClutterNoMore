@@ -1,8 +1,10 @@
 package dev.tazer.clutternomore.common.shape_map;
 
 import com.mojang.datafixers.util.Either;
+import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
+import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.tazer.clutternomore.Platform;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -78,7 +80,7 @@ public record ShapeMapFile(
     public record ShapeMapTemplate(String raw) {
         public static final Codec<ShapeMapTemplate> CODEC = Codec.STRING.flatXmap(
                 ShapeMapTemplate::validate,
-                t -> DataResult.success(t.raw)
+                template -> DataResult.success(template.raw)
         );
 
         private static DataResult<ShapeMapTemplate> validate(String raw) {
@@ -120,29 +122,39 @@ public record ShapeMapFile(
                              Optional<Conditions> not) {
 
         private static final Codec<Boolean> IS_BLOCKITEM_CODEC = Codec.BOOL.flatXmap(
-                b -> b ? DataResult.success(true)
-                       : DataResult.error(() -> "is_blockitem must be `true` (use `not` to invert)"),
+                value -> value ? DataResult.success(true)
+                               : DataResult.error(() -> "is_blockitem must be `true` (use `not` to invert)"),
                 DataResult::success
         );
 
-        public static final Codec<Conditions> CODEC = Codec.recursive("Conditions", self ->
-                RecordCodecBuilder.create(instance -> instance.group(
-                        ShapeMapTemplate.CODEC.listOf().optionalFieldOf("exists", List.of()).forGetter(Conditions::exists),
-                        Codec.STRING.listOf().optionalFieldOf("mod_loaded", List.of()).forGetter(Conditions::modLoaded),
-                        IS_BLOCKITEM_CODEC.optionalFieldOf("is_blockitem", false).forGetter(Conditions::isBlockItem),
-                        self.listOf().optionalFieldOf("all_of", List.of()).forGetter(Conditions::allOf),
-                        self.listOf().optionalFieldOf("any_of", List.of()).forGetter(Conditions::anyOf),
-                        self.listOf().optionalFieldOf("none_of", List.of()).forGetter(Conditions::noneOf),
-                        self.optionalFieldOf("not").forGetter(Conditions::not)
-                ).apply(instance, Conditions::new))
-        );
+        public static final Codec<Conditions> CODEC = new Codec<>() {
+            @Override
+            public <T> DataResult<Pair<Conditions, T>> decode(DynamicOps<T> ops, T input) {
+                return DELEGATE.decode(ops, input);
+            }
+
+            @Override
+            public <T> DataResult<T> encode(Conditions input, DynamicOps<T> ops, T prefix) {
+                return DELEGATE.encode(input, ops, prefix);
+            }
+        };
+
+        private static final Codec<Conditions> DELEGATE = RecordCodecBuilder.create(instance -> instance.group(
+                ShapeMapTemplate.CODEC.listOf().optionalFieldOf("exists", List.of()).forGetter(Conditions::exists),
+                Codec.STRING.listOf().optionalFieldOf("mod_loaded", List.of()).forGetter(Conditions::modLoaded),
+                IS_BLOCKITEM_CODEC.optionalFieldOf("is_blockitem", false).forGetter(Conditions::isBlockItem),
+                CODEC.listOf().optionalFieldOf("all_of", List.of()).forGetter(Conditions::allOf),
+                CODEC.listOf().optionalFieldOf("any_of", List.of()).forGetter(Conditions::anyOf),
+                CODEC.listOf().optionalFieldOf("none_of", List.of()).forGetter(Conditions::noneOf),
+                CODEC.optionalFieldOf("not").forGetter(Conditions::not)
+        ).apply(instance, Conditions::new));
 
         public boolean evaluate(Item parent, Map<String, String> vars) {
-            for (ShapeMapTemplate t : exists) {
-                String resolved = t.substitute(vars);
+            for (ShapeMapTemplate template : exists) {
+                String resolved = template.substitute(vars);
                 try {
                     if (!BuiltInRegistries.ITEM.containsKey(Identifier.parse(resolved))) return false;
-                } catch (Exception e) {
+                } catch (Exception ignored) {
                     return false;
                 }
             }
@@ -150,16 +162,21 @@ public record ShapeMapFile(
                 if (!Platform.INSTANCE.isModLoaded(mod)) return false;
             }
             if (isBlockItem && !(parent instanceof BlockItem)) return false;
-            for (Conditions c : allOf) {
-                if (!c.evaluate(parent, vars)) return false;
+            for (Conditions condition : allOf) {
+                if (!condition.evaluate(parent, vars)) return false;
             }
             if (!anyOf.isEmpty()) {
                 boolean any = false;
-                for (Conditions c : anyOf) if (c.evaluate(parent, vars)) { any = true; break; }
+                for (Conditions condition : anyOf) {
+                    if (condition.evaluate(parent, vars)) {
+                        any = true;
+                        break;
+                    }
+                }
                 if (!any) return false;
             }
-            for (Conditions c : noneOf) {
-                if (c.evaluate(parent, vars)) return false;
+            for (Conditions condition : noneOf) {
+                if (condition.evaluate(parent, vars)) return false;
             }
             if (not.isPresent() && not.get().evaluate(parent, vars)) return false;
             return true;
