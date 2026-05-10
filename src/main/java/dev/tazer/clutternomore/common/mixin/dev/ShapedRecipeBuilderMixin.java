@@ -1,6 +1,7 @@
 package dev.tazer.clutternomore.common.mixin.dev;
 
 //? fabric {
+import dev.tazer.clutternomore.common.mixin.annotation.IfDevEnvironment;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.data.recipes.RecipeCategory;
@@ -22,6 +23,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.List;
 import java.util.Map;
 
+@IfDevEnvironment
 //? if >26 {
 @Mixin(net.minecraft.data.recipes.RecipeUnlockAdvancementBuilder.class)
 //?} else {
