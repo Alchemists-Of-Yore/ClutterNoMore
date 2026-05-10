@@ -79,7 +79,7 @@ public class VerticalSlabBlock extends HorizontalDirectionalBlock implements Sim
         FluidState replacingFluidState = context.getLevel().getFluidState(pos);
 
         if (replacingBlockState.is(this)) {
-            return replacingBlockState.setValue(DOUBLE, true);
+            return replacingBlockState.setValue(DOUBLE, true).setValue(WATERLOGGED, false);
         }
 
         BlockState stateForPlacement = defaultBlockState().setValue(WATERLOGGED, replacingFluidState.getType() == Fluids.WATER);
