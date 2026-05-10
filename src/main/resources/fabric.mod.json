@@ -30,6 +30,9 @@
     ],
     "modmenu": [
       "dev.tazer.clutternomore.common.compat.ModMenuCompat"
+    ],
+    "fabric-datagen": [
+      "dev.tazer.clutternomore.fabric.datagen.FabricDataGeneratorEntrypoint"
     ]
   },
   "mixins": [

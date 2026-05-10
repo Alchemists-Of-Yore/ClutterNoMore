@@ -21,7 +21,11 @@ public class NeoForgeClientEvents {
     public static final Lazy<KeyMapping> SHAPE_KEY = Lazy.of(() -> new KeyMapping(
             "key.clutternomore.change_block_shape",
             GLFW.GLFW_KEY_LEFT_ALT,
+            //? if >1.21.8 {
+            /^KeyMapping.Category.INVENTORY
+            ^///?} else {
             "key.categories.inventory"
+            //?}
     ));
 
     @SubscribeEvent

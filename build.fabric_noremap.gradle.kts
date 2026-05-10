@@ -78,6 +78,12 @@ jsonlang {
     prettyPrint = true
 }
 
+fabricApi {
+    configureDataGeneration {
+        client = true
+    }
+}
+
 dependencies {
     minecraft("com.mojang:minecraft:${mc}")
     implementation("net.fabricmc:fabric-loader:${dep("fabric-loader")}")

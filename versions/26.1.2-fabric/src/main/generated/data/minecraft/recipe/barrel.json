@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "#": "#minecraft:planks",
+    "T": "#minecraft:wooden_trapdoors"
+  },
+  "pattern": [
+    "#T#",
+    "# #",
+    "###"
+  ],
+  "result": {
+    "id": "minecraft:barrel"
+  }
+}

@@ -32,3 +32,12 @@ stonecutterBuild.replacements.string {
     direction = stonecutterBuild.eval(mc, ">1.21.10")
     replace("getKey().location()", "getKey().identifier()")
 }
+stonecutterBuild.replacements.string {
+    direction = stonecutterBuild.eval(mc, ">26")
+    replace("FabricDataOutput", "FabricPackOutput")
+}
+stonecutterBuild.replacements.string {
+    direction = stonecutterBuild.eval(mc, ">1.21.10")
+    replace("getRecipeIdentifier", "getRecipeIdentifier")
+}
+

@@ -32,9 +32,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-public class ShapeMapFileHandler extends SimpleJsonResourceReloadListener
-//? >1.21.2
-<JsonElement>
+public class ShapeMapFileHandler
+//? if >1.21.2 {
+extends SimpleJsonResourceReloadListener<JsonElement>
+//?} else
+//extends SimpleJsonResourceReloadListener
 //? if fabric && <1.21.9 {
 /*implements IdentifiableResourceReloadListener
 *///?}

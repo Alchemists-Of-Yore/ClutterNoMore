@@ -12,11 +12,14 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.ModLoadingContext;
+import net.neoforged.fml.jarcontents.JarResource;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.fml.loading.FMLPaths;
+import net.neoforged.neoforgespi.locating.IModFile;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Optional;
 
@@ -42,8 +45,15 @@ public class NeoForgePlatformImpl implements Platform {
     @Override
     public JsonObject getFileInJar(String namespace, String path) {
         try {
-            return JsonParser.parseReader(new FileReader(ModLoadingContext.get().getActiveContainer().getModInfo().getOwningFile().getFile().findResource(path).toString())).getAsJsonObject();
-        } catch (FileNotFoundException e) {
+            var owningFile = ModLoadingContext.get().getActiveContainer().getModInfo().getOwningFile().getFile();
+            //? if >26 {
+            /^JarResource jarResource = owningFile.getContents().get(path);
+            if (jarResource == null) throw new IOException("Resource not found: " + path);
+            var file = JsonParser.parseReader(jarResource.bufferedReader());
+            ^///?} else
+            var file = JsonParser.parseReader(new FileReader(owningFile.findResource(path).toString()))
+            return file.getAsJsonObject();
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
@@ -55,7 +65,10 @@ public class NeoForgePlatformImpl implements Platform {
 
     @Override
     public boolean isClient() {
+        //? if <26
         return FMLEnvironment.dist.isClient();
+        //? if >26
+        //return FMLEnvironment.getDist().isClient();
     }
 
     @Override

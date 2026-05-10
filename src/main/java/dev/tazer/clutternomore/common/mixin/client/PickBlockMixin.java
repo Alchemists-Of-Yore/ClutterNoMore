@@ -23,7 +23,7 @@ import dev.tazer.clutternomore.common.networking.ChangeStackPayload;
  *///?}
 
 //? if <1.21.2 && fabric
-/*import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;*/
+//import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
@@ -44,10 +44,10 @@ public abstract class PickBlockMixin {
         if (exactIndex != -1) {
             ItemStack slotStack = inventory.
             //? if >1.21.2 {
-            /^getNonEquipmentItems()
-            ^///?} else {
-            items
-            //?}
+            getNonEquipmentItems()
+            //?} else {
+            /^items
+            ^///?}
             .get(exactIndex);
 
             if (slotStack.getItem() != targetStack.getItem() && ShapeMap.inSameShapeSet(targetStack.getItem(), slotStack.getItem())) {

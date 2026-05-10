@@ -74,13 +74,15 @@ public class ShapeSwitcherOverlay {
 
         } else {
             startX = Mth.floor(centreX - (float) shapes.size() / 2 * spacing) + spacing / 2;
-
+            //? if >26
+            RenderHelper.blit(guiGraphics, selected, Mth.floor(startX + currentIndex * spacing) - 3, y - 3, 0, 0, 22, 22, 22, 22);
             for (int index = 0; index < shapes.size(); index++) {
                 int x = startX + index * spacing;
                 RenderHelper.blit(guiGraphics, background, x, y, 0, 0, 16, 16, 16, 16);
                 RenderHelper.item(guiGraphics, shapes.get(index).getDefaultInstance(), x, y);
             }
-            RenderHelper.blit(guiGraphics, selected, Mth.floor(startX + currentIndex * spacing) - 3, y - 3, 0, 0, 22, 22, 22, 22);
+            //? if <26
+            //RenderHelper.blit(guiGraphics, selected, Mth.floor(startX + currentIndex * spacing) - 3, y - 3, 0, 0, 22, 22, 22, 22);
         }
         //? if <1.21.2
         //RenderSystem.disableBlend();

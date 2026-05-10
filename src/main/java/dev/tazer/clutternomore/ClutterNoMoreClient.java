@@ -21,6 +21,7 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 //? if neoforge {
 /*import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import net.neoforged.neoforge.network.PacketDistributor;
 *///?}
 import net.minecraft.client.Minecraft;
@@ -265,8 +266,10 @@ public class ClutterNoMoreClient {
         //?}
         //? if fabric
         ClientPlayNetworking.send(p);
-        //? if neoforge
+        //? if neoforge && <26
         //PacketDistributor.sendToServer(p);
+        //? if neoforge && >26
+        //ClientPacketDistributor.sendToServer(p);
         //? if forge && <1.21.1 {
         /*ChangeStackPacket p = new ChangeStackPacket(containerId, slotId, stack);
         ForgeNetworking.sendToServer(p);

@@ -36,7 +36,10 @@ public class ClutterNoMoreMixinPlugin implements IMixinConfigPlugin {
     //? if fabric {
     private static final boolean IS_DEV = FabricLoader.getInstance().isDevelopmentEnvironment();
     //?} else {
-    /*private static final boolean IS_DEV = !FMLLoader.isProduction();
+    /*private static final boolean IS_DEV = !FMLLoader
+            //? if >26
+            //.getCurrent()
+            .isProduction();
     *///?}
 
     private Set<String> presentMods;
@@ -50,7 +53,10 @@ public class ClutterNoMoreMixinPlugin implements IMixinConfigPlugin {
                 .map(c -> c.getMetadata().getId())
                 .collect(Collectors.toUnmodifiableSet());
         //?} else {
-        /*this.presentMods = FMLLoader.getLoadingModList().getMods().stream()
+        /*this.presentMods = FMLLoader
+                //? if >26
+                //.getCurrent()
+                .getLoadingModList().getMods().stream()
                 .map(ModInfo::getModId)
                 .collect(Collectors.toUnmodifiableSet());
         *///?}

@@ -14,9 +14,9 @@ import net.minecraft.world.item.ItemStack;
 public class RenderHelper {
 	public static void item(GuiGraphicsExtractor guiGraphics, ItemStack stack, int x, int y) {
 		//? if >26 {
-		guiGraphics.item(stack, x, y);
+		guiGraphics.fakeItem(stack, x, y);
 		//?} else {
-		/*guiGraphics.renderItem(stack, x, y);
+		/*guiGraphics.renderFakeItem(stack, x, y);
 		*///?}
 	}
 

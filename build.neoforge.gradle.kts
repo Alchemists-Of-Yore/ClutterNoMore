@@ -98,6 +98,18 @@ repositories {
             includeGroup("com.tterrag.registrate")
         }
     }
+    exclusiveContent {
+        forRepository {
+            maven("https://maven.cassian.cc") { name = "Cassian's Maven" }
+        }
+        filter { includeGroupAndSubgroups("cc.cassian") }
+    }
+    exclusiveContent {
+        forRepository {
+            maven("https://maven.fabricmc.net") { name = "Fabric" }
+        }
+        filter { includeGroupAndSubgroups("net.fabricmc") }
+    }
     maven("https://maven.createmod.net")
 }
 
@@ -143,18 +155,28 @@ dependencies {
 
     implementation("folk.sisby:kaleido-config:${dep("kaleido")}")
     jarJar("folk.sisby:kaleido-config:${dep("kaleido")}")
-    "additionalRuntimeClasspath"("folk.sisby:kaleido-config:${dep("kaleido")}")
+    if (stonecutter.eval(mc, "<1.21.9")) {
+        "additionalRuntimeClasspath"("folk.sisby:kaleido-config:${property("deps.kaleido")}")
+        runtimeOnly("me.djtheredstoner:DevAuth-neoforge:1.2.1")
 
-    compileOnly("org.sinytra.forgified-fabric-api:fabric-item-group-api-v1:4.1.7+e324903319")
+        runtimeOnly("maven.modrinth:moonlight:${dep("moonlight")}")
+        runtimeOnly("maven.modrinth:supplementaries:neoforge_${mcMajor}-3.4.14")
+        runtimeOnly("maven.modrinth:the-block-box:0.1.1")
+        runtimeOnly("maven.modrinth:no-mans-land:1.3.3")
+        runtimeOnly("maven.modrinth:biolith:hd0IDIF5")
+        runtimeOnly("maven.modrinth:mixed-litter:0.1.2")
+        compileOnly("org.sinytra.forgified-fabric-api:fabric-item-group-api-v1:4.1.7+e324903319")
+    } else {
+        compileOnly("net.fabricmc.fabric-api:fabric-creative-tab-api-v1:5.0.9+d871b99e6b") {
+            isTransitive = false
+        }
+    }
 
-    runtimeOnly("me.djtheredstoner:DevAuth-neoforge:1.2.1")
+    if (hasProperty("deps.rrv")) {
+        implementation("cc.cassian.rrv:reliable-recipe-viewer-neoforge:${dep("rrv")}")
+    }
 
-    runtimeOnly("maven.modrinth:moonlight:${dep("moonlight")}")
-    runtimeOnly("maven.modrinth:supplementaries:neoforge_${mcMajor}-3.4.14")
-    runtimeOnly("maven.modrinth:the-block-box:0.1.1")
-    runtimeOnly("maven.modrinth:no-mans-land:1.3.3")
-    runtimeOnly("maven.modrinth:biolith:hd0IDIF5")
-    runtimeOnly("maven.modrinth:mixed-litter:0.1.2")
+
     if (hasProperty("deps.would")) {
         runtimeOnly("maven.modrinth:would:${dep("would")}")
     }
@@ -197,6 +219,11 @@ tasks {
         into(rootProject.layout.buildDirectory.file("libs/${prop("mod.version")}"))
         dependsOn("build")
     }
+}
+
+tasks.register<Sync>("syncDatagen") {
+    from(project(":${mc}-fabric").tasks.named("runDatagen"))
+    into(file("src/main/generated/"))
 }
 
 publishMods {

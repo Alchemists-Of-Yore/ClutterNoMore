@@ -99,6 +99,12 @@ jsonlang {
     prettyPrint = true
 }
 
+fabricApi {
+    configureDataGeneration {
+        client = true
+    }
+}
+
 dependencies {
     minecraft("com.mojang:minecraft:${mc}")
     mappings(loom.layered {
@@ -120,9 +126,6 @@ dependencies {
     if (hasProperty("deps.emi")) {
         modCompileOnly("dev.emi:emi-fabric:${dep("emi")}:api")
         modLocalRuntime("dev.emi:emi-fabric:${dep("emi")}")
-    }
-    if (hasProperty("deps.rrv")) {
-        modImplementation("cc.cassian.rrv:reliable-recipe-viewer-fabric:${dep("rrv")}+${mc}")
     }
     if (hasProperty("deps.pyrite")) {
         modLocalRuntime("maven.modrinth:pyrite:${dep("pyrite")}")
