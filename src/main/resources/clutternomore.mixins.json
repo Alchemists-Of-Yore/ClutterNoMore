@@ -5,6 +5,7 @@
   "refmap": "clutternomore.refmap.json",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "PickBlockMixin",
     "access.BlockBehaviorAccessor",
     "access.SlotAccessor",
     "block.BlockItemMixin",
@@ -37,8 +38,8 @@
     "client.SessionSearchTreesMixin",
     "compat.emi.EMIRenderMixin",
     "compat.jei.JEIRenderMixin",
-    "compat.rrv.RRVRenderMixin",
     "compat.mousetweaks.MouseTweaksMixin",
+    "compat.rrv.RRVRenderMixin",
     "screen.AccessibilityScreenMixin",
     "screen.CloseScreenMixin",
     "screen.ContainerScreenAccessor",

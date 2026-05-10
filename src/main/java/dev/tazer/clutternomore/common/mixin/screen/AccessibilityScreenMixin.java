@@ -6,9 +6,12 @@ import net.minecraft.client.Options;
 import net.minecraft.client.gui.components.Button;
 //? if >1.21 {
 import net.minecraft.client.gui.screens.options.AccessibilityOptionsScreen;
+import net.minecraft.client.gui.screens.options.OptionsSubScreen;
 //?} else {
 /*import net.minecraft.client.gui.screens.AccessibilityOptionsScreen;
+import net.minecraft.client.gui.screens.OptionsSubScreen;
 *///?}
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -20,7 +23,13 @@ import java.util.Arrays;
 import java.util.List;
 
 @Mixin(AccessibilityOptionsScreen.class)
-public abstract class AccessibilityScreenMixin {
+public abstract class AccessibilityScreenMixin extends OptionsSubScreen {
+
+
+    public AccessibilityScreenMixin(Screen lastScreen, Options options, Component title) {
+        super(lastScreen, options, title);
+    }
+
     //? if >1.20.1 {
     @Inject(
             method = "addOptions",
@@ -48,17 +57,18 @@ public abstract class AccessibilityScreenMixin {
             at = @At(value = "RETURN")
     )
     private void cnm$injectCreateFooter(CallbackInfo ci) {
+        var parent = (AccessibilityOptionsScreen) (Object) this;
         Button shapeSwitcherButton = Button
                 .builder(
                         Component.translatable("key.clutternomore.shape_switcher"),
-                        button -> ((ScreenAccessor) this).getMinecraft().setScreen(new ShapeSwitcherOptionsScreen(((AccessibilityOptionsScreen) (Object) this), ((OptionsSubScreenAccessor) (this)).getOptions()))
-                ).bounds(((ScreenAccessor) this).getWidth() / 2 + 80, ((ScreenAccessor) this).getHeight() - 27, 150, 20).build();
+                        button -> {
+                            Minecraft.getInstance().setScreen(new ShapeSwitcherOptionsScreen(parent));
+                        }).bounds(this.width/ 2 + 80, this.height - 27, 150, 20).build();
         //? if >1.21 {
         ((ScreenAccessor) this).invokeAddRenderableWidget(shapeSwitcherButton);
         //?} else {
-        /^((AccessibilityOptionsScreen) (Object) this).addRenderableWidget(shapeSwitcherButton);
+        /^parent.addRenderableWidget(shapeSwitcherButton);
         ^///?}
-
     }
     *///?}
 }
