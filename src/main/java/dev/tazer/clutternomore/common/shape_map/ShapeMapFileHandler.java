@@ -49,8 +49,6 @@ extends SimpleJsonResourceReloadListener<JsonElement>
     /*public static final Gson GSON = new GsonBuilder().create();
     *///?}
 
-    // Heuristic for extracting named group names from a Pattern's source — Java has no
-    // public API for it before 20. Matches `(?<name>` only; ignores escapes.
     private static final Pattern NAMED_GROUP_NAME = Pattern.compile("\\(\\?<([a-zA-Z][a-zA-Z0-9]*)>");
 
     //? if >1.21.2 {

@@ -21,14 +21,13 @@ public class ItemMixin {
         Item item = stack.getItem();
 
         if (ShapeMap.contains(item)) {
-            Item originalItem = ShapeMap.getParent(item);
-            List<Item> shapes = new ArrayList<>(ShapeMap.getShapes(originalItem));
-            shapes.add(0, originalItem);
+            List<Item> shapes = ShapeMap.getShapes(item);
             List<ItemStack> stacks = new ArrayList<>(shapes.size());
-            for (Item shape : shapes) {
-                stacks.add(ShapeMap.transferStack(stack, shape));
+            for (int i = 0; i < shapes.size(); i++) {
+                stacks.add(ShapeMap.transferStack(stack, i));
             }
-            cir.setReturnValue(Optional.of(new ShapeTooltip(stacks, shapes.indexOf(item))));
+            int selectedIndex = ShapeMap.currentIndex(stack);
+            cir.setReturnValue(Optional.of(new ShapeTooltip(stacks, Math.max(selectedIndex, 0))));
         }
     }
 }

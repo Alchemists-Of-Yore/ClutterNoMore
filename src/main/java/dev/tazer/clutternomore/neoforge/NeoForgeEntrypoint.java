@@ -23,7 +23,6 @@ import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
 /^import net.neoforged.neoforge.event.AddReloadListenerEvent;
 ^///?}
 import net.neoforged.neoforge.event.OnDatapackSyncEvent;
-import net.neoforged.neoforge.event.server.ServerStartedEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;

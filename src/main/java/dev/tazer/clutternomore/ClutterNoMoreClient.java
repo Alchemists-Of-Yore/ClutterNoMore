@@ -103,11 +103,12 @@ public class ClutterNoMoreClient {
         return isHoveringCreativeTabSlot() || showTooltip || isHoveringRecipeViewer();
     }
 
-    private static ItemStack nextShape(ItemStack heldStack, int direction, boolean wrap) {
-        Item parent = ShapeMap.getParent(heldStack.getItem());
-        List<Item> shapes = new ArrayList<>(ShapeMap.getShapes(parent));
-        shapes.add(0, parent);
-        int idx = shapes.indexOf(heldStack.getItem()) - direction;
+    private static int nextShapeIndex(ItemStack heldStack, int direction, boolean wrap) {
+        List<Item> shapes = ShapeMap.getShapes(heldStack.getItem());
+        if (shapes.isEmpty()) return -1;
+        int current = ShapeMap.currentIndex(heldStack);
+        if (current < 0) current = 0;
+        int idx = current - direction;
         int max = shapes.size() - 1;
         if (wrap) {
             if (idx < 0) idx = max;
@@ -116,7 +117,7 @@ public class ClutterNoMoreClient {
             if (idx < 0) idx = 0;
             if (idx > max) idx = max;
         }
-        return ShapeMap.transferStack(heldStack, shapes.get(idx));
+        return idx;
     }
 
     private static void playSwitchSound(Player player) {
@@ -241,61 +242,64 @@ public class ClutterNoMoreClient {
     }
 
     public static void switchShape(Slot slot, int containerId, ItemStack heldStack, int direction, boolean wrap) {
-        ItemStack next = nextShape(heldStack, direction, wrap);
-        if (next.getItem() == heldStack.getItem()) return;
+        int nextIdx = nextShapeIndex(heldStack, direction, wrap);
+        if (nextIdx < 0) return;
+        int currentIdx = ShapeMap.currentIndex(heldStack);
+        if (nextIdx == currentIdx) return;
+
         Player player = Minecraft.getInstance().player;
         playSwitchSound(player);
         if (isCreativeTabSlot(slot)) {
-            slot.set(next);
+            slot.set(ShapeMap.transferStack(heldStack, nextIdx));
             return;
         }
         if (Minecraft.getInstance().screen instanceof CreativeModeInventoryScreen) {
             if (slot instanceof CreativeSlotWrapperAccessor wrapper) {
                 Slot target = wrapper.cnm$getTarget();
                 if (target != null) {
-                    sendChangeStack(player.inventoryMenu.containerId, target.index, next);
+                    sendChangeStack(player.inventoryMenu.containerId, target.index, nextIdx);
                     return;
                 }
             }
             if (slot.container == player.getInventory()) {
                 for (Slot s : player.inventoryMenu.slots) {
                     if (s.container == slot.container && s.getContainerSlot() == slot.getContainerSlot()) {
-                        sendChangeStack(player.inventoryMenu.containerId, s.index, next);
+                        sendChangeStack(player.inventoryMenu.containerId, s.index, nextIdx);
                         return;
                     }
                 }
             }
         }
-        sendChangeStack(containerId, slot.index, next);
+        sendChangeStack(containerId, slot.index, nextIdx);
     }
 
     private static final long SEND_INTERVAL_MS = 50L;
     private static long lastSendMs = 0L;
     private static int pendingContainerId;
     private static int pendingSlotId;
-    private static ItemStack pendingStack = null;
+    private static int pendingShapeIndex = Integer.MIN_VALUE;
 
-    public static void sendChangeStack(int containerId, int slotId, ItemStack stack) {
+    public static void sendChangeStack(int containerId, int slotId, int shapeIndex) {
         long now = System.currentTimeMillis();
-        if (pendingStack != null && (pendingContainerId != containerId || pendingSlotId != slotId)) {
-            sendChangeStackNow(pendingContainerId, pendingSlotId, pendingStack);
+        if (pendingShapeIndex != Integer.MIN_VALUE && (pendingContainerId != containerId || pendingSlotId != slotId)) {
+            sendChangeStackNow(pendingContainerId, pendingSlotId, pendingShapeIndex);
             lastSendMs = now;
-            pendingStack = null;
+            pendingShapeIndex = Integer.MIN_VALUE;
         }
         if (now - lastSendMs >= SEND_INTERVAL_MS) {
-            sendChangeStackNow(containerId, slotId, stack);
+            sendChangeStackNow(containerId, slotId, shapeIndex);
             lastSendMs = now;
-            pendingStack = null;
+            pendingShapeIndex = Integer.MIN_VALUE;
         } else {
             pendingContainerId = containerId;
             pendingSlotId = slotId;
-            pendingStack = stack;
+            pendingShapeIndex = shapeIndex;
         }
     }
 
-    private static void sendChangeStackNow(int containerId, int slotId, ItemStack stack) {
+    private static void sendChangeStackNow(int containerId, int slotId, int shapeIndex) {
         //? if !forge {
-        ChangeStackPayload p = new ChangeStackPayload(containerId, slotId, stack);
+        ChangeStackPayload p = new ChangeStackPayload(containerId, slotId, shapeIndex);
         //?}
         //? if fabric
         ClientPlayNetworking.send(p);
@@ -304,7 +308,7 @@ public class ClutterNoMoreClient {
         //? if neoforge && >26
         //ClientPacketDistributor.sendToServer(p);
         //? if forge && <1.21.1 {
-        /*ChangeStackPacket p = new ChangeStackPacket(containerId, slotId, stack);
+        /*ChangeStackPacket p = new ChangeStackPacket(containerId, slotId, shapeIndex);
         ForgeNetworking.sendToServer(p);
         *///?}
     }
@@ -340,10 +344,10 @@ public class ClutterNoMoreClient {
         }
 
         if (OVERLAY != null && !OVERLAY.shouldStayOpenThisTick()) OVERLAY = null;
-        if (pendingStack != null && System.currentTimeMillis() - lastSendMs >= SEND_INTERVAL_MS) {
-            sendChangeStackNow(pendingContainerId, pendingSlotId, pendingStack);
+        if (pendingShapeIndex != Integer.MIN_VALUE && System.currentTimeMillis() - lastSendMs >= SEND_INTERVAL_MS) {
+            sendChangeStackNow(pendingContainerId, pendingSlotId, pendingShapeIndex);
             lastSendMs = System.currentTimeMillis();
-            pendingStack = null;
+            pendingShapeIndex = Integer.MIN_VALUE;
         }
     }
 

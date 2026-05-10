@@ -15,7 +15,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -38,13 +37,11 @@ public class ShapeSwitcherOverlay {
         this.render = render;
         selected = ClutterNoMoreClient.selectedSlot(minecraft.player);
 
-        Item item = ShapeMap.getParent(heldStack.getItem());
         count = heldStack.getCount();
+        shapes = ShapeMap.getShapes(heldStack.getItem());
 
-        shapes = new ArrayList<>(ShapeMap.getShapes(item));
-        shapes.add(0, item);
-
-        selectedIndex = shapes.indexOf(heldStack.getItem());
+        selectedIndex = ShapeMap.currentIndex(heldStack);
+        if (selectedIndex < 0) selectedIndex = 0;
         currentIndex = selectedIndex;
         lastYaw = minecraft.player.getYRot();
         accumulatedYaw = 0;
@@ -71,7 +68,7 @@ public class ShapeSwitcherOverlay {
             for (int index = 0; index < shapes.size(); index++) {
                 int x = startX + index * spacing;
                 RenderHelper.blit(guiGraphics, background, x, y, 0, 0, 16, 16, 16, 16);
-                RenderHelper.item(guiGraphics, ShapeMap.transferStack(heldStack, shapes.get(index)), x, y);
+                RenderHelper.item(guiGraphics, ShapeMap.transferStack(heldStack, index), x, y);
             }
 
         } else {
@@ -81,7 +78,7 @@ public class ShapeSwitcherOverlay {
             for (int index = 0; index < shapes.size(); index++) {
                 int x = startX + index * spacing;
                 RenderHelper.blit(guiGraphics, background, x, y, 0, 0, 16, 16, 16, 16);
-                RenderHelper.item(guiGraphics, ShapeMap.transferStack(heldStack, shapes.get(index)), x, y);
+                RenderHelper.item(guiGraphics, ShapeMap.transferStack(heldStack, index), x, y);
             }
             //? if <26
             //RenderHelper.blit(guiGraphics, selected, Mth.floor(startX + currentIndex * spacing) - 3, y - 3, 0, 0, 22, 22, 22, 22);
@@ -131,19 +128,18 @@ public class ShapeSwitcherOverlay {
         }
         if (selectedIndex == previousIndex) return;
 
-        Item nextItem = shapes.get(selectedIndex);
         Player player = Objects.requireNonNull(minecraft.player);
-        ItemStack next = ShapeMap.transferStack(player.getItemInHand(InteractionHand.MAIN_HAND), nextItem);
+        ItemStack next = ShapeMap.transferStack(player.getItemInHand(InteractionHand.MAIN_HAND), selectedIndex);
         player.playSound(SoundEvents.UI_BUTTON_CLICK.value(), 0.3F, 1.5F);
         player.setItemInHand(InteractionHand.MAIN_HAND, next);
 
-        ClutterNoMoreClient.sendChangeStack(-1, -1, next);
+        ClutterNoMoreClient.sendChangeStack(-1, -1, selectedIndex);
     }
 
     public boolean shouldStayOpenThisTick() {
         int selected = ClutterNoMoreClient.selectedSlot(minecraft.player);
         ItemStack heldStack = minecraft.player.getItemInHand(InteractionHand.MAIN_HAND);
         count = heldStack.getCount();
-        return shapes.contains(heldStack.getItem()) && selected == this.selected;
+        return ShapeMap.contains(heldStack.getItem()) && selected == this.selected;
     }
 }

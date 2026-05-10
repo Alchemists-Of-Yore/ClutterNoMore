@@ -16,7 +16,11 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-public record ShapeMapFile(int priority, Map<ShapeMapFile.ShapeMapKey, ShapeMapFile.ConditionalRule> add, Map<ShapeMapFile.ShapeMapKey, ShapeMapFile.ConditionalRule> remove) {
+public record ShapeMapFile(
+        int priority,
+        Map<ShapeMapFile.ShapeMapKey, ShapeMapFile.ConditionalRule> add,
+        Map<ShapeMapFile.ShapeMapKey, ShapeMapFile.ConditionalRule> remove
+) {
 
     public static final int DEFAULT_PRIORITY = 1000;
 

@@ -98,6 +98,25 @@ public class ShapeMap {
         return aliases;
     }
 
+    public static int currentIndex(ItemStack stack) {
+        List<Item> shapes = getShapes(stack.getItem());
+        return shapes.indexOf(stack.getItem());
+    }
+
+    public static ItemStack transferStack(ItemStack stack, int index) {
+        List<Item> shapes = getShapes(stack.getItem());
+        if (index < 0 || index >= shapes.size()) return stack.copy();
+        Item target = shapes.get(index);
+        //? if >1.20.4 {
+        return stack.transmuteCopy(target, stack.getCount());
+        //?} else {
+        /*ItemStack result = new ItemStack(target, stack.getCount());
+        net.minecraft.nbt.CompoundTag tag = stack.getTag();
+        if (tag != null) result.setTag(tag.copy());
+        return result;
+        *///?}
+    }
+
     public static void setEdges(List<Edge> edges, boolean detailedLogs) {
         SHAPES_DATAMAP.clear();
         INVERSE_SHAPES_DATAMAP.clear();
@@ -122,28 +141,29 @@ public class ShapeMap {
         }
 
         for (Map.Entry<Item, List<Item>> entry : shapeSets.entrySet()) {
-            List<Item> shapeSet = entry.getValue();
-            if (shapeSet.size() < 2) continue;
+            List<Item> members = entry.getValue();
+            if (members.size() < 2) continue;
             List<Edge> setEdges = edgesByShapeSet.getOrDefault(entry.getKey(), List.of());
 
-            Item parent = pickParent(setEdges, shapeSet);
-            if (parent == null || !shapeSet.contains(parent)) parent = lexSmallest(shapeSet);
+            Item parent = pickParent(setEdges, members);
+            if (parent == null || !members.contains(parent)) parent = lexSmallest(members);
 
-            List<Item> shapes = new ArrayList<>(shapeSet.size() - 1);
-            for (Item m : shapeSet) {
+            List<Item> shapeList = new ArrayList<>();
+            shapeList.add(parent);
+            for (Item m : members) {
                 if (m == parent) continue;
-                shapes.add(m);
+                shapeList.add(m);
                 INVERSE_SHAPES_DATAMAP.put(m, parent);
                 //? if >1.21.9 {
                 if (Platform.INSTANCE.isModLoaded("rrv")) RRVCompat.hide(m);
                 //?}
             }
-            SHAPES_DATAMAP.put(parent, shapes);
+            SHAPES_DATAMAP.put(parent, shapeList);
 
-            if (detailedLogs && setEdges.size() > shapeSet.size() - 1) {
+            if (detailedLogs && setEdges.size() > members.size() - 1) {
                 ClutterNoMore.LOGGER.info("[ShapeMap] circular shape set resolved: parent={} shapes={}",
                         BuiltInRegistries.ITEM.getKey(parent),
-                        shapeSet.stream().map(BuiltInRegistries.ITEM::getKey).toList());
+                        members.stream().map(BuiltInRegistries.ITEM::getKey).toList());
             }
         }
     }
@@ -186,17 +206,6 @@ public class ShapeMap {
         T ra = find(parent, a);
         T rb = find(parent, b);
         if (!ra.equals(rb)) parent.put(ra, rb);
-    }
-
-    public static ItemStack transferStack(ItemStack from, Item toItem) {
-        //? if >1.20.4 {
-        return from.transmuteCopy(toItem, from.getCount());
-        //?} else {
-        /*ItemStack result = new ItemStack(toItem, from.getCount());
-        net.minecraft.nbt.CompoundTag tag = from.getTag();
-        if (tag != null) result.setTag(tag.copy());
-        return result;
-        *///?}
     }
 
     public static void sendShapeMap(ServerPlayer serverPlayer) {
