@@ -1,21 +1,27 @@
 package dev.tazer.clutternomore.common.shape_map;
 
+import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.tazer.clutternomore.Platform;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-public record ShapeMapFile(int priority, Map<ShapeMapKey, List<ShapeMapTemplate>> add, Map<ShapeMapKey, List<ShapeMapTemplate>> remove) {
+public record ShapeMapFile(int priority, Map<ShapeMapFile.ShapeMapKey, ShapeMapFile.ConditionalRule> add, Map<ShapeMapFile.ShapeMapKey, ShapeMapFile.ConditionalRule> remove) {
 
     public static final int DEFAULT_PRIORITY = 1000;
 
-    private static final Codec<Map<ShapeMapKey, List<ShapeMapTemplate>>> RULES_CODEC =
-            Codec.unboundedMap(ShapeMapKey.CODEC, ShapeMapTemplate.CODEC.listOf());
+    private static final Codec<Map<ShapeMapKey, ConditionalRule>> RULES_CODEC =
+            Codec.unboundedMap(ShapeMapKey.CODEC, ConditionalRule.CODEC);
 
     public static final Codec<ShapeMapFile> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Codec.intRange(1, Integer.MAX_VALUE).optionalFieldOf("priority", DEFAULT_PRIORITY).forGetter(ShapeMapFile::priority),
@@ -99,5 +105,81 @@ public record ShapeMapFile(int priority, Map<ShapeMapKey, List<ShapeMapTemplate>
             }
             return sb.toString();
         }
+    }
+
+    public record Conditions(List<ShapeMapTemplate> exists,
+                             List<String> modLoaded,
+                             boolean isBlockItem,
+                             List<Conditions> allOf,
+                             List<Conditions> anyOf,
+                             List<Conditions> noneOf,
+                             Optional<Conditions> not) {
+
+        private static final Codec<Boolean> IS_BLOCKITEM_CODEC = Codec.BOOL.flatXmap(
+                b -> b ? DataResult.success(true)
+                       : DataResult.error(() -> "is_blockitem must be `true` (use `not` to invert)"),
+                DataResult::success
+        );
+
+        public static final Codec<Conditions> CODEC = Codec.recursive("Conditions", self ->
+                RecordCodecBuilder.create(instance -> instance.group(
+                        ShapeMapTemplate.CODEC.listOf().optionalFieldOf("exists", List.of()).forGetter(Conditions::exists),
+                        Codec.STRING.listOf().optionalFieldOf("mod_loaded", List.of()).forGetter(Conditions::modLoaded),
+                        IS_BLOCKITEM_CODEC.optionalFieldOf("is_blockitem", false).forGetter(Conditions::isBlockItem),
+                        self.listOf().optionalFieldOf("all_of", List.of()).forGetter(Conditions::allOf),
+                        self.listOf().optionalFieldOf("any_of", List.of()).forGetter(Conditions::anyOf),
+                        self.listOf().optionalFieldOf("none_of", List.of()).forGetter(Conditions::noneOf),
+                        self.optionalFieldOf("not").forGetter(Conditions::not)
+                ).apply(instance, Conditions::new))
+        );
+
+        public boolean evaluate(Item parent, Map<String, String> vars) {
+            for (ShapeMapTemplate t : exists) {
+                String resolved = t.substitute(vars);
+                try {
+                    if (!BuiltInRegistries.ITEM.containsKey(Identifier.parse(resolved))) return false;
+                } catch (Exception e) {
+                    return false;
+                }
+            }
+            for (String mod : modLoaded) {
+                if (!Platform.INSTANCE.isModLoaded(mod)) return false;
+            }
+            if (isBlockItem && !(parent instanceof BlockItem)) return false;
+            for (Conditions c : allOf) {
+                if (!c.evaluate(parent, vars)) return false;
+            }
+            if (!anyOf.isEmpty()) {
+                boolean any = false;
+                for (Conditions c : anyOf) if (c.evaluate(parent, vars)) { any = true; break; }
+                if (!any) return false;
+            }
+            for (Conditions c : noneOf) {
+                if (c.evaluate(parent, vars)) return false;
+            }
+            if (not.isPresent() && not.get().evaluate(parent, vars)) return false;
+            return true;
+        }
+    }
+
+    public record ConditionalRule(List<ShapeMapTemplate> shapes, Optional<Conditions> conditions) {
+
+        private static final Codec<ConditionalRule> OBJECT_CODEC = RecordCodecBuilder.create(instance -> instance.group(
+                ShapeMapTemplate.CODEC.listOf().fieldOf("shapes").forGetter(ConditionalRule::shapes),
+                Conditions.CODEC.optionalFieldOf("conditions").forGetter(ConditionalRule::conditions)
+        ).apply(instance, ConditionalRule::new));
+
+        public static final Codec<ConditionalRule> CODEC = Codec.either(
+                ShapeMapTemplate.CODEC.listOf(),
+                OBJECT_CODEC
+        ).xmap(
+                either -> either.map(
+                        list -> new ConditionalRule(list, Optional.empty()),
+                        rule -> rule
+                ),
+                rule -> rule.conditions.isEmpty()
+                        ? Either.left(rule.shapes)
+                        : Either.right(rule)
+        );
     }
 }

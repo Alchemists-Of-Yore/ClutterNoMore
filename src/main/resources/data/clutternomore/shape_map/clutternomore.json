@@ -2,15 +2,18 @@
   "priority": 500,
   "add": {
     "/(?<ns>[^:]+):(?<stem>.+)_log/": [
+      "${ns}:${stem}wood",
       "${ns}:${stem}_wood",
-      "wilderwild:hollowed_${stem}_log"
+      "wilderwild:hollowed_${stem}_log",
+      "quark:hollow_${stem}_log",
+      "everycompat:quark/${ns}/hollow_${stem}_log"
     ],
 
     "/(?<ns>[^:]+):stripped_(?<stem>.+)_log/": [
       "wilderwild:stripped_hollowed_${stem}_log"
     ],
 
-    "/minecraft:(?<stem>.+?)(?<end>_planks|_block|s|)/": [
+    "/minecraft:(?<stem>.+?)(?<end>_planks|_block)/": [
       "/(?!minecraft:)[^:]+:${stem}_slab/",
       "/(?!minecraft:)[^:]+:${stem}_stairs/",
       "/(?!minecraft:)[^:]+:${stem}_wall/",
@@ -19,7 +22,27 @@
       "/(?!minecraft:)[^:]+:${stem}${end}_wall/"
     ],
 
-    "/(?<ns>[^:]+):(?<stem>.+?)(?<end>_planks|_block|s|)/": [
+    "/minecraft:(?<stem>.+?)(?<end>s|)/": {
+      "shapes": [
+        "/(?!minecraft:)[^:]+:${stem}_slab/",
+        "/(?!minecraft:)[^:]+:${stem}_stairs/",
+        "/(?!minecraft:)[^:]+:${stem}_wall/",
+        "/(?!minecraft:)[^:]+:${stem}${end}_slab/",
+        "/(?!minecraft:)[^:]+:${stem}${end}_stairs/",
+        "/(?!minecraft:)[^:]+:${stem}${end}_wall/"
+      ],
+      "conditions": {
+        "is_blockitem": true,
+        "not": {
+          "exists": [
+            "minecraft:${stem}_planks",
+            "minecraft:${stem}_block"
+          ]
+        }
+      }
+    },
+
+    "/(?<ns>[^:]+):(?<stem>.+?)(?<end>_planks|_block)/": [
       "${ns}:${stem}_slab",
       "${ns}:${stem}_stairs",
       "${ns}:${stem}_wall",
@@ -30,6 +53,29 @@
       "${ns}:spiked_${stem}",
       "${ns}:spiked_${stem}${end}"
     ],
+
+    "/(?<ns>[^:]+):(?<stem>.+?)(?<end>s|)/": {
+      "shapes": [
+        "${ns}:${stem}_slab",
+        "${ns}:${stem}_stairs",
+        "${ns}:${stem}_wall",
+        "${ns}:${stem}${end}_slab",
+        "${ns}:${stem}${end}_stairs",
+        "${ns}:${stem}${end}_wall",
+
+        "${ns}:spiked_${stem}",
+        "${ns}:spiked_${stem}${end}"
+      ],
+      "conditions": {
+        "is_blockitem": true,
+        "not": {
+          "exists": [
+            "${ns}:${stem}_planks",
+            "${ns}:${stem}_block"
+          ]
+        }
+      }
+    },
 
     "/(?<ns>[^:]+):stripped_(?<wood>.+?)_palisade/": [
       "${ns}:stripped_spiked_${wood}_palisade"
@@ -51,5 +97,13 @@
     "warped_stem": ["warped_hyphae"],
     "stripped_crimson_stem": ["stripped_crimson_hyphae"],
     "stripped_warped_stem": ["stripped_warped_hyphae"]
+  },
+  "remove": {
+    "/[^:]+:copycat.*/": ["/.*/"],
+    "#clutternomore:shape_map_blacklist": ["/.*/"],
+    "/.*/": [
+      "/[^:]+:copycat.*/",
+      "#clutternomore:shape_map_blacklist"
+    ]
   }
 }

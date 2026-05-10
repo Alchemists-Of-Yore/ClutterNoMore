@@ -8,6 +8,8 @@ import com.google.gson.GsonBuilder;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
 import dev.tazer.clutternomore.ClutterNoMore;
+import dev.tazer.clutternomore.common.shape_map.ShapeMapFile.ConditionalRule;
+import dev.tazer.clutternomore.common.shape_map.ShapeMapFile.Conditions;
 import dev.tazer.clutternomore.common.shape_map.ShapeMapFile.ShapeMapKey;
 import dev.tazer.clutternomore.common.shape_map.ShapeMapFile.ShapeMapTemplate;
 //? if fabric && <1.21.9 {
@@ -102,10 +104,12 @@ extends SimpleJsonResourceReloadListener<JsonElement>
     private record KeyMatch(Item item, Map<String, String> vars) {}
 
     private void applyRules(Loaded file, List<ShapeMap.Edge> edges, boolean detailed, boolean isAdd) {
-        Map<ShapeMapKey, List<ShapeMapTemplate>> rules = isAdd ? file.contents.add() : file.contents.remove();
-        for (Map.Entry<ShapeMapKey, List<ShapeMapTemplate>> rule : rules.entrySet()) {
+        Map<ShapeMapKey, ConditionalRule> rules = isAdd ? file.contents.add() : file.contents.remove();
+        for (Map.Entry<ShapeMapKey, ConditionalRule> rule : rules.entrySet()) {
             ShapeMapKey key = rule.getKey();
-            List<ShapeMapTemplate> templates = rule.getValue();
+            ConditionalRule body = rule.getValue();
+            List<ShapeMapTemplate> templates = body.shapes();
+            Conditions conditions = body.conditions().orElse(null);
 
             if (isAdd) {
                 if (detailed && key instanceof ShapeMapKey.Tag) {
@@ -119,6 +123,7 @@ extends SimpleJsonResourceReloadListener<JsonElement>
                 }
                 List<KeyMatch> matches = resolveKey(key, file.id, detailed);
                 for (KeyMatch match : matches) {
+                    if (conditions != null && !conditions.evaluate(match.item, match.vars)) continue;
                     for (ShapeMapTemplate template : templates) {
                         String resolved = template.substitute(match.vars);
                         List<Item> shapes = resolveValue(resolved, template.raw(), file.id, detailed);
@@ -129,14 +134,15 @@ extends SimpleJsonResourceReloadListener<JsonElement>
                     }
                 }
             } else {
-                edges.removeIf(edge -> ruleMatchesEdge(key, templates, edge));
+                edges.removeIf(edge -> ruleMatchesEdge(key, templates, conditions, edge));
             }
         }
     }
 
-    private boolean ruleMatchesEdge(ShapeMapKey key, List<ShapeMapTemplate> templates, ShapeMap.Edge edge) {
+    private boolean ruleMatchesEdge(ShapeMapKey key, List<ShapeMapTemplate> templates, Conditions conditions, ShapeMap.Edge edge) {
         Map<String, String> vars = matchKeyAgainst(key, edge.parent());
         if (vars == null) return false;
+        if (conditions != null && !conditions.evaluate(edge.parent(), vars)) return false;
         for (ShapeMapTemplate template : templates) {
             String resolved = template.substitute(vars);
             if (matchesValueAgainst(resolved, edge.shape())) return true;
