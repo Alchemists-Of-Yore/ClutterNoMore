@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.Mixin;
 @Mixin(IronBarsBlock.class)
 public class IronBarsBlockMixin {
     @WrapMethod(method = "attachsTo")
-    private boolean attachToVerticalSlabs(BlockState state, boolean solidSide, Operation<Boolean> original) {
+    private boolean cnm$attachToVerticalSlabs(BlockState state, boolean solidSide, Operation<Boolean> original) {
         if (state.getBlock() instanceof VerticalSlabBlock) return true;
         return original.call(state, solidSide);
     }

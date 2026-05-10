@@ -55,12 +55,6 @@ public class NeoForgeEntrypoint {
         );
     }
 
-//    @SubscribeEvent
-//    private static void onServerStarted(ServerStartedEvent event) {
-//        MinecraftServer server = event.getServer();
-//        ClutterNoMore.load(server.registryAccess(), server.getRecipeManager());
-//    }
-
     @SubscribeEvent
     private static void onServerStarted(OnDatapackSyncEvent event) {
         event.getRelevantPlayers().forEach((ShapeMap::sendShapeMap));

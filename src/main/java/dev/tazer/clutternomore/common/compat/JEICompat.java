@@ -6,6 +6,7 @@ import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.registration.IRecipeRegistration;
+import mezz.jei.api.runtime.IJeiRuntime;
 //? if >1.20.1
 import mezz.jei.api.registration.IIngredientAliasRegistration;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -24,6 +25,24 @@ import java.util.Map;
 
 @JeiPlugin
 public class JEICompat implements IModPlugin {
+
+    private static IJeiRuntime runtime;
+
+    @Override
+    public void onRuntimeAvailable(IJeiRuntime jeiRuntime) {
+        runtime = jeiRuntime;
+    }
+
+    @Override
+    public void onRuntimeUnavailable() {
+        runtime = null;
+    }
+
+    public static boolean isHoveringIngredient() {
+        if (runtime == null) return false;
+        if (runtime.getIngredientListOverlay().getIngredientUnderMouse().isPresent()) return true;
+        return runtime.getRecipesGui().getIngredientUnderMouse(VanillaTypes.ITEM_STACK).isPresent();
+    }
 
     @Override
     public void registerRecipes(IRecipeRegistration registry) {

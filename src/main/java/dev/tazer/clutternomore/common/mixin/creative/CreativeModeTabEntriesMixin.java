@@ -26,7 +26,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class CreativeModeTabEntriesMixin {
     //? if forge {
     /*@Inject(method = "accept*", at = @At("HEAD"), cancellable = true)
-    private void accept(ItemStack newEntry, CreativeModeTab.TabVisibility visibility, CallbackInfo ci) {
+    private void cnm$accept(ItemStack newEntry, CreativeModeTab.TabVisibility visibility, CallbackInfo ci) {
         if (CHooks.denyItem(newEntry.getItem())) ci.cancel();
     }
     *///?} else if neoforge {
@@ -37,12 +37,12 @@ public abstract class CreativeModeTabEntriesMixin {
     public abstract void insertAfter(ItemStack existingEntry, ItemStack newEntry, CreativeModeTab.TabVisibility visibility);
 
     @Inject(method = "accept", at = @At("HEAD"), cancellable = true)
-    private void accept(ItemStack newEntry, CreativeModeTab.TabVisibility visibility, CallbackInfo ci) {
+    private void cnm$accept(ItemStack newEntry, CreativeModeTab.TabVisibility visibility, CallbackInfo ci) {
         if (CHooks.denyItem(newEntry.getItem())) ci.cancel();
     }
 
     @Inject(method = "insertAfter", at = @At("HEAD"), cancellable = true)
-    private void insertAfter(ItemStack existingEntry, ItemStack newEntry, CreativeModeTab.TabVisibility visibility, CallbackInfo ci) {
+    private void cnm$insertAfter(ItemStack existingEntry, ItemStack newEntry, CreativeModeTab.TabVisibility visibility, CallbackInfo ci) {
         if (CHooks.denyItem(newEntry.getItem())) ci.cancel();
         if (ShapeMap.isShape(existingEntry.getItem())) {
             insertAfter(ShapeMap.getParent(existingEntry.getItem()).getDefaultInstance(), newEntry, visibility);
@@ -51,7 +51,7 @@ public abstract class CreativeModeTabEntriesMixin {
     }
 
     @Inject(method = "insertBefore", at = @At("HEAD"), cancellable = true)
-    private void insertBefore(ItemStack existingEntry, ItemStack newEntry, CreativeModeTab.TabVisibility visibility, CallbackInfo ci) {
+    private void cnm$insertBefore(ItemStack existingEntry, ItemStack newEntry, CreativeModeTab.TabVisibility visibility, CallbackInfo ci) {
         if (CHooks.denyItem(newEntry.getItem())) ci.cancel();
         if (ShapeMap.isShape(existingEntry.getItem())) {
             insertBefore(ShapeMap.getParent(existingEntry.getItem()).getDefaultInstance(), newEntry, visibility);
@@ -59,7 +59,7 @@ public abstract class CreativeModeTabEntriesMixin {
         }
     }
     @Inject(method = "assertTargetExists", at = @At("HEAD"), cancellable = true)
-    private void insertBefore(InsertableLinkedOpenCustomHashSet<ItemStack> setToCheck, ItemStack existingEntry, CallbackInfo ci) {
+    private void cnm$assertTargetExists(InsertableLinkedOpenCustomHashSet<ItemStack> setToCheck, ItemStack existingEntry, CallbackInfo ci) {
         ci.cancel();
     }
     *///?}

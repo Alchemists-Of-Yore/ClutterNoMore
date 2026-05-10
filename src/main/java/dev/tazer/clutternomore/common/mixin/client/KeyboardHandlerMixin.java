@@ -17,11 +17,11 @@ public class KeyboardHandlerMixin {
 
     @Inject(method = "keyPress", at = @At("HEAD"), cancellable = true)
     //? if >1.21.8 {
-    private void key(long windowPointer, int action, KeyEvent keyEvent, CallbackInfo ci) {
+    private void cnm$key(long windowPointer, int action, KeyEvent keyEvent, CallbackInfo ci) {
         int key = keyEvent.key();
     //?} else {
 
-    /*private void key(long windowPointer, int key, int scanCode, int action, int modifiers, CallbackInfo ci) {
+    /*private void cnm$key(long windowPointer, int key, int scanCode, int action, int modifiers, CallbackInfo ci) {
     *///?}
         ClutterNoMoreClient.onKeyInput(key, action);
     }

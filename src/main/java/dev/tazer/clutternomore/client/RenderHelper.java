@@ -1,6 +1,9 @@
 package dev.tazer.clutternomore.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import dev.tazer.clutternomore.ClutterNoMore;
+import dev.tazer.clutternomore.ClutterNoMoreClient;
+import dev.tazer.clutternomore.common.shape_map.ShapeMap;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 //? if >1.21.6 {
 import net.minecraft.client.renderer.RenderPipelines;
@@ -12,6 +15,21 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 
 public class RenderHelper {
+
+	public static void shapeBadge(GuiGraphicsExtractor guiGraphics, ItemStack stack, int x, int y) {
+		if (!ClutterNoMoreClient.CLIENT_CONFIG.SHAPE_INDICATOR.value()) return;
+		if (stack == null || stack.isEmpty() || !ShapeMap.contains(stack.getItem())) return;
+		Identifier texture = ClutterNoMore.location("textures/gui/shape_indicator.png");
+		//? if <1.21.6 {
+		/*guiGraphics.pose().pushPose();
+		guiGraphics.pose().translate(0.0F, 0.0F, 200.0F);
+		*///?}
+		blit(guiGraphics, texture, x + 12, y, 0, 0, 4, 4, 4, 4);
+		//? if <1.21.6 {
+		/*guiGraphics.pose().popPose();
+		*///?}
+	}
+
 	public static void item(GuiGraphicsExtractor guiGraphics, ItemStack stack, int x, int y) {
 		//? if >26 {
 		guiGraphics.item(stack, x, y);

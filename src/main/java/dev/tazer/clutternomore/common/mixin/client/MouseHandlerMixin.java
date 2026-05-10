@@ -16,17 +16,17 @@ public class MouseHandlerMixin {
     //? if fabric {
     //? if >1.21.8 {
     @Inject(method = "onButton", at = @At("HEAD"))
-    private void key(long windowPointer, MouseButtonInfo mouseButtonInfo, int action, CallbackInfo ci) {
+    private void cnm$onButton(long windowPointer, MouseButtonInfo mouseButtonInfo, int action, CallbackInfo ci) {
         int button = mouseButtonInfo.button();
     //?} else {
     /*@Inject(method = "onPress", at = @At("HEAD"), cancellable = true)
-    private void key(long windowPointer, int button, int action, int modifiers, CallbackInfo ci) {
+    private void cnm$onButton(long windowPointer, int button, int action, int modifiers, CallbackInfo ci) {
     *///?}
         ClutterNoMoreClient.onKeyInput(button, action);
     }
 
     @Inject(method = "onScroll", at = @At("HEAD"), cancellable = true)
-    private void key(long windowPointer, double xOffset, double yOffset, CallbackInfo ci) {
+    private void cnm$onScroll(long windowPointer, double xOffset, double yOffset, CallbackInfo ci) {
         if (ClutterNoMoreClient.onMouseScrolling(yOffset)) {
             ci.cancel();
         }

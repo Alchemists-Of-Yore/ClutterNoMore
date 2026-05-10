@@ -26,7 +26,7 @@ public class BlockItemMixin {
             /*target = "Lnet/minecraft/world/item/ItemStack;shrink(I)V")
             *///?}
     )
-    private void place(ItemStack instance,
+    private void cnm$place(ItemStack instance,
                        int amount,
                        //? if >1.20.1 {
                        LivingEntity entity,

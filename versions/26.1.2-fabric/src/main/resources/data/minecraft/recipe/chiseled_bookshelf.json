@@ -7,7 +7,7 @@
     ],
     "key": {
         "#": "#minecraft:planks",
-        "P": "#minecraft:paper"
+        "P": "minecraft:paper"
     },
     "result": {
         "id": "minecraft:chiseled_bookshelf",

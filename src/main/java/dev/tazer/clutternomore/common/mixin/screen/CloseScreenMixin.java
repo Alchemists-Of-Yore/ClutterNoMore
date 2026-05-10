@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(Minecraft.class)
 public class CloseScreenMixin {
     @Inject(method = "setScreen", at = @At("RETURN"))
-    private void accept(Screen guiScreen, CallbackInfo ci) {
+    private void cnm$onSetScreen(Screen guiScreen, CallbackInfo ci) {
         ClutterNoMoreClient.OVERLAY = null;
     }
 }

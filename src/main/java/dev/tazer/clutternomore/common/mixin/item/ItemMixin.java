@@ -17,7 +17,7 @@ import java.util.Optional;
 @Mixin(Item.class)
 public class ItemMixin {
     @Inject(method = "getTooltipImage", at = @At("HEAD"), cancellable = true)
-    private void getTooltipImage(ItemStack stack, CallbackInfoReturnable<Optional<TooltipComponent>> cir) {
+    private void cnm$getTooltipImage(ItemStack stack, CallbackInfoReturnable<Optional<TooltipComponent>> cir) {
         Item item = stack.getItem();
 
         if (ShapeMap.contains(item)) {

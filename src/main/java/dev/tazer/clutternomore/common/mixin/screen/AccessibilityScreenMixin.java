@@ -25,7 +25,7 @@ public abstract class AccessibilityScreenMixin {
             method = "addOptions",
             at = @At(value = "RETURN")
     )
-    public void addOptions(CallbackInfo ci) {
+    public void cnm$addOptions(CallbackInfo ci) {
         Button shapeSwitcherButton = Button
                 .builder(
                         Component.translatable("key.clutternomore.shape_switcher"),
@@ -38,7 +38,7 @@ public abstract class AccessibilityScreenMixin {
             method = "createFooter",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/components/Button$Builder;bounds(IIII)Lnet/minecraft/client/gui/components/Button$Builder;")
     )
-    private Button.Builder redirectCreateFooter(Button.Builder builder, int x, int y, int width, int height) {
+    private Button.Builder cnm$redirectCreateFooter(Button.Builder builder, int x, int y, int width, int height) {
         return builder.bounds(x - 80, y, width, height);
     }
 
@@ -46,7 +46,7 @@ public abstract class AccessibilityScreenMixin {
             method = "createFooter",
             at = @At(value = "RETURN")
     )
-    private void injectCreateFooter(CallbackInfo ci) {
+    private void cnm$injectCreateFooter(CallbackInfo ci) {
         Button shapeSwitcherButton = Button
                 .builder(
                         Component.translatable("key.clutternomore.shape_switcher"),

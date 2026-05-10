@@ -11,12 +11,12 @@
     ],
 
     "/minecraft:(?<stem>.+?)(?<end>_planks|_block|s|)/": [
-      "/[^:]+:${stem}_slab/",
-      "/[^:]+:${stem}_stairs/",
-      "/[^:]+:${stem}_wall/",
-      "/[^:]+:${stem}${end}_slab/",
-      "/[^:]+:${stem}${end}_stairs/",
-      "/[^:]+:${stem}${end}_wall/"
+      "/(?!minecraft:)[^:]+:${stem}_slab/",
+      "/(?!minecraft:)[^:]+:${stem}_stairs/",
+      "/(?!minecraft:)[^:]+:${stem}_wall/",
+      "/(?!minecraft:)[^:]+:${stem}${end}_slab/",
+      "/(?!minecraft:)[^:]+:${stem}${end}_stairs/",
+      "/(?!minecraft:)[^:]+:${stem}${end}_wall/"
     ],
 
     "/(?<ns>[^:]+):(?<stem>.+?)(?<end>_planks|_block|s|)/": [
@@ -29,6 +29,10 @@
 
       "${ns}:spiked_${stem}",
       "${ns}:spiked_${stem}${end}"
+    ],
+
+    "/(?<ns>[^:]+):stripped_(?<wood>.+?)_palisade/": [
+      "${ns}:stripped_spiked_${wood}_palisade"
     ],
 
     "/(?<ns>[^:]+):(?<stem>.+)_slab/": [

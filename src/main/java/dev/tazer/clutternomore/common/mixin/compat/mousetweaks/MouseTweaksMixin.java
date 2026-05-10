@@ -13,13 +13,13 @@ import yalter.mousetweaks.Main;
 @Mixin(Main.class)
 public class MouseTweaksMixin {
     @WrapOperation(method = "areStacksCompatible", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;isSameItem(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemStack;)Z"))
-    private static boolean clutternomore$checkSameSet(ItemStack a, ItemStack b, Operation<Boolean> original) {
+    private static boolean cnm$checkSameSet(ItemStack a, ItemStack b, Operation<Boolean> original) {
         return original.call(a, b) || ShapeMap.inSameShapeSet(a.getItem(), b.getItem());
     }
 
     //? if >1.20.1 {
     @WrapOperation(method = "areStacksCompatible", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;isSameItem(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemStack;)Z"))
-    private static boolean clutternomore$checkSameSetAndComponents(ItemStack a, ItemStack b, Operation<Boolean> original) {
+    private static boolean cnm$checkSameSetAndComponents(ItemStack a, ItemStack b, Operation<Boolean> original) {
         return original.call(a, b) || ShapeMap.inSameShapeSet(a.getItem(), b.getItem()) && a.getComponentsPatch().equals(b.getComponentsPatch());
     }
     //?}

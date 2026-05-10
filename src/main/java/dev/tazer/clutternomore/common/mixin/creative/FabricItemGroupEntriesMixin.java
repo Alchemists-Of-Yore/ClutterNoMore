@@ -19,12 +19,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class FabricItemGroupEntriesMixin {
 
     @Inject(method = "accept", at = @At("HEAD"), cancellable = true)
-    private void accept(ItemStack newEntry, CreativeModeTab.TabVisibility visibility, CallbackInfo ci) {
+    private void cnm$accept(ItemStack newEntry, CreativeModeTab.TabVisibility visibility, CallbackInfo ci) {
         if (CHooks.denyItem(newEntry.getItem())) ci.cancel();
     }
 
     @Inject(method = "isEnabled", remap = false, at = @At("RETURN"), cancellable = true)
-    private void accept(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
+    private void cnm$isEnabled(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
         if (CHooks.denyItem(stack.getItem())) cir.setReturnValue(false);
     }
 }
