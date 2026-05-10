@@ -12,6 +12,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.ModLoadingContext;
+//? if >26
 import net.neoforged.fml.jarcontents.JarResource;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.fml.loading.FMLPaths;
@@ -47,11 +48,11 @@ public class NeoForgePlatformImpl implements Platform {
         try {
             var owningFile = ModLoadingContext.get().getActiveContainer().getModInfo().getOwningFile().getFile();
             //? if >26 {
-            /^JarResource jarResource = owningFile.getContents().get(path);
+            JarResource jarResource = owningFile.getContents().get(path);
             if (jarResource == null) throw new IOException("Resource not found: " + path);
             var file = JsonParser.parseReader(jarResource.bufferedReader());
-            ^///?} else
-            var file = JsonParser.parseReader(new FileReader(owningFile.findResource(path).toString()))
+            //?} else
+            //var file = JsonParser.parseReader(new FileReader(owningFile.findResource(path).toString()));
             return file.getAsJsonObject();
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -66,9 +67,9 @@ public class NeoForgePlatformImpl implements Platform {
     @Override
     public boolean isClient() {
         //? if <26
-        return FMLEnvironment.dist.isClient();
+        //return FMLEnvironment.dist.isClient();
         //? if >26
-        //return FMLEnvironment.getDist().isClient();
+        return FMLEnvironment.getDist().isClient();
     }
 
     @Override

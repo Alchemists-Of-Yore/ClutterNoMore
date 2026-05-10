@@ -18,10 +18,10 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.loading.FMLLoader;
 //? >26 {
-/^import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
-^///?} else {
-import net.neoforged.neoforge.event.AddReloadListenerEvent;
-//?}
+import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
+//?} else {
+/^import net.neoforged.neoforge.event.AddReloadListenerEvent;
+^///?}
 import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 import net.neoforged.neoforge.event.server.ServerStartedEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
@@ -65,16 +65,16 @@ public class NeoForgeEntrypoint {
     }
 
     //? if >26 {
-    /^@SubscribeEvent
+    @SubscribeEvent
     private static void addReloadListeners(AddServerReloadListenersEvent event) {
         event.addListener(ClutterNoMore.location("shape_map"), new ShapeMapFileHandler());
     }
-    ^///?} else {
-    @SubscribeEvent
+    //?} else {
+    /^@SubscribeEvent
     private static void addReloadListeners(AddReloadListenerEvent event) {
         event.addListener(new ShapeMapFileHandler());
     }
-    //?}
+    ^///?}
 
     @SubscribeEvent
     private static void registerBlocks(RegisterEvent event) {

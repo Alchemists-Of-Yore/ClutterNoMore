@@ -1,6 +1,7 @@
 package dev.tazer.clutternomore.common.mixin.screen;
 
 import dev.tazer.clutternomore.client.ShapeSwitcherOptionsScreen;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
 import net.minecraft.client.gui.components.Button;
 //? if >1.21 {
@@ -29,7 +30,7 @@ public abstract class AccessibilityScreenMixin {
         Button shapeSwitcherButton = Button
                 .builder(
                         Component.translatable("key.clutternomore.shape_switcher"),
-                        button -> ((ScreenAccessor) this).getMinecraft().setScreen(new ShapeSwitcherOptionsScreen(((AccessibilityOptionsScreen) (Object) this), ((OptionsSubScreenAccessor) (this)).getOptions()))
+                        button -> Minecraft.getInstance().setScreen(new ShapeSwitcherOptionsScreen(((AccessibilityOptionsScreen) (Object) this)))
                 ).bounds(0, 0, 150, 20).build();
         ((OptionsSubScreenAccessor) this).getList().addSmall(List.of(shapeSwitcherButton));
     }

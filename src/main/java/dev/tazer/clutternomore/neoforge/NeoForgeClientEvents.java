@@ -22,10 +22,10 @@ public class NeoForgeClientEvents {
             "key.clutternomore.change_block_shape",
             GLFW.GLFW_KEY_LEFT_ALT,
             //? if >1.21.8 {
-            /^KeyMapping.Category.INVENTORY
-            ^///?} else {
-            "key.categories.inventory"
-            //?}
+            KeyMapping.Category.INVENTORY
+            //?} else {
+            /^"key.categories.inventory"
+            ^///?}
     ));
 
     @SubscribeEvent

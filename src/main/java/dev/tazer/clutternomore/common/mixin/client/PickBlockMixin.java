@@ -5,11 +5,11 @@ package dev.tazer.clutternomore.common.mixin.client;
 /^import dev.tazer.clutternomore.forge.networking.ChangeStackPacket;
 /^import dev.tazer.clutternomore.forge.networking.ForgeNetworking;
 ^///?} else {
-/^import dev.tazer.clutternomore.common.networking.ChangeStackPayload;
-^///?}
+import dev.tazer.clutternomore.common.networking.ChangeStackPayload;
+//?}
 //? if fabric {
-/^import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-^///?}
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+//?}
 //? if neoforge {
 /^import java.util.Objects;
 ^///?}
@@ -38,8 +38,8 @@ public abstract class PickBlockMixin {
                 int menuSlot = exactIndex < 9 ? exactIndex + 36 : exactIndex;
                 int containerId = Minecraft.getInstance().player.inventoryMenu.containerId;
                 //? if fabric {
-                /^ClientPlayNetworking.send(new ChangeStackPayload(containerId, menuSlot, replaced));
-                ^///?}
+                ClientPlayNetworking.send(new ChangeStackPayload(containerId, menuSlot, replaced));
+                //?}
                 //? if neoforge {
                 /^Objects.requireNonNull(((Minecraft) (Object) this).getConnection()).send(new ChangeStackPayload(containerId, menuSlot, replaced));
                 ^///?}

@@ -42,8 +42,7 @@
     "screen.AccessibilityScreenMixin",
     "screen.CloseScreenMixin",
     "screen.ContainerScreenAccessor",
-    "screen.OptionsSubScreenAccessor",
-    "screen.ScreenAccessor"
+    "screen.OptionsSubScreenAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

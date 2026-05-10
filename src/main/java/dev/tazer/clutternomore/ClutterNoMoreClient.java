@@ -4,7 +4,7 @@ import dev.tazer.clutternomore.client.ShapeSwitcherOptionsScreen;
 import dev.tazer.clutternomore.client.ShapeSwitcherOverlay;
 import dev.tazer.clutternomore.common.compat.JEICompat;
 //? if <1.21.4
-/*import dev.tazer.clutternomore.common.compat.EMICompat;*/
+//import dev.tazer.clutternomore.common.compat.EMICompat;
 //? if >1.21.9
 import dev.tazer.clutternomore.common.compat.RRVCompat;
 import dev.tazer.clutternomore.common.shape_map.ShapeMap;
@@ -26,6 +26,7 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 //? if neoforge {
 /*import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
+//? if >26
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import net.neoforged.neoforge.network.PacketDistributor;
 *///?}
