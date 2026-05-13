@@ -42,5 +42,8 @@
   "depends": {
     "minecraft": "${minecraft}",
     "fabric-api": ">=0.88.1"
+  },
+  "breaks": {
+    "rrv": "<8.2.0"
   }
 }

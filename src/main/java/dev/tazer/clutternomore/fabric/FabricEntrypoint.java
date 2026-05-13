@@ -37,9 +37,7 @@ public class FabricEntrypoint implements ModInitializer {
         registerPayloadHandlers();
         //? if >26 {
         ResourceLoader.get(PackType.SERVER_DATA).registerReloadListener(ClutterNoMore.location("shape_map"), new ShapeMapFileHandler());
-        //?} else if >=1.21.9 {
-        /*ResourceLoader.get(PackType.SERVER_DATA).registerReloader(ClutterNoMore.location("shape_map"), new ShapeMapFileHandler());
-        *///?} else {
+        //?} else {
         /*ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(new ShapeMapFileHandler());
         *///?}
         ServerLifecycleEvents.SYNC_DATA_PACK_CONTENTS.register((serverPlayer, b) -> {

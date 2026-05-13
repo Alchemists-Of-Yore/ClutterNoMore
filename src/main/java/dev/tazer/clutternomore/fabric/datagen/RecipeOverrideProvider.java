@@ -61,6 +61,14 @@ public class RecipeOverrideProvider extends FabricRecipeProvider {
                         .pattern("###")
                         .save(output);
 
+                chiseled(CHISELED_DEEPSLATE, COBBLED_DEEPSLATE, output);
+                chiseled(CHISELED_NETHER_BRICKS, NETHER_BRICKS, output);
+                chiseled(CHISELED_POLISHED_BLACKSTONE, POLISHED_BLACKSTONE, output);
+                chiseled(CHISELED_QUARTZ_BLOCK, QUARTZ_BLOCK, output);
+                chiseled(CHISELED_RED_SANDSTONE, RED_SANDSTONE, output);
+                chiseled(CHISELED_SANDSTONE, SANDSTONE, output);
+                chiseled(CHISELED_STONE_BRICKS, STONE_BRICKS, output);
+                //? if >1.21 {
                 chiseled(CHISELED_COPPER, CUT_COPPER, output);
                 chiseled(EXPOSED_CHISELED_COPPER, EXPOSED_CUT_COPPER, output);
                 chiseled(WEATHERED_CHISELED_COPPER, WEATHERED_CUT_COPPER, output);
@@ -71,14 +79,10 @@ public class RecipeOverrideProvider extends FabricRecipeProvider {
                 chiseled(WAXED_WEATHERED_CHISELED_COPPER, WAXED_WEATHERED_CUT_COPPER, output);
                 chiseled(WAXED_OXIDIZED_CHISELED_COPPER, WAXED_OXIDIZED_CUT_COPPER, output);
 
-                chiseled(CHISELED_DEEPSLATE, COBBLED_DEEPSLATE, output);
-                chiseled(CHISELED_NETHER_BRICKS, NETHER_BRICKS, output);
-                chiseled(CHISELED_POLISHED_BLACKSTONE, POLISHED_BLACKSTONE, output);
-                chiseled(CHISELED_QUARTZ_BLOCK, QUARTZ_BLOCK, output);
-                chiseled(CHISELED_RED_SANDSTONE, RED_SANDSTONE, output);
-                chiseled(CHISELED_SANDSTONE, SANDSTONE, output);
-                chiseled(CHISELED_STONE_BRICKS, STONE_BRICKS, output);
                 chiseled(CHISELED_TUFF, TUFF, output);
+                chiseled(CHISELED_TUFF_BRICKS, TUFF_BRICKS, output);
+                //?}
+
                 //? if >1.21.4
                 chiseled(CHISELED_RESIN_BRICKS, RESIN_BRICK_SLAB, output);
 
