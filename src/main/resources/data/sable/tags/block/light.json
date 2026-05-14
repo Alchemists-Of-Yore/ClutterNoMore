@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    "#clutternomore:vertical_slabs"
+  ],
+  "remove": [
+    "#clutternomore:wooden_vertical_slabs"
+  ],
+  "fabric:remove": [
+    "#clutternomore:wooden_vertical_slabs"
+  ]
+}

@@ -20,5 +20,9 @@
   "tooltip.clutternomore.hold_to_change": "Hold [%s] to change shape",
   "tooltip.clutternomore.press_to_change": "Press [%s] to change shape",
   "modmenu.nameTranslation.clutternomore": "Clutter No More",
-  "modmenu.summaryTranslation.clutternomore": "Fixes the game's inventory clutter problem by unifying Stairs and Slabs into a single block: Transform your full blocks into other shapes with the press of a keybind!"
+  "modmenu.summaryTranslation.clutternomore": "Fixes the game's inventory clutter problem by unifying Stairs and Slabs into a single block: Transform your full blocks into other shapes with the press of a keybind!",
+  "tag.clutternomore.vertical_slabs": "Vertical Slabs",
+  "tag.clutternomore.wooden_vertical_slabs": "Wooden Vertical Slabs",
+  "tag.clutternomore.steps": "Steps",
+  "tag.clutternomore.wooden_steps": "Wooden Steps"
 }

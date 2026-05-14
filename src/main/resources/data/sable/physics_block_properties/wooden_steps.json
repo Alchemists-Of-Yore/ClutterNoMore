@@ -1,0 +1,13 @@
+{
+  "selector": "#clutternomore:wooden_steps",
+  "properties": {
+    "sable:mass": 0.125,
+    "sable:volume": 0.25
+  },
+  "overrides": {
+    "type=double": {
+      "sable:mass": 0.25,
+      "sable:volume": 0.5
+    }
+  }
+}
