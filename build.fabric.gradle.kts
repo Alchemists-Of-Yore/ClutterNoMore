@@ -148,6 +148,7 @@ dependencies {
     if (hasProperty("deps.mousetweaks")) {
         modImplementation("maven.modrinth:mouse-tweaks:${dep("mousetweaks")}")
     }
+    modImplementation("maven.modrinth:fractal-lib:${dep("fractal")}")
 }
 
 tasks {

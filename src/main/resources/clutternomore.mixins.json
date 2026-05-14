@@ -15,6 +15,7 @@
     "compat.create.StackRequirementMixin",
     "compat.jei.SimpleJEIRenderMixin",
     "creative.CreativeModeTabEntriesMixin",
+    "creative.DefaultStackEntryCollectorMixin",
     "creative.FabricItemGroupEntriesMixin",
     "creative.ItemDisplayBuilderMixin",
     "dev.ShapedRecipeBuilderMixin",
