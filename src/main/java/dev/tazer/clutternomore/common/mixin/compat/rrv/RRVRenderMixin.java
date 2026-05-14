@@ -1,5 +1,6 @@
 package dev.tazer.clutternomore.common.mixin.compat.rrv;
 
+import com.llamalad7.mixinextras.sugar.Local;
 import dev.tazer.clutternomore.common.mixin.annotation.IfModPresent;
 //? if >1.21.9 {
 import dev.tazer.clutternomore.client.RenderHelper;
@@ -25,8 +26,9 @@ public abstract class RRVRenderMixin {
     @Shadow @Final private int y;
 
     @Inject(method = "extractRenderState", at = @At("RETURN"))
-    private void cnm$badge(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float delta, CallbackInfo ci) {
-        RenderHelper.shapeBadge(guiGraphics, this.getStack(), this.x, this.y);
+    private void cnm$badge(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float delta, CallbackInfo ci, @Local(name = "recipe") String hasRecipe) {
+        if (hasRecipe == null)
+            RenderHelper.shapeBadge(guiGraphics, this.getStack(), this.x+3, this.y+2);
     }
     //?}
 }
