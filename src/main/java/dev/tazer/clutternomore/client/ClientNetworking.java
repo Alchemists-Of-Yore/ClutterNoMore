@@ -15,7 +15,7 @@ public class ClientNetworking {
         //? if neoforge && >26
         //net.neoforged.neoforge.client.network.ClientPacketDistributor.sendToServer(p);
         //? if forge && <1.21.1 {
-        /* dev.tazer.clutternomore.forge.networking.ForgeNetworking.INSTANCE.sendToServer(p);
+         /*dev.tazer.clutternomore.forge.networking.ForgeNetworking.INSTANCE.sendToServer(p);
         *///?}
     }
 }

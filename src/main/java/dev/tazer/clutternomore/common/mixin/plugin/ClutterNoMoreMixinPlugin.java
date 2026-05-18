@@ -38,7 +38,7 @@ public class ClutterNoMoreMixinPlugin implements IMixinConfigPlugin {
     //?} else {
     /*private static final boolean IS_DEV = !FMLLoader
             //? if >26
-            //.getCurrent()
+            .getCurrent()
             .isProduction();
     *///?}
 
@@ -55,7 +55,7 @@ public class ClutterNoMoreMixinPlugin implements IMixinConfigPlugin {
         //?} else {
         /*this.presentMods = FMLLoader
                 //? if >26
-                //.getCurrent()
+                .getCurrent()
                 .getLoadingModList().getMods().stream()
                 .map(ModInfo::getModId)
                 .collect(Collectors.toUnmodifiableSet());

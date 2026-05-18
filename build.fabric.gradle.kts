@@ -146,15 +146,13 @@ dependencies {
         modCompileOnly("mezz.jei:jei-1.21.10-fabric:26.2.0.27")
     }
 
-    modCompileOnly("dev.isxander:controlify:${property("deps.controlify")}") {
+    modImplementation("dev.isxander:controlify:${property("deps.controlify")}") {
         exclude(group = "maven.modrinth")
+        exclude(group = "io.github.llamalad7")
     }
 
     implementation("folk.sisby:kaleido-config:${dep("kaleido")}")
     include("folk.sisby:kaleido-config:${dep("kaleido")}")
-
-    val modules = listOf("transitive-access-wideners-v1", "registry-sync-v0", "resource-loader-v0")
-    for (it in modules) modImplementation(fabricApi.module("fabric-$it", dep("fabric-api")))
 
     if (hasProperty("deps.mousetweaks")) {
         modImplementation("maven.modrinth:mouse-tweaks:${dep("mousetweaks")}")

@@ -1,6 +1,5 @@
 package dev.tazer.clutternomore.common.mixin.creative;
 
-import de.dafuqs.fractal.api.DefaultStackEntryCollector;
 import dev.tazer.clutternomore.common.CHooks;
 import dev.tazer.clutternomore.common.mixin.annotation.IfModPresent;
 import net.minecraft.world.item.CreativeModeTab;
@@ -14,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Pseudo
 @IfModPresent("fractal")
-@Mixin(DefaultStackEntryCollector.class)
+@Mixin(targets = "de.dafuqs.fractal.api.DefaultStackEntryCollector.DefaultStackEntryCollector")
 public abstract class DefaultStackEntryCollectorMixin {
 
     @Inject(method = "accept(Lnet/minecraft/world/level/ItemLike;Lnet/minecraft/world/item/CreativeModeTab$TabVisibility;)V", at = @At(value = "HEAD"), cancellable = true)
