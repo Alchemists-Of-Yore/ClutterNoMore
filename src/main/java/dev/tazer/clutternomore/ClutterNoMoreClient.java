@@ -1,5 +1,6 @@
 package dev.tazer.clutternomore;
 
+import dev.tazer.clutternomore.client.ClientNetworking;
 import dev.tazer.clutternomore.client.ShapeSwitcherOptionsScreen;
 import dev.tazer.clutternomore.client.ShapeSwitcherOverlay;
 import dev.tazer.clutternomore.common.compat.ControlifyCompat;
@@ -16,20 +17,13 @@ import dev.tazer.clutternomore.common.mixin.screen.ContainerScreenAccessor;
  import dev.tazer.clutternomore.common.networking.ChangeStackPayload;
  import net.minecraft.client.DeltaTracker;
 //?} else {
-/*import dev.tazer.clutternomore.forge.networking.ChangeStackPacket;
-import dev.tazer.clutternomore.forge.networking.ForgeNetworking;
+/*import dev.tazer.clutternomore.forge.networking.ChangeStackPayload;
 import net.minecraftforge.client.ConfigScreenHandler;
 import net.minecraftforge.fml.ModLoadingContext;
 *///?}
-//? if fabric {
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-//?}
 //? if neoforge {
 /*import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
-//? if >26
-import net.neoforged.neoforge.client.network.ClientPacketDistributor;
-import net.neoforged.neoforge.network.PacketDistributor;
 *///?}
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -221,6 +215,7 @@ public class ClutterNoMoreClient {
         }
     }
 
+    // Used for key releases while a screen is open.
     public static void onKeyReleased(int button) {
         if (button == shapeKey()) {
             keyHeld = false;
@@ -303,19 +298,7 @@ public class ClutterNoMoreClient {
     }
 
     private static void sendChangeStackNow(int containerId, int slotId, int shapeIndex) {
-        //? if !forge {
-        ChangeStackPayload p = new ChangeStackPayload(containerId, slotId, shapeIndex);
-        //?}
-        //? if fabric
-        ClientPlayNetworking.send(p);
-        //? if neoforge && <26
-        //PacketDistributor.sendToServer(p);
-        //? if neoforge && >26
-        //ClientPacketDistributor.sendToServer(p);
-        //? if forge && <1.21.1 {
-        /*ChangeStackPacket p = new ChangeStackPacket(containerId, slotId, shapeIndex);
-        ForgeNetworking.sendToServer(p);
-        *///?}
+        ClientNetworking.sendToServer(new ChangeStackPayload(containerId, slotId, shapeIndex));
     }
 
     public static int shapeKey() {

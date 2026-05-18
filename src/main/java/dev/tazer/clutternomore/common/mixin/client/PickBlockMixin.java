@@ -1,24 +1,17 @@
 package dev.tazer.clutternomore.common.mixin.client;
 
 //? if forge {
-/*import dev.tazer.clutternomore.forge.networking.ChangeStackPacket;
-import dev.tazer.clutternomore.forge.networking.ForgeNetworking;
-*///?} else if fabric {
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+/*import dev.tazer.clutternomore.forge.networking.ChangeStackPayload;
+*///?} else {
 import dev.tazer.clutternomore.common.networking.ChangeStackPayload;
-//?} else if neoforge {
-/*import java.util.Objects;
-import dev.tazer.clutternomore.common.networking.ChangeStackPayload;
-*///?}
+//?}
+import dev.tazer.clutternomore.client.ClientNetworking;
 import dev.tazer.clutternomore.common.shape_map.ShapeMap;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 
 import java.util.List;
 
@@ -45,15 +38,7 @@ public abstract class PickBlockMixin {
                 inventory.items.set(exactIndex, replaced);
                 int menuSlot = exactIndex < 9 ? exactIndex + 36 : exactIndex;
                 int containerId = Minecraft.getInstance().player.inventoryMenu.containerId;
-                //? if fabric {
-                ClientPlayNetworking.send(new ChangeStackPayload(containerId, menuSlot, shapeIdx));
-                //?}
-                //? if neoforge {
-                /^Objects.requireNonNull(Minecraft.getInstance().getConnection()).send(new ChangeStackPayload(containerId, menuSlot, shapeIdx));
-                ^///?}
-                //? if forge {
-                /^ForgeNetworking.INSTANCE.sendToServer(new ChangeStackPacket(containerId, menuSlot, shapeIdx));
-                ^///?}
+                ClientNetworking.sendToServer(new ChangeStackPayload(containerId, menuSlot, shapeIdx));
             }
         }
 

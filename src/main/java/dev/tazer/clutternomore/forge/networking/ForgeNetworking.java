@@ -18,18 +18,14 @@ public class ForgeNetworking {
 
     public static void register() {
         int packetId = 0;
-        INSTANCE.registerMessage(packetId++, ChangeStackPacket.class,
-                ChangeStackPacket::encode,
-                ChangeStackPacket::decode,
-                ChangeStackPacket::handle);
+        INSTANCE.registerMessage(packetId++, ChangeStackPayload.class,
+                ChangeStackPayload::encode,
+                ChangeStackPayload::decode,
+                ChangeStackPayload::handle);
         INSTANCE.registerMessage(packetId++, ShapeMapPacket.class,
                 ShapeMapPacket::encode,
                 ShapeMapPacket::decode,
                 ShapeMapPacket::handle);
-    }
-
-    public static void sendToServer(ChangeStackPacket packet) {
-        INSTANCE.sendToServer(packet);
     }
 
     //FIXME

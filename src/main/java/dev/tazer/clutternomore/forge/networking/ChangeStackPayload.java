@@ -13,23 +13,23 @@ import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public record ChangeStackPacket(int containerId, int slot, int shapeIndex) {
+public record ChangeStackPayload(int containerId, int slot, int shapeIndex) {
 
-    public static void encode(ChangeStackPacket packet, FriendlyByteBuf buf) {
+    public static void encode(ChangeStackPayload packet, FriendlyByteBuf buf) {
         buf.writeInt(packet.containerId);
         buf.writeInt(packet.slot);
         buf.writeInt(packet.shapeIndex);
     }
 
-    public static ChangeStackPacket decode(FriendlyByteBuf buf) {
-        return new ChangeStackPacket(
+    public static ChangeStackPayload decode(FriendlyByteBuf buf) {
+        return new ChangeStackPayload(
                 buf.readInt(),
                 buf.readInt(),
                 buf.readInt()
         );
     }
 
-    public static void handle(ChangeStackPacket packet, Supplier<NetworkEvent.Context> contextSupplier) {
+    public static void handle(ChangeStackPayload packet, Supplier<NetworkEvent.Context> contextSupplier) {
         NetworkEvent.Context context = contextSupplier.get();
         context.enqueueWork(() -> {
             ServerPlayer player = context.getSender();
