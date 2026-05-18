@@ -2,6 +2,7 @@ package dev.tazer.clutternomore;
 
 import dev.tazer.clutternomore.client.ShapeSwitcherOptionsScreen;
 import dev.tazer.clutternomore.client.ShapeSwitcherOverlay;
+import dev.tazer.clutternomore.common.compat.ControlifyCompat;
 import dev.tazer.clutternomore.common.compat.JEICompat;
 //? if <1.21.4
 //import dev.tazer.clutternomore.common.compat.EMICompat;
@@ -45,7 +46,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.ChatFormatting;
 import org.lwjgl.glfw.GLFW;
-import java.util.ArrayList;
+
 import java.util.List;
 
 import static dev.tazer.clutternomore.ClutterNoMore.MODID;
@@ -161,8 +162,11 @@ public class ClutterNoMoreClient {
         return hint.copy().withStyle(ChatFormatting.DARK_GRAY);
     }
 
+    /**
+     * Used for ingame key presses.
+     */
     public static void onKeyInput(int keyCode, int action) {
-        if (keyCode != shapeKey()) return;
+        if (keyCode != shapeKey() || Platform.INSTANCE.isModLoaded("controlify") && ControlifyCompat.currentInputModeIsController()) return;
         Minecraft minecraft = Minecraft.getInstance();
         if (minecraft.screen != null) return;
 
@@ -197,6 +201,7 @@ public class ClutterNoMoreClient {
         }
     }
 
+    // Used for key presses while a screen is open.
     public static void onKeyPress(Screen screen, int button) {
         if (button != shapeKey()) return;
         if (keyHeld) return;
@@ -333,6 +338,10 @@ public class ClutterNoMoreClient {
     }
 
     public static void onPlayerTick(Minecraft minecraft) {
+        if (Platform.INSTANCE.isModLoaded("controlify")) {
+            ControlifyCompat.checkForControllerInput(minecraft);
+        }
+
         boolean physical = isShapeKeyPhysicallyDown();
         boolean rising = physical && !keyHeld;
         keyHeld = physical;
@@ -376,6 +385,32 @@ public class ClutterNoMoreClient {
         if (OVERLAY != null) {
             OVERLAY.onMouseScrolled(direction);
             return true;
+        }
+        return false;
+    }
+
+    public static boolean changeHotbarSlot(int selectedIndex) {
+        if (ClutterNoMoreClient.OVERLAY != null) {
+            int maxIndex = ClutterNoMoreClient.OVERLAY.shapes.size() - 1;
+            if (selectedIndex < 0) selectedIndex = 0;
+            if (selectedIndex > maxIndex) selectedIndex = maxIndex;
+            ClutterNoMoreClient.OVERLAY.changeSlot(selectedIndex);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static boolean prevSlot() {
+        if (ClutterNoMoreClient.OVERLAY != null) {
+            return changeHotbarSlot(ClutterNoMoreClient.OVERLAY.selectedIndex+1);
+        }
+        return false;
+    }
+
+    public static boolean nextSlot() {
+        if (ClutterNoMoreClient.OVERLAY != null) {
+            return changeHotbarSlot(ClutterNoMoreClient.OVERLAY.selectedIndex-1);
         }
         return false;
     }

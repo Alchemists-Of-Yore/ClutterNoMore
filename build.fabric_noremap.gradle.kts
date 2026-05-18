@@ -33,6 +33,13 @@ repositories {
             includeGroupAndSubgroups("org.quiltmc.parsers")
         }
     }
+    maven {
+        name = "Quilt Maven"
+        url = uri("https://maven.quiltmc.org/repository/release/")
+        content {
+            includeGroupAndSubgroups("org.quiltmc.parsers")
+        }
+    }
     maven("https://maven.blamejared.com/") {
         name = "JEI"
         content { includeGroup("mezz.jei") }
@@ -43,6 +50,7 @@ repositories {
         }
         filter { includeGroupAndSubgroups("cc.cassian") }
     }
+    mavenCentral()
 }
 
 val accesswidener = "${mc}.accesswidener"
@@ -93,6 +101,12 @@ dependencies {
     include("folk.sisby:kaleido-config:${dep("kaleido")}")
     compileOnly("mezz.jei:jei-${mc}-fabric:${dep("jei")}")
     implementation("cc.cassian.rrv:reliable-recipe-viewer-fabric:${dep("rrv")}")
+
+    implementation("dev.isxander:controlify:${property("deps.controlify")}") {
+        exclude(group = "maven.modrinth")
+        exclude(group = "net.caffeinemc")
+    }
+    implementation("dev.isxander:yet-another-config-lib:${property("deps.yacl")}")
 
     implementation("com.terraformersmc:modmenu:${dep("modmenu")}")
 

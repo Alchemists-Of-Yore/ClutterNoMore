@@ -54,6 +54,13 @@ repositories {
             includeGroupAndSubgroups("org.quiltmc.parsers")
         }
     }
+    maven {
+        name = "Quilt Maven"
+        url = uri("https://maven.quiltmc.org/repository/release/")
+        content {
+            includeGroupAndSubgroups("org.quiltmc.parsers")
+        }
+    }
     maven("https://maven.blamejared.com/") {
         name = "JEI"
         content { includeGroup("mezz.jei") }
@@ -137,6 +144,10 @@ dependencies {
         modLocalRuntime("mezz.jei:jei-${mc}-fabric:${dep("jei")}")
     } else {
         modCompileOnly("mezz.jei:jei-1.21.10-fabric:26.2.0.27")
+    }
+
+    modCompileOnly("dev.isxander:controlify:${property("deps.controlify")}") {
+        exclude(group = "maven.modrinth")
     }
 
     implementation("folk.sisby:kaleido-config:${dep("kaleido")}")

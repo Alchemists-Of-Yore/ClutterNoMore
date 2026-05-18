@@ -8,6 +8,7 @@
 - By default, hovering over an item in the creative inventory or supported recipe viewers (EMI/JEI/RRV) now shows all shapes without having to hold [Alt].
 - Tag translations for CNM tags.
 - Support for Sable tags.
+- Support for shape switching via Controlify.
 - Shape switcher config is now shown when clicking the mod settings in Mod Menu or the NeoForge mods screen.
 
 ### Changed

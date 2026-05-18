@@ -15,14 +15,8 @@ public class HotbarMixin {
     //? if >1.21.8 {
     @WrapOperation(method = "handleKeybinds", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Inventory;setSelectedSlot(I)V"))
     private void cnm$handleHotbar(Inventory instance, int selectedIndex, Operation<Void> original) {
-        if (ClutterNoMoreClient.OVERLAY != null) {
-            int maxIndex = ClutterNoMoreClient.OVERLAY.shapes.size() - 1;
-            if (selectedIndex < 0) selectedIndex = 0;
-            if (selectedIndex > maxIndex) selectedIndex = maxIndex;
-            ClutterNoMoreClient.OVERLAY.changeSlot(selectedIndex);
-        } else {
+        if (!ClutterNoMoreClient.changeHotbarSlot(selectedIndex))
             original.call(instance, selectedIndex);
-        }
     }
 
     //?} else {

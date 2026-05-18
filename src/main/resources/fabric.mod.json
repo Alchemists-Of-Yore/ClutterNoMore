@@ -33,6 +33,9 @@
     ],
     "fabric-datagen": [
       "dev.tazer.clutternomore.fabric.datagen.FabricDataGeneratorEntrypoint"
+    ],
+    "controlify": [
+      "dev.tazer.clutternomore.common.compat.ControlifyCompat"
     ]
   },
   "mixins": [

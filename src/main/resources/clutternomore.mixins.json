@@ -11,6 +11,7 @@
     "block.BlockItemMixin",
     "block.BlockMixin",
     "block.IronBarsBlockMixin",
+    "compat.controlify.ControlifyInGameInputHandlerMixin",
     "compat.create.ItemRequirementMixin",
     "compat.create.StackRequirementMixin",
     "compat.jei.SimpleJEIRenderMixin",

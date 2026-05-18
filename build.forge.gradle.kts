@@ -79,6 +79,13 @@ repositories {
             includeGroupAndSubgroups("org.quiltmc.parsers")
         }
     }
+    maven {
+        name = "Quilt Maven"
+        url = uri("https://maven.quiltmc.org/repository/release/")
+        content {
+            includeGroupAndSubgroups("org.quiltmc.parsers")
+        }
+    }
     maven("https://maven.su5ed.dev/releases") {
         name = "Sinytra Maven"
         content { includeGroupAndSubgroups("dev.su5ed.sinytra") }
@@ -142,6 +149,8 @@ dependencies {
     compileOnly("mezz.jei:jei-${mc}-forge-api:${dep("jei")}")
     // at runtime, use the full JEI jar for Forge
     modRuntimeOnly("mezz.jei:jei-${mc}-forge:${dep("jei")}")
+
+    modCompileOnly("maven.modrinth:controlify-forgified:${property("deps.controlify")}")
 
     modImplementation("dev.su5ed.sinytra:fabric-loader:2.7.11+0.16.5+${mc}")
     modImplementation("dev.su5ed.sinytra.fabric-api:fabric-api-base:0.4.32+ef105b4977")

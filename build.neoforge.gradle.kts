@@ -77,6 +77,13 @@ repositories {
             includeGroupAndSubgroups("org.quiltmc.parsers")
         }
     }
+    maven {
+        name = "Quilt Maven"
+        url = uri("https://maven.quiltmc.org/repository/release/")
+        content {
+            includeGroupAndSubgroups("org.quiltmc.parsers")
+        }
+    }
     maven("https://maven.su5ed.dev/releases") {
         name = "Sinytra Maven"
         content {
@@ -176,11 +183,15 @@ dependencies {
         implementation("cc.cassian.rrv:reliable-recipe-viewer-neoforge:${dep("rrv")}")
     }
 
+    implementation("dev.isxander:controlify:${dep("controlify")}") {
+        exclude(group = "maven.modrinth")
+        exclude(group = "net.caffeinemc")
+    }
 
     if (hasProperty("deps.would")) {
         runtimeOnly("maven.modrinth:would:${dep("would")}")
     }
-    // YACL - required by McQoy
+    // YACL - required by McQoy/Controlify
     if (hasProperty("deps.yacl")) {
         runtimeOnly("dev.isxander:yet-another-config-lib:${dep("yacl")}-neoforge")
     }
