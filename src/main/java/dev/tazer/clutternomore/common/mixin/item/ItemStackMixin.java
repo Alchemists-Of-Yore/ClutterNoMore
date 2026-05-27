@@ -21,15 +21,4 @@ public class ItemStackMixin {
         if (!cir.getReturnValue()) cir.setReturnValue(ShapeMap.inSameShapeSet(stack.getItem(), other.getItem()));
     }
     *///?}
-
-    //? if <26 {
-    /*@Inject(method = "is(Lnet/minecraft/world/item/Item;)Z", at = @At("RETURN"), cancellable = true)
-    private void cnm$is(Item item, CallbackInfoReturnable<Boolean> cir) {
-        if (cir.getReturnValue()) return;
-        ItemStack self = (ItemStack) (Object) this;
-        if (ShapeMap.inSameShapeSet(self.getItem(), item)) {
-            cir.setReturnValue(true);
-        }
-    }
-    *///?}
 }
