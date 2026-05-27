@@ -32,7 +32,6 @@ import net.minecraft.world.item.Item;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
 
 public class ShapeMapFileHandler
 //? if >1.21.2 {
@@ -71,37 +70,37 @@ extends SimpleJsonResourceReloadListener<JsonElement>
     @Override
     protected void apply(Map<Identifier, JsonElement> files, ResourceManager resourceManager, ProfilerFiller profilerFiller) {
         if (!ClutterNoMore.STARTUP_CONFIG.SHAPE_MAPS.value()) {
-            ShapeMap.setEdges(List.of(), false);
+            ShapeMap.setMappings(List.of(), false);
             return;
         }
         boolean detailed = ClutterNoMore.STARTUP_CONFIG.DETAILED_LOGS.value();
 
-        List<Loaded> loaded = new ArrayList<>();
+        List<LoadedFile> loadedFiles = new ArrayList<>();
         for (Map.Entry<Identifier, JsonElement> entry : files.entrySet()) {
             DataResult<ShapeMapFile> parsed = ShapeMapFile.CODEC.parse(JsonOps.INSTANCE, entry.getValue());
             parsed.error().ifPresent(err -> ClutterNoMore.LOGGER.error(
                     "[ShapeMap] failed to parse '{}': {}", entry.getKey(), err.message()));
-            parsed.result().ifPresent(file -> loaded.add(new Loaded(entry.getKey(), file)));
+            parsed.result().ifPresent(file -> loadedFiles.add(new LoadedFile(entry.getKey(), file)));
         }
 
-        loaded.sort(Comparator
-                .comparingInt((Loaded l) -> l.contents.priority())
+        loadedFiles.sort(Comparator
+                .comparingInt((LoadedFile l) -> l.contents.priority())
                 .thenComparing(l -> l.id.toString()));
 
-        List<ShapeMap.Edge> edges = new ArrayList<>();
-        for (Loaded l : loaded) {
-            applyRules(l, edges, detailed, true);
-            applyRules(l, edges, detailed, false);
+        List<ShapeMap.Mapping> mappings = new ArrayList<>();
+        for (LoadedFile file : loadedFiles) {
+            applyRules(file, mappings, detailed, true);
+            applyRules(file, mappings, detailed, false);
         }
 
-        ShapeMap.setEdges(edges, detailed);
+        ShapeMap.setMappings(mappings, detailed);
     }
 
-    private record Loaded(Identifier id, ShapeMapFile contents) {}
+    private record LoadedFile(Identifier id, ShapeMapFile contents) {}
 
     private record KeyMatch(Item item, Map<String, String> vars) {}
 
-    private void applyRules(Loaded file, List<ShapeMap.Edge> edges, boolean detailed, boolean isAdd) {
+    private void applyRules(LoadedFile file, List<ShapeMap.Mapping> mappings, boolean detailed, boolean isAdd) {
         Map<ShapeMapKey, ConditionalRule> rules = isAdd ? file.contents.add() : file.contents.remove();
         for (Map.Entry<ShapeMapKey, ConditionalRule> rule : rules.entrySet()) {
             ShapeMapKey key = rule.getKey();
@@ -127,23 +126,23 @@ extends SimpleJsonResourceReloadListener<JsonElement>
                         List<Item> shapes = resolveValue(resolved, template.raw(), file.id, detailed);
                         for (Item shape : shapes) {
                             if (shape == match.item) continue;
-                            edges.add(new ShapeMap.Edge(match.item, shape, file.contents.priority(), file.id));
+                            mappings.add(new ShapeMap.Mapping(match.item, shape, file.contents.priority(), file.id));
                         }
                     }
                 }
             } else {
-                edges.removeIf(edge -> ruleMatchesEdge(key, templates, conditions, edge));
+                mappings.removeIf(mapping -> ruleMatchesMapping(key, templates, conditions, mapping));
             }
         }
     }
 
-    private boolean ruleMatchesEdge(ShapeMapKey key, List<ShapeMapTemplate> templates, Conditions conditions, ShapeMap.Edge edge) {
-        Map<String, String> vars = matchKeyAgainst(key, edge.parent());
+    private boolean ruleMatchesMapping(ShapeMapKey key, List<ShapeMapTemplate> templates, Conditions conditions, ShapeMap.Mapping mapping) {
+        Map<String, String> vars = matchKeyAgainst(key, mapping.parent());
         if (vars == null) return false;
-        if (conditions != null && !conditions.evaluate(edge.parent(), vars)) return false;
+        if (conditions != null && !conditions.evaluate(mapping.parent(), vars)) return false;
         for (ShapeMapTemplate template : templates) {
             String resolved = template.substitute(vars);
-            if (matchesValueAgainst(resolved, edge.shape())) return true;
+            if (ShapeMapFile.matches(resolved, mapping.shape())) return true;
         }
         return false;
     }
@@ -178,35 +177,10 @@ extends SimpleJsonResourceReloadListener<JsonElement>
         return null;
     }
 
-    private boolean matchesValueAgainst(String resolved, Item shape) {
-        Identifier shapeId = BuiltInRegistries.ITEM.getKey(shape);
-        if (resolved.length() >= 2 && resolved.startsWith("/") && resolved.endsWith("/")) {
-            try {
-                return Pattern.compile(resolved.substring(1, resolved.length() - 1))
-                        .matcher(shapeId.toString()).matches();
-            } catch (PatternSyntaxException e) {
-                return false;
-            }
-        }
-        if (resolved.startsWith("#")) {
-            Identifier tagId;
-            try { tagId = Identifier.parse(resolved.substring(1)); }
-            catch (Exception e) { return false; }
-            TagKey<Item> tagKey = TagKey.create(Registries.ITEM, tagId);
-            return BuiltInRegistries.ITEM.wrapAsHolder(shape).is(tagKey);
-        }
-        try {
-            return Identifier.parse(resolved).equals(shapeId);
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
     private List<KeyMatch> resolveKey(ShapeMapKey key, Identifier source, boolean detailed) {
         if (key instanceof ShapeMapKey.Literal literal) {
             Optional<Item> item = BuiltInRegistries.ITEM.getOptional(literal.id());
-            if (item.isEmpty()) return List.of();
-            return List.of(new KeyMatch(item.get(), defaultVars(literal.id())));
+            return item.map(value -> List.of(new KeyMatch(value, defaultVars(literal.id())))).orElseGet(List::of);
         }
         if (key instanceof ShapeMapKey.Tag tag) {
             TagKey<Item> tagKey = TagKey.create(Registries.ITEM, tag.tagId());
@@ -251,52 +225,12 @@ extends SimpleJsonResourceReloadListener<JsonElement>
     }
 
     private List<Item> resolveValue(String resolved, String original, Identifier source, boolean detailed) {
-        if (resolved.length() >= 2 && resolved.startsWith("/") && resolved.endsWith("/")) {
-            String body = resolved.substring(1, resolved.length() - 1);
-            Pattern pattern;
-            try {
-                pattern = Pattern.compile(body);
-            } catch (PatternSyntaxException e) {
-                ClutterNoMore.LOGGER.error("[ShapeMap] invalid regex value '{}' (from template '{}') in {}: {}",
-                        resolved, original, source, e.getMessage());
-                return List.of();
-            }
-            List<Item> items = new ArrayList<>();
-            for (Map.Entry<ResourceKey<Item>, Item> entry : BuiltInRegistries.ITEM.entrySet()) {
-                Identifier id = entry.getKey().identifier();
-                if (pattern.matcher(id.toString()).matches()) items.add(entry.getValue());
-            }
-            return items;
+        List<Item> items = ShapeMapFile.resolveItems(resolved, msg ->
+                ClutterNoMore.LOGGER.error("[ShapeMap] {} (from template '{}') in {}", msg, original, source));
+        if (detailed && resolved.startsWith("#") && items.isEmpty()) {
+            ClutterNoMore.LOGGER.info("[ShapeMap] missing/empty tag '{}' (value in {})", resolved, source);
         }
-
-        if (resolved.startsWith("#")) {
-            Identifier tagId;
-            try {
-                tagId = Identifier.parse(resolved.substring(1));
-            } catch (Exception e) {
-                ClutterNoMore.LOGGER.error("[ShapeMap] invalid tag id '{}' (from template '{}') in {}: {}",
-                        resolved, original, source, e.getMessage());
-                return List.of();
-            }
-            TagKey<Item> tagKey = TagKey.create(Registries.ITEM, tagId);
-            List<Item> tagged = itemsInTag(tagKey);
-            if (tagged.isEmpty() && detailed) {
-                ClutterNoMore.LOGGER.info("[ShapeMap] missing/empty tag '{}' (value in {})", resolved, source);
-            }
-            return tagged;
-        }
-
-        Identifier id;
-        try {
-            id = Identifier.parse(resolved);
-        } catch (Exception e) {
-            ClutterNoMore.LOGGER.error("[ShapeMap] invalid identifier '{}' (from template '{}') in {}: {}",
-                    resolved, original, source, e.getMessage());
-            return List.of();
-        }
-        Optional<Item> item = BuiltInRegistries.ITEM.getOptional(id);
-        if (item.isEmpty()) return List.of();
-        return List.of(item.get());
+        return items;
     }
 
     private static List<Item> itemsInTag(TagKey<Item> tagKey) {

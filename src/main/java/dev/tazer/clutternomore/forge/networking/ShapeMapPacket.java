@@ -36,7 +36,7 @@ public record ShapeMapPacket(Map<Identifier, List<Identifier>> shapes, Map<Ident
     public static void handle(ShapeMapPacket packet, Supplier<NetworkEvent.Context> contextSupplier) {
         NetworkEvent.Context context = contextSupplier.get();
         context.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-            final Map<Item, List<Item>> SHAPES_DATAMAP = new HashMap<>();
+            final Map<Item, List<Item>> shapesByParent = new HashMap<>();
             packet.shapes.forEach((parentId, shapeIds) -> {
                 Item parent = BuiltInRegistries.ITEM.getOptional(parentId).orElse(null);
                 if (parent == null) return;
@@ -44,15 +44,15 @@ public record ShapeMapPacket(Map<Identifier, List<Identifier>> shapes, Map<Ident
                 for (Identifier shapeId : shapeIds) {
                     BuiltInRegistries.ITEM.getOptional(shapeId).ifPresent(shapes::add);
                 }
-                SHAPES_DATAMAP.put(parent, shapes);
+                shapesByParent.put(parent, shapes);
             });
-            final Map<Item, Item> INVERSE_SHAPES_DATAMAP = new HashMap<>();
+            final Map<Item, Item> parentByShape = new HashMap<>();
             packet.inverseShapes.forEach((shapeId, parentId) -> {
                 Item shape = BuiltInRegistries.ITEM.getOptional(shapeId).orElse(null);
                 Item parent = BuiltInRegistries.ITEM.getOptional(parentId).orElse(null);
-                if (shape != null && parent != null) INVERSE_SHAPES_DATAMAP.put(shape, parent);
+                if (shape != null && parent != null) parentByShape.put(shape, parent);
             });
-            ShapeMap.setShapeMaps(SHAPES_DATAMAP, INVERSE_SHAPES_DATAMAP);
+            ShapeMap.setShapeMaps(shapesByParent, parentByShape);
         }));
         context.setPacketHandled(true);
     }

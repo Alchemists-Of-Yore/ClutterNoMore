@@ -8,13 +8,17 @@ import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.tazer.clutternomore.Platform;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
@@ -41,27 +45,13 @@ public record ShapeMapFile(
         Codec<ShapeMapKey> CODEC = Codec.STRING.flatXmap(ShapeMapKey::parse, key -> DataResult.success(key.raw()));
 
         static DataResult<ShapeMapKey> parse(String raw) {
-            if (raw.startsWith("#")) {
-                String body = raw.substring(1);
-                try {
-                    return DataResult.success(new Tag(Identifier.parse(body)));
-                } catch (Exception e) {
-                    return DataResult.error(() -> "Invalid tag id in shape map key '" + raw + "': " + e.getMessage());
-                }
-            }
-            if (raw.length() >= 2 && raw.startsWith("/") && raw.endsWith("/")) {
-                String body = raw.substring(1, raw.length() - 1);
-                try {
-                    return DataResult.success(new Regex(Pattern.compile(body)));
-                } catch (PatternSyntaxException e) {
-                    return DataResult.error(() -> "Invalid regex in shape map key '" + raw + "': " + e.getMessage());
-                }
-            }
-            try {
-                return DataResult.success(new Literal(Identifier.parse(raw)));
-            } catch (Exception e) {
-                return DataResult.error(() -> "Invalid identifier in shape map key '" + raw + "': " + e.getMessage());
-            }
+            String[] error = { null };
+            Selector sel = parseSelector(raw, msg -> error[0] = msg);
+            if (sel == null) return DataResult.error(() -> "Invalid shape map key '" + raw + "': " + error[0]);
+            if (sel instanceof Selector.Literal l) return DataResult.success(new Literal(l.id()));
+            if (sel instanceof Selector.Tag t) return DataResult.success(new Tag(t.tagKey().location()));
+            if (sel instanceof Selector.Regex r) return DataResult.success(new Regex(r.pattern()));
+            return DataResult.error(() -> "Unreachable selector type for '" + raw + "'");
         }
 
         record Literal(Identifier id) implements ShapeMapKey {
@@ -152,11 +142,7 @@ public record ShapeMapFile(
         public boolean evaluate(Item parent, Map<String, String> vars) {
             for (ShapeMapTemplate template : exists) {
                 String resolved = template.substitute(vars);
-                try {
-                    if (!BuiltInRegistries.ITEM.containsKey(Identifier.parse(resolved))) return false;
-                } catch (Exception ignored) {
-                    return false;
-                }
+                if (resolveItems(resolved, null).isEmpty()) return false;
             }
             for (String mod : modLoaded) {
                 if (!Platform.INSTANCE.isModLoaded(mod)) return false;
@@ -181,6 +167,69 @@ public record ShapeMapFile(
             if (not.isPresent() && not.get().evaluate(parent, vars)) return false;
             return true;
         }
+
+    }
+
+    public sealed interface Selector permits Selector.Regex, Selector.Tag, Selector.Literal {
+        record Regex(Pattern pattern) implements Selector {}
+        record Tag(TagKey<Item> tagKey) implements Selector {}
+        record Literal(Identifier id) implements Selector {}
+    }
+
+    public static Selector parseSelector(String resolved, Consumer<String> onError) {
+        if (resolved.length() >= 2 && resolved.startsWith("/") && resolved.endsWith("/")) {
+            try {
+                return new Selector.Regex(Pattern.compile(resolved.substring(1, resolved.length() - 1)));
+            } catch (PatternSyntaxException e) {
+                if (onError != null) onError.accept("invalid regex '" + resolved + "': " + e.getMessage());
+                return null;
+            }
+        }
+        if (resolved.startsWith("#")) {
+            try {
+                return new Selector.Tag(TagKey.create(Registries.ITEM, Identifier.parse(resolved.substring(1))));
+            } catch (Exception e) {
+                if (onError != null) onError.accept("invalid tag id '" + resolved + "': " + e.getMessage());
+                return null;
+            }
+        }
+        try {
+            return new Selector.Literal(Identifier.parse(resolved));
+        } catch (Exception e) {
+            if (onError != null) onError.accept("invalid identifier '" + resolved + "': " + e.getMessage());
+            return null;
+        }
+    }
+
+    public static boolean matches(Selector selector, Item item) {
+        if (selector == null) return false;
+        if (selector instanceof Selector.Regex r) {
+            return r.pattern().matcher(BuiltInRegistries.ITEM.getKey(item).toString()).matches();
+        }
+        if (selector instanceof Selector.Tag t) {
+            return BuiltInRegistries.ITEM.wrapAsHolder(item).is(t.tagKey());
+        }
+        if (selector instanceof Selector.Literal l) {
+            return BuiltInRegistries.ITEM.getKey(item).equals(l.id());
+        }
+        return false;
+    }
+
+    public static boolean matches(String resolved, Item item) {
+        return matches(parseSelector(resolved, null), item);
+    }
+
+    public static List<Item> resolveItems(String resolved, Consumer<String> onError) {
+        Selector selector = parseSelector(resolved, onError);
+        if (selector == null) return List.of();
+        if (selector instanceof Selector.Literal l) {
+            return BuiltInRegistries.ITEM.getOptional(l.id()).map(List::of).orElse(List.of());
+        }
+        List<Item> items = new ArrayList<>();
+        for (Item item : BuiltInRegistries.ITEM) {
+            if (matches(selector, item)) items.add(item);
+        }
+        return items;
     }
 
     public record ConditionalRule(List<ShapeMapTemplate> shapes, Optional<Conditions> conditions) {

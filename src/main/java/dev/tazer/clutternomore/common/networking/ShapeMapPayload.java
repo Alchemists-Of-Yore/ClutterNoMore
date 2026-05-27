@@ -66,7 +66,7 @@ public record ShapeMapPayload(Map<Identifier, List<Identifier>> shapes, Map<Iden
                                           //? if forge
                                           //Object
                                           context) {
-        final Map<Item, List<Item>> SHAPES_DATAMAP = new HashMap<>();
+        final Map<Item, List<Item>> shapesByParent = new HashMap<>();
         data.shapes.forEach((parentId, shapeIds) -> {
             Item parent = BuiltInRegistries.ITEM.getOptional(parentId).orElse(null);
             if (parent == null) return;
@@ -74,15 +74,15 @@ public record ShapeMapPayload(Map<Identifier, List<Identifier>> shapes, Map<Iden
             for (Identifier shapeId : shapeIds) {
                 BuiltInRegistries.ITEM.getOptional(shapeId).ifPresent(shapes::add);
             }
-            SHAPES_DATAMAP.put(parent, shapes);
+            shapesByParent.put(parent, shapes);
         });
-        final Map<Item, Item> INVERSE_SHAPES_DATAMAP = new HashMap<>();
+        final Map<Item, Item> parentByShape = new HashMap<>();
         data.inverseShapes.forEach((shapeId, parentId) -> {
             Item shape = BuiltInRegistries.ITEM.getOptional(shapeId).orElse(null);
             Item parent = BuiltInRegistries.ITEM.getOptional(parentId).orElse(null);
-            if (shape != null && parent != null) INVERSE_SHAPES_DATAMAP.put(shape, parent);
+            if (shape != null && parent != null) parentByShape.put(shape, parent);
         });
-        ShapeMap.setShapeMaps(SHAPES_DATAMAP, INVERSE_SHAPES_DATAMAP);
+        ShapeMap.setShapeMaps(shapesByParent, parentByShape);
     }
 }
 

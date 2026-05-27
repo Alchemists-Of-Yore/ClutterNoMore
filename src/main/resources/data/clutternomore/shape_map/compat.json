@@ -25,7 +25,7 @@
     "create:linear_chassis": [
       "create:secondary_linear_chassis"
     ],
-    "/create:white_sail/": [
+    "create:white_sail": [
       "simulated:white_symmetric_sail",
       "create:sail_frame"
     ],
@@ -37,8 +37,11 @@
       "supplementaries:daub_brace",
       "supplementaries:daub_cross_brace"
     ],
-    "/minecraft:(?<color>.+)_banner/": [
+    "/(minecraft|dye_depot):(?<color>.+)_banner/": [
       "supplementaries:flag_${color}"
+    ],
+    "/create:(?<color>.+)_seat/": [
+      "bits_n_bobs:${color}_chair"
     ],
     "podzol": ["pyrite:podzol_turf"],
     "mycelium": ["pyrite:mycelium_turf"],
@@ -48,5 +51,10 @@
       "pyrite:path_slab",
       "pyrite:path_stairs"
     ]
+  },
+  "remove": {
+    "/[^:]+:copycat.*/": ["/.*/"],
+
+    "/minecraft:.*tuff.*/": ["/cavernsandchasms:.*tuff.*/"]
   }
 }
