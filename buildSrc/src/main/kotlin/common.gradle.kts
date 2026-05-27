@@ -1,5 +1,6 @@
 plugins {
     java
+    idea
 }
 
 version = "${prop("mod.version")}+${dep("minecraft")}-$loaderName"
@@ -14,6 +15,13 @@ java {
             else -> 17
         }
     )
+}
+
+idea {
+    module {
+        isDownloadSources = true
+        isDownloadJavadoc = true
+    }
 }
 
 stonecutterBuild.replacements.string {

@@ -99,21 +99,27 @@ public class ClutterNoMoreMixinPlugin implements IMixinConfigPlugin {
                 }
 
                 if (node.desc.equals(Type.getDescriptor(IfModPresent.class))) {
-                    String value = getAnnotationValue(node, "value", "");
-                    if (value.isEmpty()) throw new IllegalArgumentException("modid must not be empty");
-                    if (!presentMods.contains(value)) {
-                        LOGGER.debug("Skipping mixin {}; mod '{}' is not present", mixinClassName, value);
-                        return false;
+                    if (!checkModPresent(node, mixinClassName)) return false;
+                    continue;
+                }
+
+                if (node.desc.equals(Type.getDescriptor(IfModPresent.List.class))) {
+                    List<AnnotationNode> nested = getAnnotationValue(node, "value", Collections.emptyList());
+                    for (AnnotationNode inner : nested) {
+                        if (!checkModPresent(inner, mixinClassName)) return false;
                     }
                     continue;
                 }
 
                 if (node.desc.equals(Type.getDescriptor(IfModAbsent.class))) {
-                    String value = getAnnotationValue(node, "value", "");
-                    if (value.isEmpty()) throw new IllegalArgumentException("modid must not be empty");
-                    if (presentMods.contains(value)) {
-                        LOGGER.debug("Skipping mixin {}; mod '{}' is not absent", mixinClassName, value);
-                        return false;
+                    if (!checkModAbsent(node, mixinClassName)) return false;
+                    continue;
+                }
+
+                if (node.desc.equals(Type.getDescriptor(IfModAbsent.List.class))) {
+                    List<AnnotationNode> nested = getAnnotationValue(node, "value", Collections.emptyList());
+                    for (AnnotationNode inner : nested) {
+                        if (!checkModAbsent(inner, mixinClassName)) return false;
                     }
                     continue;
                 }
@@ -151,6 +157,26 @@ public class ClutterNoMoreMixinPlugin implements IMixinConfigPlugin {
             return false;
         }
 
+        return true;
+    }
+
+    private boolean checkModPresent(AnnotationNode node, String mixinClassName) {
+        String value = getAnnotationValue(node, "value", "");
+        if (value.isEmpty()) throw new IllegalArgumentException("modid must not be empty");
+        if (!presentMods.contains(value)) {
+            LOGGER.debug("Skipping mixin {}; mod '{}' is not present", mixinClassName, value);
+            return false;
+        }
+        return true;
+    }
+
+    private boolean checkModAbsent(AnnotationNode node, String mixinClassName) {
+        String value = getAnnotationValue(node, "value", "");
+        if (value.isEmpty()) throw new IllegalArgumentException("modid must not be empty");
+        if (presentMods.contains(value)) {
+            LOGGER.debug("Skipping mixin {}; mod '{}' is not absent", mixinClassName, value);
+            return false;
+        }
         return true;
     }
 

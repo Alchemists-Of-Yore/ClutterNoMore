@@ -115,6 +115,10 @@ legacyForge {
     }
 
     runs {
+        configureEach {
+            jvmArgument("-XX:+IgnoreUnrecognizedVMOptions")
+            jvmArgument("-XX:+AllowEnhancedClassRedefinition")
+        }
         register("client") {
             gameDirectory = file("run/")
             client()
@@ -212,15 +216,18 @@ publishMods {
 
     modrinth {
         projectId = prop("publish.modrinth")
-        accessToken = env.MODRINTH_API_KEY.orNull()
+        accessToken = providers.environmentVariable("MODRINTH_TOKEN")
         minecraftVersions.add(mc)
         minecraftVersions.addAll(additionalVersions)
     }
 
     curseforge {
         projectId = prop("publish.curseforge")
-        accessToken = env.CURSEFORGE_API_KEY.orNull()
+        accessToken = providers.environmentVariable("CURSEFORGE_API_KEY")
         minecraftVersions.add(mc)
         minecraftVersions.addAll(additionalVersions)
+
+        clientRequired = true
+        serverRequired = true
     }
 }

@@ -151,7 +151,7 @@ publishMods {
 
     modrinth {
         projectId = prop("publish.modrinth")
-        accessToken = env.MODRINTH_API_KEY.orNull()
+        accessToken = providers.environmentVariable("MODRINTH_TOKEN")
         minecraftVersions.add(mc)
         minecraftVersions.addAll(additionalVersions)
         requires("fabric-api")
@@ -159,9 +159,13 @@ publishMods {
 
     curseforge {
         projectId = prop("publish.curseforge")
-        accessToken = env.CURSEFORGE_API_KEY.orNull()
+        accessToken = providers.environmentVariable("CURSEFORGE_API_KEY")
         minecraftVersions.add(prop("publish.curseforge_minecraft_version"))
         minecraftVersions.addAll(additionalVersions)
+
+        clientRequired = true
+        serverRequired = true
+
         requires("fabric-api")
     }
 }

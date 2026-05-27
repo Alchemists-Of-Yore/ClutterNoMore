@@ -1,30 +1,39 @@
-name: Release
-on: [workflow_dispatch] # Manual trigger
-
-permissions:
-  contents: write
+name: Build
+on:
+  push:
+    paths:
+      - 'src/**'
+      - 'buildSrc/**'
+      - '**/gradle.properties'
+      - '**/settings.gradle.kts'
+      - '**/build.gradle.kts'
+      - '**/build.*.gradle.kts'
+      - 'stonecutter.gradle.kts'
+      - 'gradle/**'
+      - '.github/workflows/build.yml'
+  pull_request:
+    branches:
+      - 'master'
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      CURSEFORGE_API_KEY: ${{ secrets.CURSEFORGE_API_KEY }}
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
     steps:
       - name: Checkout sources
         uses: actions/checkout@v6
+
       - name: Setup Java
         uses: actions/setup-java@v5
         with:
           distribution: 'temurin'
           java-version: 25
           cache: gradle
+
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v6
+
       - name: Make Gradle Wrapper Executable
         run: chmod +x ./gradlew
+
       - name: Execute Gradle build
         run: ./gradlew chiseledBuild
-      - name: Publish mods
-        run: ./gradlew chiseledPublishMods
