@@ -10,6 +10,7 @@
 - Support for Sable tags.
 - Support for shape switching via Controlify.
 - Shape switcher config is now shown when clicking the mod settings in Mod Menu or the NeoForge mods screen.
+- Compatibility with Create, making schematic requirements ignore the shape of the item.
 
 ### Changed
 - Components are now preserved when switching shapes.

@@ -102,12 +102,19 @@ public class RecipeRemover {
                         }
                     }
                     Set<String> dangerousTags = new HashSet<>();
+                    String resultId = BuiltInRegistries.ITEM.getKey(resultItem).toString();
                     for (Map.Entry<String, TagInfo> entry : tagCache.entrySet()) {
-                        for (Item shape : entry.getValue().shapes()) {
-                            if (ShapeMap.inSameShapeSet(shape, resultItem)) {
-                                dangerousTags.add(entry.getKey());
+                        JsonArray expanded = entry.getValue().expandedItems();
+                        if (expanded.size() == 0) continue;
+                        boolean allCollapseToResult = true;
+                        for (JsonElement element : expanded) {
+                            if (!element.getAsJsonObject().get("item").getAsString().equals(resultId)) {
+                                allCollapseToResult = false;
                                 break;
                             }
+                        }
+                        if (allCollapseToResult) {
+                            dangerousTags.add(entry.getKey());
                         }
                     }
                     if (jsonContainsAnyId(json, dangerousIds, dangerousTags)) {
