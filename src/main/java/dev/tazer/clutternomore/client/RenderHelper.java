@@ -24,7 +24,7 @@ public class RenderHelper {
 		/*guiGraphics.pose().pushPose();
 		guiGraphics.pose().translate(0.0F, 0.0F, 200.0F);
 		*///?}
-		blit(guiGraphics, texture, x + 12, y, 0, 0, 4, 4, 4, 4);
+		blit(guiGraphics, texture, x - 4, y - 4, 0, 0, 24, 24, 24, 24);
 		//? if <1.21.6 {
 		/*guiGraphics.pose().popPose();
 		*///?}
