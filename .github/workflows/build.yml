@@ -36,4 +36,4 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Execute Gradle build
-        run: ./gradlew chiseledBuild
+        run: ./gradlew build

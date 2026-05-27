@@ -9,7 +9,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       CURSEFORGE_API_KEY: ${{ secrets.CURSEFORGE_API_KEY }}
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
     steps:
       - name: Checkout sources
@@ -25,6 +24,6 @@ jobs:
       - name: Make Gradle Wrapper Executable
         run: chmod +x ./gradlew
       - name: Execute Gradle build
-        run: ./gradlew chiseledBuild
+        run: ./gradlew build
       - name: Publish mods
-        run: ./gradlew chiseledPublishMods
+        run: ./gradlew publishMods
