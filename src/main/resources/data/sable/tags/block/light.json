@@ -1,7 +1,7 @@
 {
   "replace": false,
   "values": [
-    "#clutternomore:vertical_slabs"
+    { "id": "#clutternomore:vertical_slabs", "required": false }
   ],
   "remove": [
     "#clutternomore:wooden_vertical_slabs"
