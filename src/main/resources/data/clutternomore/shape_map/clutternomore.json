@@ -5,7 +5,8 @@
       "${ns}:${stem}_wood",
       "wilderwild:hollowed_${stem}_log",
       "quark:hollow_${stem}_log",
-      "everycompat:quark/${ns}/hollow_${stem}_log"
+      "quark:hollow_${stem}_stem",
+      "everycompat:q/${ns}/hollow_${stem}_log"
     ],
 
     "/(?<ns>[^:]+):(?<stem>.*wood.*)_log/": [
@@ -101,8 +102,11 @@
       "${ns}:${stem}_step"
     ],
 
-    "crimson_stem": ["crimson_hyphae"],
-    "warped_stem": ["warped_hyphae"],
+    "/(?<ns>[^:]+):(?<stem>.+)_stem/": [
+      "{ns}:{stem}_hyphae",
+      "quark:hollow_${stem}_stem",
+      "everycompat:q/${ns}/hollow_${stem}_stem"
+    ],
     "stripped_crimson_stem": ["stripped_crimson_hyphae"],
     "stripped_warped_stem": ["stripped_warped_hyphae"]
   },

@@ -55,6 +55,7 @@
   "remove": {
     "/[^:]+:copycat.*/": ["/.*/"],
 
-    "/minecraft:.*tuff.*/": ["/cavernsandchasms:.*tuff.*/"]
+    "/minecraft:.*tuff.*/": ["/caverns_and_chasms:.*tuff.*/"],
+    "/caverns_and_chasms:.*tuff.*/": ["/minecraft:.*tuff.*/"]
   }
 }
