@@ -1,1 +1,2 @@
 - Added shape support for more modded blocks
+- Optimise shape map handling, reducing load times significantly

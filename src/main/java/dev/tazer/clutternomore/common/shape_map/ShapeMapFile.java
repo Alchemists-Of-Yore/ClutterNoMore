@@ -15,6 +15,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -139,22 +140,21 @@ public record ShapeMapFile(
                 CODEC.optionalFieldOf("not").forGetter(Conditions::not)
         ).apply(instance, Conditions::new));
 
-        public boolean evaluate(Item parent, Map<String, String> vars) {
+        public boolean evaluate(Item parent, Map<String, String> vars, ScanIndex index) {
             for (ShapeMapTemplate template : exists) {
-                String resolved = template.substitute(vars);
-                if (resolveItems(resolved, null).isEmpty()) return false;
+                if (!anyMatch(template.substitute(vars), index)) return false;
             }
             for (String mod : modLoaded) {
                 if (!Platform.INSTANCE.isModLoaded(mod)) return false;
             }
             if (isBlockItem && !(parent instanceof BlockItem)) return false;
             for (Conditions condition : allOf) {
-                if (!condition.evaluate(parent, vars)) return false;
+                if (!condition.evaluate(parent, vars, index)) return false;
             }
             if (!anyOf.isEmpty()) {
                 boolean any = false;
                 for (Conditions condition : anyOf) {
-                    if (condition.evaluate(parent, vars)) {
+                    if (condition.evaluate(parent, vars, index)) {
                         any = true;
                         break;
                     }
@@ -162,12 +162,53 @@ public record ShapeMapFile(
                 if (!any) return false;
             }
             for (Conditions condition : noneOf) {
-                if (condition.evaluate(parent, vars)) return false;
+                if (condition.evaluate(parent, vars, index)) return false;
             }
-            if (not.isPresent() && not.get().evaluate(parent, vars)) return false;
+            if (not.isPresent() && not.get().evaluate(parent, vars, index)) return false;
             return true;
         }
 
+    }
+
+    public record ScanIndex(List<Item> items, Identifier[] identifiers, String[] ids, Map<String, List<Item>> byPath) {
+            private static ScanIndex cached;
+
+        public static ScanIndex get() {
+                ScanIndex local = cached;
+                if (local == null || local.items.size() != BuiltInRegistries.ITEM.size()) {
+                    local = build();
+                    cached = local;
+                }
+                return local;
+            }
+
+            private static ScanIndex build() {
+                List<Item> items = new ArrayList<>();
+                for (Item item : BuiltInRegistries.ITEM) items.add(item);
+                int n = items.size();
+                Identifier[] identifiers = new Identifier[n];
+                String[] ids = new String[n];
+                Map<String, List<Item>> byPath = new HashMap<>();
+                for (int i = 0; i < n; i++) {
+                    Item item = items.get(i);
+                    Identifier id = BuiltInRegistries.ITEM.getKey(item);
+                    identifiers[i] = id;
+                    ids[i] = id.toString();
+                    byPath.computeIfAbsent(id.getPath(), k -> new ArrayList<>()).add(item);
+                }
+                return new ScanIndex(items, identifiers, ids, byPath);
+            }
+        }
+
+    private static String literalPathAnchor(String regexBody) {
+        int colon = regexBody.lastIndexOf(':');
+        if (colon < 0 || colon == regexBody.length() - 1) return null;
+        for (int i = colon + 1; i < regexBody.length(); i++) {
+            char c = regexBody.charAt(i);
+            boolean literal = (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9') || c == '_' || c == '-' || c == '/';
+            if (!literal) return null;
+        }
+        return regexBody.substring(colon + 1);
     }
 
     public sealed interface Selector permits Selector.Regex, Selector.Tag, Selector.Literal {
@@ -220,16 +261,66 @@ public record ShapeMapFile(
     }
 
     public static List<Item> resolveItems(String resolved, Consumer<String> onError) {
+        return resolveItems(resolved, onError, null);
+    }
+
+    public static List<Item> resolveItems(String resolved, Consumer<String> onError, ScanIndex index) {
         Selector selector = parseSelector(resolved, onError);
         if (selector == null) return List.of();
         if (selector instanceof Selector.Literal l) {
             return BuiltInRegistries.ITEM.getOptional(l.id()).map(List::of).orElse(List.of());
+        }
+        if (index != null && selector instanceof Selector.Regex r) {
+            Pattern pattern = r.pattern();
+            String anchor = literalPathAnchor(pattern.pattern());
+            if (anchor != null) {
+                List<Item> candidates = index.byPath.get(anchor);
+                if (candidates == null) return List.of();
+                List<Item> result = new ArrayList<>();
+                for (Item item : candidates) {
+                    if (pattern.matcher(BuiltInRegistries.ITEM.getKey(item).toString()).matches()) result.add(item);
+                }
+                return result;
+            }
+            List<Item> result = new ArrayList<>();
+            for (int i = 0; i < index.ids.length; i++) {
+                if (pattern.matcher(index.ids[i]).matches()) result.add(index.items.get(i));
+            }
+            return result;
         }
         List<Item> items = new ArrayList<>();
         for (Item item : BuiltInRegistries.ITEM) {
             if (matches(selector, item)) items.add(item);
         }
         return items;
+    }
+
+    public static boolean anyMatch(String resolved, ScanIndex index) {
+        Selector selector = parseSelector(resolved, null);
+        if (selector == null) return false;
+        if (selector instanceof Selector.Literal l) {
+            return BuiltInRegistries.ITEM.containsKey(l.id());
+        }
+        if (index != null && selector instanceof Selector.Regex r) {
+            Pattern pattern = r.pattern();
+            String anchor = literalPathAnchor(pattern.pattern());
+            if (anchor != null) {
+                List<Item> candidates = index.byPath.get(anchor);
+                if (candidates == null) return false;
+                for (Item item : candidates) {
+                    if (pattern.matcher(BuiltInRegistries.ITEM.getKey(item).toString()).matches()) return true;
+                }
+                return false;
+            }
+            for (String id : index.ids) {
+                if (pattern.matcher(id).matches()) return true;
+            }
+            return false;
+        }
+        for (Item item : BuiltInRegistries.ITEM) {
+            if (matches(selector, item)) return true;
+        }
+        return false;
     }
 
     public record ConditionalRule(List<ShapeMapTemplate> shapes, Optional<Conditions> conditions) {

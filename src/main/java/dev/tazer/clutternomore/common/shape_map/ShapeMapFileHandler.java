@@ -21,7 +21,6 @@ import net.minecraft.core.registries.Registries;
 //? if >1.21.2
 import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.resources.Identifier;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.tags.TagKey;
@@ -87,10 +86,11 @@ extends SimpleJsonResourceReloadListener<JsonElement>
                 .comparingInt((LoadedFile l) -> l.contents.priority())
                 .thenComparing(l -> l.id.toString()));
 
+        ShapeMapFile.ScanIndex index = ShapeMapFile.ScanIndex.get();
         List<ShapeMap.Mapping> mappings = new ArrayList<>();
         for (LoadedFile file : loadedFiles) {
-            applyRules(file, mappings, detailed, true);
-            applyRules(file, mappings, detailed, false);
+            applyRules(file, mappings, detailed, true, index);
+            applyRules(file, mappings, detailed, false, index);
         }
 
         ShapeMap.setMappings(mappings, detailed);
@@ -100,7 +100,7 @@ extends SimpleJsonResourceReloadListener<JsonElement>
 
     private record KeyMatch(Item item, Map<String, String> vars) {}
 
-    private void applyRules(LoadedFile file, List<ShapeMap.Mapping> mappings, boolean detailed, boolean isAdd) {
+    private void applyRules(LoadedFile file, List<ShapeMap.Mapping> mappings, boolean detailed, boolean isAdd, ShapeMapFile.ScanIndex index) {
         Map<ShapeMapKey, ConditionalRule> rules = isAdd ? file.contents.add() : file.contents.remove();
         for (Map.Entry<ShapeMapKey, ConditionalRule> rule : rules.entrySet()) {
             ShapeMapKey key = rule.getKey();
@@ -118,12 +118,12 @@ extends SimpleJsonResourceReloadListener<JsonElement>
                         }
                     }
                 }
-                List<KeyMatch> matches = resolveKey(key, file.id, detailed);
+                List<KeyMatch> matches = resolveKey(key, file.id, detailed, index);
                 for (KeyMatch match : matches) {
-                    if (conditions != null && !conditions.evaluate(match.item, match.vars)) continue;
+                    if (conditions != null && !conditions.evaluate(match.item, match.vars, index)) continue;
                     for (ShapeMapTemplate template : templates) {
                         String resolved = template.substitute(match.vars);
-                        List<Item> shapes = resolveValue(resolved, template.raw(), file.id, detailed);
+                        List<Item> shapes = resolveValue(resolved, template.raw(), file.id, detailed, index);
                         for (Item shape : shapes) {
                             if (shape == match.item) continue;
                             mappings.add(new ShapeMap.Mapping(match.item, shape, file.contents.priority(), file.id));
@@ -131,15 +131,15 @@ extends SimpleJsonResourceReloadListener<JsonElement>
                     }
                 }
             } else {
-                mappings.removeIf(mapping -> ruleMatchesMapping(key, templates, conditions, mapping));
+                mappings.removeIf(mapping -> ruleMatchesMapping(key, templates, conditions, mapping, index));
             }
         }
     }
 
-    private boolean ruleMatchesMapping(ShapeMapKey key, List<ShapeMapTemplate> templates, Conditions conditions, ShapeMap.Mapping mapping) {
+    private boolean ruleMatchesMapping(ShapeMapKey key, List<ShapeMapTemplate> templates, Conditions conditions, ShapeMap.Mapping mapping, ShapeMapFile.ScanIndex index) {
         Map<String, String> vars = matchKeyAgainst(key, mapping.parent());
         if (vars == null) return false;
-        if (conditions != null && !conditions.evaluate(mapping.parent(), vars)) return false;
+        if (conditions != null && !conditions.evaluate(mapping.parent(), vars, index)) return false;
         for (ShapeMapTemplate template : templates) {
             String resolved = template.substitute(vars);
             if (ShapeMapFile.matches(resolved, mapping.shape())) return true;
@@ -177,7 +177,7 @@ extends SimpleJsonResourceReloadListener<JsonElement>
         return null;
     }
 
-    private List<KeyMatch> resolveKey(ShapeMapKey key, Identifier source, boolean detailed) {
+    private List<KeyMatch> resolveKey(ShapeMapKey key, Identifier source, boolean detailed, ShapeMapFile.ScanIndex index) {
         if (key instanceof ShapeMapKey.Literal literal) {
             Optional<Item> item = BuiltInRegistries.ITEM.getOptional(literal.id());
             return item.map(value -> List.of(new KeyMatch(value, defaultVars(literal.id())))).orElseGet(List::of);
@@ -200,33 +200,33 @@ extends SimpleJsonResourceReloadListener<JsonElement>
             Pattern pattern = regex.pattern();
             Set<String> names = namedGroupNames(pattern);
             List<KeyMatch> matches = new ArrayList<>();
-            for (Map.Entry<ResourceKey<Item>, Item> entry : BuiltInRegistries.ITEM.entrySet()) {
-                Identifier id = entry.getKey().identifier();
-                Matcher m = pattern.matcher(id.toString());
+            for (int i = 0; i < index.ids().length; i++) {
+                Matcher m = pattern.matcher(index.ids()[i]);
                 if (!m.matches()) continue;
+                Identifier id = index.identifiers()[i];
                 Map<String, String> vars = new HashMap<>();
                 vars.put("ns", id.getNamespace());
                 vars.put("path", id.getPath());
-                for (int i = 1; i <= m.groupCount(); i++) {
-                    String g = m.group(i);
-                    if (g != null) vars.put(String.valueOf(i), g);
+                for (int g = 1; g <= m.groupCount(); g++) {
+                    String captured = m.group(g);
+                    if (captured != null) vars.put(String.valueOf(g), captured);
                 }
                 for (String name : names) {
                     try {
-                        String g = m.group(name);
-                        if (g != null) vars.put(name, g);
+                        String captured = m.group(name);
+                        if (captured != null) vars.put(name, captured);
                     } catch (IllegalArgumentException ignored) {}
                 }
-                matches.add(new KeyMatch(entry.getValue(), vars));
+                matches.add(new KeyMatch(index.items().get(i), vars));
             }
             return matches;
         }
         return List.of();
     }
 
-    private List<Item> resolveValue(String resolved, String original, Identifier source, boolean detailed) {
+    private List<Item> resolveValue(String resolved, String original, Identifier source, boolean detailed, ShapeMapFile.ScanIndex index) {
         List<Item> items = ShapeMapFile.resolveItems(resolved, msg ->
-                ClutterNoMore.LOGGER.error("[ShapeMap] {} (from template '{}') in {}", msg, original, source));
+                ClutterNoMore.LOGGER.error("[ShapeMap] {} (from template '{}') in {}", msg, original, source), index);
         if (detailed && resolved.startsWith("#") && items.isEmpty()) {
             ClutterNoMore.LOGGER.info("[ShapeMap] missing/empty tag '{}' (value in {})", resolved, source);
         }
