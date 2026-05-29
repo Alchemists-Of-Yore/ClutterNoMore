@@ -131,7 +131,7 @@ dependencies {
     modLocalRuntime("maven.modrinth:mcqoy:${dep("mcqoy")}")
 
     if (hasProperty("deps.emi")) {
-        modCompileOnly("dev.emi:emi-fabric:${dep("emi")}:api")
+        modCompileOnly("dev.emi:emi-fabric:${dep("emi")}")
         modLocalRuntime("dev.emi:emi-fabric:${dep("emi")}")
     }
     if (hasProperty("deps.pyrite")) {

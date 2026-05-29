@@ -155,7 +155,7 @@ neoForge {
 
 dependencies {
     if (hasProperty("deps.emi")) {
-        compileOnly("dev.emi:emi-neoforge:${dep("emi")}:api")
+        compileOnly("dev.emi:emi-neoforge:${dep("emi")}")
         runtimeOnly("dev.emi:emi-neoforge:${dep("emi")}")
     }
 
