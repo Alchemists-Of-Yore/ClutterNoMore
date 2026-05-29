@@ -1,3 +1,1 @@
-- Added shape support for more modded blocks
-- Optimise shape map handling, reducing load times significantly
-- Fix sable crash when disabling steps
+- Added everycompat support for quark's hollow logs
