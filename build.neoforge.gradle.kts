@@ -188,6 +188,7 @@ dependencies {
     }
 
     implementation("dev.isxander:controlify:${dep("controlify")}") {
+        isTransitive = false
         exclude(group = "maven.modrinth")
         exclude(group = "net.caffeinemc")
     }
