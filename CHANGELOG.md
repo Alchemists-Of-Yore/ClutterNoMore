@@ -1,1 +1,2 @@
 - Added everycompat support for quark's hollow logs
+- Slightly optimised shape map handling

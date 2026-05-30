@@ -131,20 +131,63 @@ extends SimpleJsonResourceReloadListener<JsonElement>
                     }
                 }
             } else {
-                mappings.removeIf(mapping -> ruleMatchesMapping(key, templates, conditions, mapping, index));
+                Map<Item, List<Item>> parentsByShape = buildParentsByShape(mappings);
+                ShapeMapFile.Selector[] valueSelectors = precomputeConstantSelectors(templates);
+                mappings.removeIf(mapping -> ruleMatchesMapping(key, templates, valueSelectors, conditions, mapping, index, parentsByShape));
             }
         }
     }
 
-    private boolean ruleMatchesMapping(ShapeMapKey key, List<ShapeMapTemplate> templates, Conditions conditions, ShapeMap.Mapping mapping, ShapeMapFile.ScanIndex index) {
-        Map<String, String> vars = matchKeyAgainst(key, mapping.parent());
-        if (vars == null) return false;
-        if (conditions != null && !conditions.evaluate(mapping.parent(), vars, index)) return false;
-        for (ShapeMapTemplate template : templates) {
-            String resolved = template.substitute(vars);
-            if (ShapeMapFile.matches(resolved, mapping.shape())) return true;
+    private boolean ruleMatchesMapping(ShapeMapKey key, List<ShapeMapTemplate> templates, ShapeMapFile.Selector[] valueSelectors,
+                                       Conditions conditions, ShapeMap.Mapping mapping, ShapeMapFile.ScanIndex index,
+                                       Map<Item, List<Item>> parentsByShape) {
+        Item parent = mapping.parent();
+        Item shape = mapping.shape();
+        if (candidateMatches(key, templates, valueSelectors, conditions, parent, shape, index)) return true;
+
+        List<Item> immediate = parentsByShape.get(parent);
+        if (immediate == null) return false;
+        List<Item> queue = new ArrayList<>(immediate);
+        Set<Item> visited = new HashSet<>();
+        visited.add(parent);
+        for (int i = 0; i < queue.size(); i++) {
+            Item candidate = queue.get(i);
+            if (!visited.add(candidate)) continue;
+            if (candidateMatches(key, templates, valueSelectors, conditions, candidate, shape, index)) return true;
+            List<Item> up = parentsByShape.get(candidate);
+            if (up != null) queue.addAll(up);
         }
         return false;
+    }
+
+    private boolean candidateMatches(ShapeMapKey key, List<ShapeMapTemplate> templates, ShapeMapFile.Selector[] valueSelectors,
+                                     Conditions conditions, Item candidate, Item shape, ShapeMapFile.ScanIndex index) {
+        Map<String, String> vars = matchKeyAgainst(key, candidate);
+        if (vars == null) return false;
+        if (conditions != null && !conditions.evaluate(candidate, vars, index)) return false;
+        for (int i = 0; i < templates.size(); i++) {
+            ShapeMapFile.Selector selector = valueSelectors[i];
+            if (selector == null) selector = ShapeMapFile.parseSelector(templates.get(i).substitute(vars), null);
+            if (ShapeMapFile.matches(selector, shape)) return true;
+        }
+        return false;
+    }
+
+    private static Map<Item, List<Item>> buildParentsByShape(List<ShapeMap.Mapping> mappings) {
+        Map<Item, List<Item>> parentsByShape = new HashMap<>();
+        for (ShapeMap.Mapping mapping : mappings) {
+            parentsByShape.computeIfAbsent(mapping.shape(), k -> new ArrayList<>()).add(mapping.parent());
+        }
+        return parentsByShape;
+    }
+
+    private static ShapeMapFile.Selector[] precomputeConstantSelectors(List<ShapeMapTemplate> templates) {
+        ShapeMapFile.Selector[] selectors = new ShapeMapFile.Selector[templates.size()];
+        for (int i = 0; i < templates.size(); i++) {
+            String raw = templates.get(i).raw();
+            if (!raw.contains("${")) selectors[i] = ShapeMapFile.parseSelector(raw, null);
+        }
+        return selectors;
     }
 
     private Map<String, String> matchKeyAgainst(ShapeMapKey key, Item parent) {
