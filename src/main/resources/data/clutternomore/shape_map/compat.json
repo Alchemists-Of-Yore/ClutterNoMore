@@ -50,12 +50,44 @@
       "pyrite:path_turf",
       "pyrite:path_slab",
       "pyrite:path_stairs"
-    ]
+    ],
+    "/dye_depot:(?<stem>.+?)(?<end>_block)/": {
+      "shapes": [
+        "/dye_the_world:${stem}_slab/",
+        "/dye_the_world:${stem}_stairs/",
+        "/dye_the_world:${stem}_wall/",
+        "/dye_the_world:${stem}${end}_slab/",
+        "/dye_the_world:${stem}${end}_stairs/",
+        "/dye_the_world:${stem}${end}_stair/",
+        "/dye_the_world:${stem}${end}_wall/"
+      ],
+      "conditions": {
+        "is_blockitem": true
+      }
+    },
+    "/dye_depot:(?<stem>.+?)(?<end>s|)/": {
+      "shapes": [
+        "/dye_the_world:${stem}_slab/",
+        "/dye_the_world:${stem}_stairs/",
+        "/dye_the_world:${stem}_wall/",
+        "/dye_the_world:${stem}${end}_slab/",
+        "/dye_the_world:${stem}${end}_stairs/",
+        "/dye_the_world:${stem}${end}_wall/"
+      ],
+      "conditions": {
+        "is_blockitem": true,
+        "none_of": [
+          { "exists": ["/[^:]+:${stem}_block/"] }
+        ]
+      }
+    }
   },
   "remove": {
     "/[^:]+:copycat.*/": ["/.*/"],
 
     "/minecraft:.*tuff.*/": ["/caverns_and_chasms:.*tuff.*/"],
-    "/caverns_and_chasms:.*tuff.*/": ["/minecraft:.*tuff.*/"]
+    "/caverns_and_chasms:.*tuff.*/": ["/minecraft:.*tuff.*/"],
+    "/minecraft:.*quartz.*/": ["/ae2:.*quartz.*/"],
+    "/ae2:.*quartz.*/": ["/minecraft:.*quartz.*/"]
   }
 }
