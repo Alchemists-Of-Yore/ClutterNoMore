@@ -4,8 +4,10 @@ package dev.tazer.clutternomore.common.networking;
 
 import dev.tazer.clutternomore.ClutterNoMore;
 import dev.tazer.clutternomore.common.shape_map.ShapeMap;
-//? if fabric
+import io.netty.buffer.ByteBuf;
+//? if fabric {
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+//?}
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -24,18 +26,7 @@ import java.util.Map;
 public record ShapeMapPayload(Map<Identifier, List<Identifier>> shapes, Map<Identifier, Identifier> inverseShapes) implements CustomPacketPayload {
     public static final Type<ShapeMapPayload> TYPE = new Type<>(Identifier.fromNamespaceAndPath(ClutterNoMore.MODID, "shapes"));
 
-    private static final StreamCodec<RegistryFriendlyByteBuf, List<Identifier>> ID_LIST_CODEC = StreamCodec.of(
-            (buf, list) -> {
-                buf.writeVarInt(list.size());
-                for (Identifier id : list) Identifier.STREAM_CODEC.encode(buf, id);
-            },
-            buf -> {
-                int size = buf.readVarInt();
-                List<Identifier> list = new ArrayList<>(size);
-                for (int i = 0; i < size; i++) list.add(Identifier.STREAM_CODEC.decode(buf));
-                return list;
-            }
-    );
+    private static final StreamCodec<ByteBuf, List<Identifier>> ID_LIST_CODEC = Identifier.STREAM_CODEC.apply(ByteBufCodecs.list());
 
     private static final StreamCodec<RegistryFriendlyByteBuf, Map<Identifier, List<Identifier>>> SHAPE_MAP_CODEC = ByteBufCodecs.map(
             HashMap::new, Identifier.STREAM_CODEC, ID_LIST_CODEC, BuiltInRegistries.ITEM.size()
