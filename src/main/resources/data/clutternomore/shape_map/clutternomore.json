@@ -5,7 +5,6 @@
       "${ns}:${wood}_wood",
       "wilderwild:hollowed_${wood}_log",
       "quark:hollow_${wood}_log",
-      "quark:hollow_${wood}_stem",
       "everycomp:q/${ns}/hollow_${wood}_log"
     ],
 
@@ -17,30 +16,22 @@
       "wilderwild:stripped_hollowed_${wood}_log"
     ],
 
-    "/minecraft:(?<stem>.+?)(?<end>_planks)/": {
+    "/minecraft:(?<stem>.+?)_planks/": {
       "shapes": [
         "/(?!minecraft:)[^:]+:${stem}_slab/",
         "/(?!minecraft:)[^:]+:${stem}_stairs/",
-        "/(?!minecraft:)[^:]+:${stem}_wall/",
-        "/(?!minecraft:)[^:]+:${stem}${end}_slab/",
-        "/(?!minecraft:)[^:]+:${stem}${end}_stairs/",
-        "/(?!minecraft:)[^:]+:${stem}${end}_stair/",
-        "/(?!minecraft:)[^:]+:${stem}${end}_wall/"
+        "/(?!minecraft:)[^:]+:${stem}_wall/"
       ],
       "conditions": {
         "is_blockitem": true
       }
     },
 
-    "/minecraft:(?<stem>.+?)(?<end>_block)/": {
+    "/minecraft:(?<stem>.+?)_block/": {
       "shapes": [
         "/(?!minecraft:)[^:]+:${stem}_slab/",
         "/(?!minecraft:)[^:]+:${stem}_stairs/",
-        "/(?!minecraft:)[^:]+:${stem}_wall/",
-        "/(?!minecraft:)[^:]+:${stem}${end}_slab/",
-        "/(?!minecraft:)[^:]+:${stem}${end}_stairs/",
-        "/(?!minecraft:)[^:]+:${stem}${end}_stair/",
-        "/(?!minecraft:)[^:]+:${stem}${end}_wall/"
+        "/(?!minecraft:)[^:]+:${stem}_wall/"
       ],
       "conditions": {
         "is_blockitem": true,
@@ -66,36 +57,23 @@
       }
     },
 
-    "/(?<ns>[^:]+):(?<stem>.+?)(?<end>_planks)/": {
+    "/(?<ns>[^:]+):(?<stem>.+?)_planks/": {
       "shapes": [
         "${ns}:${stem}_slab",
         "${ns}:${stem}_stairs",
         "${ns}:${stem}_wall",
-        "${ns}:${stem}${end}_slab",
-        "${ns}:${stem}${end}_stairs",
-        "${ns}:${stem}${end}_stair",
-        "${ns}:${stem}${end}_wall",
-
-        "${ns}:spiked_${stem}",
-        "${ns}:spiked_${stem}${end}"
+        "${ns}:spiked_${stem}"
       ],
       "conditions": {
         "is_blockitem": true
       }
     },
 
-    "/(?<ns>[^:]+):(?<stem>.+?)(?<end>_block)/": {
+    "/(?<ns>[^:]+):(?<stem>.+?)_block/": {
       "shapes": [
         "${ns}:${stem}_slab",
         "${ns}:${stem}_stairs",
-        "${ns}:${stem}_wall",
-        "${ns}:${stem}${end}_slab",
-        "${ns}:${stem}${end}_stairs",
-        "${ns}:${stem}${end}_stair",
-        "${ns}:${stem}${end}_wall",
-
-        "${ns}:spiked_${stem}",
-        "${ns}:spiked_${stem}${end}"
+        "${ns}:${stem}_wall"
       ],
       "conditions": {
         "is_blockitem": true,
@@ -132,7 +110,7 @@
       "clutternomore:vertical_${stem}_slab"
     ],
 
-    "/(?<ns>[^:]+):(?<stem>.+)_slab/": [
+    "/(?!minecraft:)(?<ns>[^:]+):(?<stem>.+)_slab/": [
       "clutternomore:${ns}/vertical_${stem}_slab",
       "${ns}:vertical_${stem}_slab",
       "${ns}:${stem}_vertical_slab"
@@ -142,7 +120,7 @@
       "clutternomore:${stem}_step"
     ],
 
-    "/(?<ns>[^:]+):(?<stem>.+)_stair(s|)/": [
+    "/(?!minecraft:)(?<ns>[^:]+):(?<stem>.+)_stair(s|)/": [
       "clutternomore:${ns}/${stem}_step",
       "${ns}:${stem}_step"
     ],
@@ -150,7 +128,8 @@
     "/(?<ns>[^:]+):(?<wood>.+)_stem/": [
       "${ns}:${wood}_hyphae",
       "quark:hollow_${wood}_stem",
-      "everycomp:q/${ns}/hollow_${wood}_stem"
+      "everycomp:q/${ns}/hollow_${wood}_stem",
+      "everycomp:q/${ns}/hollow_${wood}_log"
     ]
   },
   "remove": {

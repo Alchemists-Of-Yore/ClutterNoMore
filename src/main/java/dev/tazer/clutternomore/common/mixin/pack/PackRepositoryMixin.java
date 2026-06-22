@@ -2,6 +2,7 @@ package dev.tazer.clutternomore.common.mixin.pack;
 
 import dev.tazer.clutternomore.ClutterNoMore;
 import net.minecraft.server.packs.PackResources;
+import net.minecraft.server.packs.VanillaPackResources;
 import net.minecraft.server.packs.repository.PackRepository;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -17,7 +18,7 @@ public class PackRepositoryMixin {
     private void cnm$injectRuntimePack(CallbackInfoReturnable<List<PackResources>> cir) {
         List<PackResources> opened = new ArrayList<>(cir.getReturnValue());
         if (!opened.contains(ClutterNoMore.RESOURCES)) {
-            opened.add(ClutterNoMore.RESOURCES);
+            opened.addFirst(ClutterNoMore.RESOURCES);
         }
         cir.setReturnValue(List.copyOf(opened));
     }

@@ -1,5 +1,5 @@
 {
-  "priority": 500,
+  "priority": 501,
   "add": {
     "glass": [
       "create:tiled_glass",
@@ -51,15 +51,11 @@
       "pyrite:path_slab",
       "pyrite:path_stairs"
     ],
-    "/dye_depot:(?<stem>.+?)(?<end>_block)/": {
+    "/dye_depot:(?<stem>.+?)_block/": {
       "shapes": [
-        "/dye_the_world:${stem}_slab/",
-        "/dye_the_world:${stem}_stairs/",
-        "/dye_the_world:${stem}_wall/",
-        "/dye_the_world:${stem}${end}_slab/",
-        "/dye_the_world:${stem}${end}_stairs/",
-        "/dye_the_world:${stem}${end}_stair/",
-        "/dye_the_world:${stem}${end}_wall/"
+        "dye_the_world:${stem}_slab",
+        "dye_the_world:${stem}_stairs",
+        "dye_the_world:${stem}_wall"
       ],
       "conditions": {
         "is_blockitem": true
@@ -67,18 +63,16 @@
     },
     "/dye_depot:(?<stem>.+?)(?<end>s|)/": {
       "shapes": [
-        "/dye_the_world:${stem}_slab/",
-        "/dye_the_world:${stem}_stairs/",
-        "/dye_the_world:${stem}_wall/",
-        "/dye_the_world:${stem}${end}_slab/",
-        "/dye_the_world:${stem}${end}_stairs/",
-        "/dye_the_world:${stem}${end}_wall/"
+        "dye_the_world:${stem}_slab",
+        "dye_the_world:${stem}_stairs",
+        "dye_the_world:${stem}_wall",
+        "dye_the_world:${stem}${end}_slab",
+        "dye_the_world:${stem}${end}_stairs",
+        "dye_the_world:${stem}${end}_wall"
       ],
       "conditions": {
         "is_blockitem": true,
-        "none_of": [
-          { "exists": ["/[^:]+:${stem}_block/"] }
-        ]
+        "not": { "exists": ["/[^:]+:${stem}_block/"] }
       }
     }
   },

@@ -1,2 +1,2 @@
-- Slightly optimised shape map handling
-- Shape map fixes and various mod compat
+- Fix lang changes to generated blocks not being applied
+- Fix minor mod compat issues
