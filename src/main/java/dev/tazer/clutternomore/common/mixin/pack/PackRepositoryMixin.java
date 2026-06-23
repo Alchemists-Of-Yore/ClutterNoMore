@@ -18,7 +18,7 @@ public class PackRepositoryMixin {
     private void cnm$injectRuntimePack(CallbackInfoReturnable<List<PackResources>> cir) {
         List<PackResources> opened = new ArrayList<>(cir.getReturnValue());
         if (!opened.contains(ClutterNoMore.RESOURCES)) {
-            opened.addFirst(ClutterNoMore.RESOURCES);
+            opened.add(0, ClutterNoMore.RESOURCES);
         }
         cir.setReturnValue(List.copyOf(opened));
     }
