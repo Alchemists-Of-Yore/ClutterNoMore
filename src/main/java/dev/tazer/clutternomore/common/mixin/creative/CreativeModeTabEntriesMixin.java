@@ -43,7 +43,10 @@ public abstract class CreativeModeTabEntriesMixin {
 
     @Inject(method = "insertAfter", at = @At("HEAD"), cancellable = true)
     private void cnm$insertAfter(ItemStack existingEntry, ItemStack newEntry, CreativeModeTab.TabVisibility visibility, CallbackInfo ci) {
-        if (CHooks.denyItem(newEntry.getItem())) ci.cancel();
+        if (CHooks.denyItem(newEntry.getItem())) {
+            ci.cancel();
+            return;
+        }
         if (ShapeMap.isShape(existingEntry.getItem())) {
             insertAfter(ShapeMap.getParent(existingEntry.getItem()).getDefaultInstance(), newEntry, visibility);
             ci.cancel();
@@ -52,7 +55,10 @@ public abstract class CreativeModeTabEntriesMixin {
 
     @Inject(method = "insertBefore", at = @At("HEAD"), cancellable = true)
     private void cnm$insertBefore(ItemStack existingEntry, ItemStack newEntry, CreativeModeTab.TabVisibility visibility, CallbackInfo ci) {
-        if (CHooks.denyItem(newEntry.getItem())) ci.cancel();
+        if (CHooks.denyItem(newEntry.getItem())) {
+            ci.cancel();
+            return;
+        }
         if (ShapeMap.isShape(existingEntry.getItem())) {
             insertBefore(ShapeMap.getParent(existingEntry.getItem()).getDefaultInstance(), newEntry, visibility);
             ci.cancel();
