@@ -68,6 +68,8 @@ public class RecipeRemover {
         *///?}
 
         List<RecipeHolder<?>> kept = new ArrayList<>();
+        boolean detailedLogs = ClutterNoMore.STARTUP_CONFIG.DETAILED_LOGS.value();
+        int encodeFailures = 0;
 
         for (RecipeHolder<?> holder : source) {
             try {
@@ -87,7 +89,8 @@ public class RecipeRemover {
                 Optional<JsonElement> encoded = encodeResult.result();
                 if (encoded.isEmpty()) {
                     if (encodeResult.error().isPresent()) {
-                        ClutterNoMore.LOGGER.warn("[CNM] encode fail for {}: {}", holder.id(), encodeResult.error().get().message());
+                        encodeFailures++;
+                        if (detailedLogs) ClutterNoMore.LOGGER.warn("[CNM] encode fail for {}: {}", holder.id(), encodeResult.error().get().message());
                     }
                     kept.add(holder);
                     continue;
@@ -136,6 +139,10 @@ public class RecipeRemover {
                 ClutterNoMore.LOGGER.error("Error processing recipe {}: {}", holder.id(), exception.getMessage());
                 kept.add(holder);
             }
+        }
+
+        if (encodeFailures > 0) {
+            ClutterNoMore.LOGGER.info("[CNM] {} recipes could not be re-encoded for shape processing and were kept unchanged (enable detailed logs to list them)", encodeFailures);
         }
 
         //? if >=26 {

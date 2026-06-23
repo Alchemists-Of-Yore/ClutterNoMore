@@ -1,2 +1,3 @@
-- Fix lang changes to generated blocks not being applied
-- Fix minor mod compat issues
+- Fixed lang changes to generated blocks not being applied
+- Fixed minor mod compat issues
+- Fixed occasional log spam
