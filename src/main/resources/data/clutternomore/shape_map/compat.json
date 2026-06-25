@@ -74,6 +74,156 @@
         "is_blockitem": true,
         "not": { "exists": ["/[^:]+:${stem}_block/"] }
       }
+    },
+
+
+    "/minecraft:(?<stem>.+?)(?<end>_planks)/": {
+      "shapes": [
+        "pyrite:${stem}_wall_gate/",
+        "pyrite:${stem}${end}_wall_gate/"
+      ],
+      "conditions": {
+        "is_blockitem": true
+      }
+    },
+
+    "/minecraft:(?<stem>.+?)(?<end>_block)/": {
+      "shapes": [
+        "pyrite:${stem}_wall_gate/",
+        "pyrite:${stem}${end}_wall_gate/"
+      ],
+      "conditions": {
+        "is_blockitem": true,
+        "not": { "exists": ["/[^:]+:${stem}_planks/"] }
+      }
+    },
+
+    "/minecraft:(?<stem>.+?)(?<end>s|)/": {
+      "shapes": [
+        "pyrite:${stem}_wall_gate/",
+        "pyrite:${stem}${end}_wall_gate/"
+      ],
+      "conditions": {
+        "is_blockitem": true,
+        "none_of": [
+          { "exists": ["/[^:]+:${stem}_planks/"] },
+          { "exists": ["/[^:]+:${stem}_block/"] }
+        ]
+      }
+    },
+
+    "/(?<ns>[^:]+):(?<stem>.+?)(?<end>_planks)/": {
+      "shapes": [
+        "pyrite:${stem}_wall_gate",
+        "pyrite:${stem}${end}_wall_gate"
+      ],
+      "conditions": {
+        "is_blockitem": true
+      }
+    },
+
+    "/(?<ns>[^:]+):(?<stem>.+?)(?<end>_block)/": {
+      "shapes": [
+        "pyrite:${stem}${end}_wall_gate"
+      ],
+      "conditions": {
+        "is_blockitem": true,
+        "not": { "exists": ["${ns}:${stem}_planks"] }
+      }
+    },
+
+    "/(?<ns>[^:]+):(?<stem>.+?)(?<end>s|)/": {
+      "shapes": [
+        "pyrite:${stem}${end}_wall_gate"
+      ],
+      "conditions": {
+        "is_blockitem": true,
+        "none_of": [
+          { "exists": ["${ns}:${stem}_planks"] },
+          { "exists": ["${ns}:${stem}_block"] }
+        ]
+      }
+    },
+
+    "/(?<ns>[^:]+):(?<stem>.+?)_bricks/": {
+      "shapes": [
+        "pyrite:${stem}_brick_wall_gate"
+      ],
+      "conditions": {
+        "is_blockitem": true,
+        "none_of": [
+          { "exists": ["${ns}:${stem}_planks"] },
+          { "exists": ["${ns}:${stem}_block"] }
+        ]
+      }
+    },
+
+    "/(?<ns>[^:]+):(?<stem>.+?)_tiles/": {
+      "shapes": [
+        "pyrite:${stem}_tile_wall_gate"
+      ],
+      "conditions": {
+        "is_blockitem": true,
+        "none_of": [
+          { "exists": ["${ns}:${stem}_planks"] },
+          { "exists": ["${ns}:${stem}_block"] }
+        ]
+      }
+    },
+
+    "minecraft:bricks": {
+      "shapes": [
+        "pyrite:brick_wall_gate"
+      ]
+    },
+
+
+    "minecraft:resin_bricks": {
+      "shapes": [
+        "pyrite:resin_brick_wall_gate"
+      ]
+    },
+
+    "minecraft:exposed_cut_copper": {
+      "shapes": [
+        "pyrite:cut_exposed_copper_wall",
+        "pyrite:cut_exposed_copper_wall_gate"
+      ]
+    },
+
+    "minecraft:weathered_cut_copper": {
+      "shapes": [
+        "pyrite:cut_weathered_copper_wall",
+        "pyrite:cut_weathered_copper_wall_gate"
+      ]
+    },
+
+    "minecraft:oxidized_cut_copper": {
+      "shapes": [
+        "pyrite:cut_oxidized_copper_wall",
+        "pyrite:cut_oxidized_copper_wall_gate"
+      ]
+    },
+
+    "minecraft:waxed_exposed_cut_copper": {
+      "shapes": [
+        "pyrite:waxed_cut_exposed_copper_wall",
+        "pyrite:waxed_cut_exposed_copper_wall_gate"
+      ]
+    },
+
+    "minecraft:waxed_weathered_cut_copper": {
+      "shapes": [
+        "pyrite:waxed_cut_weathered_copper_wall",
+        "pyrite:waxed_cut_weathered_copper_wall_gate"
+      ]
+    },
+
+    "minecraft:waxed_oxidized_cut_copper": {
+      "shapes": [
+        "pyrite:waxed_cut_oxidized_copper_wall",
+        "pyrite:waxed_cut_oxidized_copper_wall_gate"
+      ]
     }
   },
   "remove": {

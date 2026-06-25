@@ -1,2 +1,3 @@
 - Ported to 26.2
 - Fixed a crash when the item registry is somehow smaller than the shape map.
+- Added support for Pyrite wall gates.
