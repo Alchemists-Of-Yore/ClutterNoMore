@@ -56,6 +56,7 @@ public class ClutterNoMoreClient {
         //ModLoadingContext.get().registerExtensionPoint(IConfigScreenFactory.class, ()-> (mod, screen) -> new ShapeSwitcherOptionsScreen(screen));
         //? forge
         //ModLoadingContext.get().registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class, () -> new ConfigScreenHandler.ConfigScreenFactory((minecraft, parent)-> new ShapeSwitcherOptionsScreen(parent, minecraft.options)));
+
     }
 
     public static boolean isCreativeTabSlot(Slot slot) {

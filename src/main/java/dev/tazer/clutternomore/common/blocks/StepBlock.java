@@ -36,13 +36,7 @@ public class StepBlock extends HorizontalDirectionalBlock implements SimpleWater
     public static final MapCodec<? extends StepBlock> CODEC = simpleCodec(StepBlock::new);
     //?}
 
-    public static final
-    //? if >1.21.2 {
-    EnumProperty<Direction>
-    //?} else {
-    /*DirectionProperty
-    *///?}
-    FACING = HorizontalDirectionalBlock.FACING;
+    public static final EnumProperty<Direction> FACING = HorizontalDirectionalBlock.FACING;
     public static final EnumProperty<SlabType> SLAB_TYPE = BlockStateProperties.SLAB_TYPE;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
@@ -105,12 +99,7 @@ public class StepBlock extends HorizontalDirectionalBlock implements SimpleWater
     }
 
     @Override
-    //? if >1.20.1 {
-    protected
-    //?} else {
-    /*public
-    *///?}
-    boolean canBeReplaced(BlockState state, BlockPlaceContext context) {
+    public boolean canBeReplaced(BlockState state, BlockPlaceContext context) {
         ItemStack itemStack = context.getItemInHand();
         if (state.getValue(SLAB_TYPE) == SlabType.DOUBLE || !(itemStack.is(asItem())) ) {
             return false;
@@ -171,12 +160,7 @@ public class StepBlock extends HorizontalDirectionalBlock implements SimpleWater
     *///?}
 
     @Override
-    //? if >1.20.1 {
-    protected
-    //?} else {
-    /*public
-    *///?}
-    boolean useShapeForLightOcclusion(BlockState state) {
+    public boolean useShapeForLightOcclusion(BlockState state) {
         return true;
     }
 

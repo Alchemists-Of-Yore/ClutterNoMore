@@ -72,3 +72,7 @@ stonecutterBuild.replacements.string {
     direction = stonecutterBuild.eval(mc, ">26.1.2")
     replace("Minecraft.getInstance().setScreen", "Minecraft.getInstance().gui.setScreen")
 }
+stonecutterBuild.replacements.string {
+    direction = stonecutterBuild.eval(mc, ">1.21.2")
+    replace("DirectionProperty", "EnumProperty<Direction>")
+}

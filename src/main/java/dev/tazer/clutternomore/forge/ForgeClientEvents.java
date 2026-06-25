@@ -3,7 +3,7 @@ package dev.tazer.clutternomore.forge;
 /*import dev.tazer.clutternomore.ClutterNoMore;
 import dev.tazer.clutternomore.ClutterNoMoreClient;
 import dev.tazer.clutternomore.client.ClientShapeTooltip;
-import dev.tazer.clutternomore.common.networking.ShapeTooltip;
+import dev.tazer.clutternomore.common.inventory.ShapeTooltip;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;

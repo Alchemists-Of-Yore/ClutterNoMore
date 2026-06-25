@@ -26,7 +26,7 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.ScheduledTickAccess;
 //?} else {
-/*import net.minecraft.world.level.block.state.properties.DirectionProperty;
+/*import net.minecraft.world.level.block.state.properties.EnumProperty<Direction>;
 *///?}
 import net.minecraft.world.level.block.state.properties.SlabType;
 import net.minecraft.world.level.material.Fluid;
@@ -44,13 +44,7 @@ public class VerticalSlabBlock extends HorizontalDirectionalBlock implements Sim
     public static final MapCodec<? extends VerticalSlabBlock> CODEC = simpleCodec(VerticalSlabBlock::new);
     //?}
     public static final BooleanProperty DOUBLE = BooleanProperty.create("double");
-    public static final
-    //? if >1.21.2 {
-    EnumProperty<Direction>
-    //?} else {
-    /*DirectionProperty
-    *///?}
-    FACING = BlockStateProperties.HORIZONTAL_FACING;
+    public static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
     public VerticalSlabBlock(BlockBehaviour.Properties properties) {

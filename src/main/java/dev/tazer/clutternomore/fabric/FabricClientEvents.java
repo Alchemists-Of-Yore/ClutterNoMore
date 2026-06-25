@@ -4,7 +4,7 @@ package dev.tazer.clutternomore.fabric;
 
 import dev.tazer.clutternomore.ClutterNoMoreClient;
 import dev.tazer.clutternomore.client.ClientShapeTooltip;
-import dev.tazer.clutternomore.common.networking.ShapeTooltip;
+import dev.tazer.clutternomore.common.inventory.ShapeTooltip;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.screens.Screen;
 //? if >1.21.8 {

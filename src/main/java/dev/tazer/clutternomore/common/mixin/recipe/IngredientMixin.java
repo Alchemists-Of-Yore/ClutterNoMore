@@ -14,25 +14,20 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Ingredient.class)
 public class IngredientMixin {
-    //? if >=26 {
     @Inject(method = "test(Lnet/minecraft/world/item/ItemStack;)Z", at = @At("RETURN"), cancellable = true)
     private void cnm$test(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
         if (cir.getReturnValue() || stack == null || stack.isEmpty()) return;
         Item myItem = stack.getItem();
         Ingredient self = (Ingredient) (Object) this;
+        //? if >=26 {
         if (self.items().anyMatch(h -> ShapeMap.inSameShapeSet(h.value(), myItem))) {
             cir.setReturnValue(true);
         }
-    }
-    //?} else {
-    /*@Inject(method = "test(Lnet/minecraft/world/item/ItemStack;)Z", at = @At("RETURN"), cancellable = true)
-    private void cnm$test(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
-        if (cir.getReturnValue() || stack == null || stack.isEmpty()) return;
-        Item myItem = stack.getItem();
-        Ingredient self = (Ingredient) (Object) this;
+        //?} else {
+        /*
         if (Arrays.stream(self.getItems()).anyMatch(h -> ShapeMap.inSameShapeSet(h.getItem(), myItem))) {
             cir.setReturnValue(true);
         }
+        *///?}
     }
-    *///?}
 }

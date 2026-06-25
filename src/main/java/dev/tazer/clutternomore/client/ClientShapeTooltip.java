@@ -1,19 +1,13 @@
 package dev.tazer.clutternomore.client;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import dev.tazer.clutternomore.ClutterNoMore;
 import dev.tazer.clutternomore.ClutterNoMoreClient;
-import dev.tazer.clutternomore.common.networking.ShapeTooltip;
-import net.minecraft.client.Minecraft;
+import dev.tazer.clutternomore.common.inventory.ShapeTooltip;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
-//? if >1.21.6 {
-import net.minecraft.client.renderer.RenderPipelines;
-//?}
-//? if =1.21.5 {
-/*import net.minecraft.client.renderer.RenderType;
-*///?}
+//? if <1.21.2
+//import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
@@ -44,11 +38,12 @@ public class ClientShapeTooltip implements ClientTooltipComponent {
     }
 
     @Override
-    //? if >26 {
-    public void extractImage(Font font, int mouseX, int mouseY, int width, int height, GuiGraphicsExtractor guiGraphics) {
-    //?} else {
-    /*public void renderImage(Font font, int mouseX, int mouseY, GuiGraphicsExtractor guiGraphics) {
-    *///?}
+    //~ if >26.1 'renderImage' -> 'extractImage' {
+    public void extractImage(Font font, int mouseX, int mouseY,
+                             //? if >26.1
+                             int width, int height,
+                             GuiGraphicsExtractor guiGraphics) {
+    //~}
         if (ClutterNoMoreClient.iconsRendering()) {
             Identifier selected = ClutterNoMore.location("textures/gui/selected_shape_inventory.png");
 

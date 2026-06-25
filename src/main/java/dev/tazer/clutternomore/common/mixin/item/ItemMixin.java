@@ -1,7 +1,7 @@
 package dev.tazer.clutternomore.common.mixin.item;
 
 import dev.tazer.clutternomore.common.shape_map.ShapeMap;
-import dev.tazer.clutternomore.common.networking.ShapeTooltip;
+import dev.tazer.clutternomore.common.inventory.ShapeTooltip;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;

@@ -10,15 +10,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ItemStack.class)
 public class ItemStackMixin {
-    //? if >1.20.1 {
+    //~ if >1.20.1 'isSameItemSameTags' -> 'isSameItemSameComponents' {
     @Inject(method = "isSameItemSameComponents", at = @At("RETURN"), cancellable = true)
     private static void cnm$isSameItemSameComponents(ItemStack stack, ItemStack other, CallbackInfoReturnable<Boolean> cir) {
         if (!cir.getReturnValue()) cir.setReturnValue(ShapeMap.inSameShapeSet(stack.getItem(), other.getItem()));
     }
-    //?} else {
-    /*@Inject(method = "isSameItemSameTags", at = @At("RETURN"), cancellable = true)
-    private static void cnm$isSameItemSameTags(ItemStack stack, ItemStack other, CallbackInfoReturnable<Boolean> cir) {
-        if (!cir.getReturnValue()) cir.setReturnValue(ShapeMap.inSameShapeSet(stack.getItem(), other.getItem()));
-    }
-    *///?}
+    //~}
 }
