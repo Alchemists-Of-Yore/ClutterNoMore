@@ -5,11 +5,13 @@ package dev.tazer.clutternomore.fabric.datagen;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.recipes.*;
 import net.minecraft.resources.Identifier;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
 
+import java.util.Locale;
 import java.util.concurrent.CompletableFuture;
 
 import static net.minecraft.world.item.Items.*;
@@ -69,15 +71,15 @@ public class RecipeOverrideProvider extends FabricRecipeProvider {
                 chiseled(CHISELED_SANDSTONE, SANDSTONE, output);
                 chiseled(CHISELED_STONE_BRICKS, STONE_BRICKS, output);
                 //? if >1.21 {
-                chiseled(CHISELED_COPPER, CUT_COPPER, output);
-                chiseled(EXPOSED_CHISELED_COPPER, EXPOSED_CUT_COPPER, output);
-                chiseled(WEATHERED_CHISELED_COPPER, WEATHERED_CUT_COPPER, output);
-                chiseled(OXIDIZED_CHISELED_COPPER, OXIDIZED_CUT_COPPER, output);
+                chiseled("CHISELED_COPPER", "CUT_COPPER", output);
+                chiseled("EXPOSED_CHISELED_COPPER", "EXPOSED_CUT_COPPER", output);
+                chiseled("WEATHERED_CHISELED_COPPER", "WEATHERED_CUT_COPPER", output);
+                chiseled("OXIDIZED_CHISELED_COPPER", "OXIDIZED_CUT_COPPER", output);
 
-                chiseled(WAXED_CHISELED_COPPER, WAXED_CUT_COPPER, output);
-                chiseled(WAXED_EXPOSED_CHISELED_COPPER, WAXED_EXPOSED_CUT_COPPER, output);
-                chiseled(WAXED_WEATHERED_CHISELED_COPPER, WAXED_WEATHERED_CUT_COPPER, output);
-                chiseled(WAXED_OXIDIZED_CHISELED_COPPER, WAXED_OXIDIZED_CUT_COPPER, output);
+                chiseled("WAXED_CHISELED_COPPER", "WAXED_CUT_COPPER", output);
+                chiseled("WAXED_EXPOSED_CHISELED_COPPER", "WAXED_EXPOSED_CUT_COPPER", output);
+                chiseled("WAXED_WEATHERED_CHISELED_COPPER", "WAXED_WEATHERED_CUT_COPPER", output);
+                chiseled("WAXED_OXIDIZED_CHISELED_COPPER", "WAXED_OXIDIZED_CUT_COPPER", output);
 
                 chiseled(CHISELED_TUFF, TUFF, output);
                 chiseled(CHISELED_TUFF_BRICKS, TUFF_BRICKS, output);
@@ -87,6 +89,19 @@ public class RecipeOverrideProvider extends FabricRecipeProvider {
                 chiseled(CHISELED_RESIN_BRICKS, RESIN_BRICK_SLAB, output);
 
 
+            }
+
+			private Item getItem(String chiseledCopper) {
+                //? if >1.21.2 {
+                return BuiltInRegistries.ITEM.getValue
+                //?} else {
+                /*return BuiltInRegistries.ITEM.get
+                *///?}
+				(Identifier.withDefaultNamespace(chiseledCopper.toLowerCase(Locale.ROOT)));
+			}
+
+            private void chiseled(String chiseledRedSandstone, String redSandstone, RecipeOutput output) {
+                chiseled(getItem(chiseledRedSandstone), getItem(redSandstone), output);
             }
 
             private void chiseled(Item chiseledRedSandstone, Item redSandstone, RecipeOutput output) {

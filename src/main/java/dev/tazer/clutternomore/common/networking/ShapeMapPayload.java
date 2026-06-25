@@ -29,11 +29,11 @@ public record ShapeMapPayload(Map<Identifier, List<Identifier>> shapes, Map<Iden
     private static final StreamCodec<ByteBuf, List<Identifier>> ID_LIST_CODEC = Identifier.STREAM_CODEC.apply(ByteBufCodecs.list());
 
     private static final StreamCodec<RegistryFriendlyByteBuf, Map<Identifier, List<Identifier>>> SHAPE_MAP_CODEC = ByteBufCodecs.map(
-            HashMap::new, Identifier.STREAM_CODEC, ID_LIST_CODEC, BuiltInRegistries.ITEM.size()
+            HashMap::new, Identifier.STREAM_CODEC, ID_LIST_CODEC
     );
 
     private static final StreamCodec<RegistryFriendlyByteBuf, Map<Identifier, Identifier>> INVERSE_SHAPE_MAP_CODEC = ByteBufCodecs.map(
-            HashMap::new, Identifier.STREAM_CODEC, Identifier.STREAM_CODEC, BuiltInRegistries.ITEM.size()
+            HashMap::new, Identifier.STREAM_CODEC, Identifier.STREAM_CODEC
     );
 
     public static final StreamCodec<RegistryFriendlyByteBuf, ShapeMapPayload> STREAM_CODEC = StreamCodec.composite(

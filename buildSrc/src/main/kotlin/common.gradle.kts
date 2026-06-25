@@ -56,4 +56,19 @@ stonecutterBuild.replacements.string {
     direction = stonecutterBuild.eval(mc, ">1.21.10")
     replace("getRecipeIdentifier", "getRecipeIdentifier")
 }
-
+stonecutterBuild.replacements.string {
+    direction = stonecutterBuild.eval(mc, ">26.1.2")
+    replace("net.minecraft.advancements.Criterion", "net.minecraft.advancements.triggers.Criterion")
+}
+stonecutterBuild.replacements.string {
+    direction = stonecutterBuild.eval(mc, ">26.1.2")
+    replace("minecraft.screen", "minecraft.gui.screen()")
+}
+stonecutterBuild.replacements.string {
+    direction = stonecutterBuild.eval(mc, ">26.1.2")
+    replace("Minecraft.getInstance().screen", "Minecraft.getInstance().gui.screen()")
+}
+stonecutterBuild.replacements.string {
+    direction = stonecutterBuild.eval(mc, ">26.1.2")
+    replace("Minecraft.getInstance().setScreen", "Minecraft.getInstance().gui.setScreen")
+}

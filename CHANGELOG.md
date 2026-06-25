@@ -1,3 +1,2 @@
-- Fixed lang changes to generated blocks not being applied
-- Fixed minor mod compat issues
-- Fixed occasional log spam
+- Ported to 26.2
+- Fixed a crash when the item registry is somehow smaller than the shape map.
