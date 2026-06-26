@@ -33,6 +33,9 @@
   ],
   "client": [
     "client.BlockColorsMixin",
+    //? if <26.1 {
+    "client.ItemColorsMixin",
+    //?}
     "client.CreativeInventoryScreenAccessor",
     "client.CreativeShapeIndicatorMixin",
     "client.CreativeSlotWrapperAccessor",
