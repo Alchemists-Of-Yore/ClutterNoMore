@@ -224,6 +224,17 @@
         "pyrite:waxed_cut_oxidized_copper_wall",
         "pyrite:waxed_cut_oxidized_copper_wall_gate"
       ]
+    },
+
+    "would:aspen_log_gazing": {
+      "shapes": [
+        "would:aspen_wood_gazing"
+      ]
+    },
+    "would:stripped_aspen_log_gazing": {
+      "shapes": [
+        "would:stripped_aspen_wood_gazing"
+      ]
     }
   },
   "remove": {

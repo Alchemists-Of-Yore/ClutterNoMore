@@ -1,3 +1,2 @@
-- Ported to 26.2
-- Fixed a crash when the item registry is somehow smaller than the shape map.
-- Added support for Pyrite wall gates.
+- Vertical Slabs and Steps now inherit their tints from their parents (thanks @evanbones!).
+- Added manual compatibility for Would Aspen logs.

@@ -171,7 +171,7 @@ dependencies {
         runtimeOnly("me.djtheredstoner:DevAuth-neoforge:1.2.1")
 
         runtimeOnly("maven.modrinth:moonlight:${dep("moonlight")}")
-        runtimeOnly("maven.modrinth:supplementaries:neoforge_${mcMajor}-3.4.14")
+        runtimeOnly("maven.modrinth:supplementaries:${mc}-3.7.4-neoforge")
         runtimeOnly("maven.modrinth:the-block-box:0.1.1")
         runtimeOnly("maven.modrinth:no-mans-land:1.3.3")
         runtimeOnly("maven.modrinth:biolith:hd0IDIF5")
