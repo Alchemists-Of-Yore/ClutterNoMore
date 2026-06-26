@@ -27,7 +27,7 @@ public final class StepGenerator {
 
             try {
                 generateBlock(parent, shape, manager);
-                AssetGenerator.generateItem(shape, manager);
+                AssetGenerator.generateItem(parent, shape, manager);
             } catch (IOException e) {
                 ClutterNoMore.LOGGER.catching(e);
                 throw new RuntimeException(e);
@@ -42,13 +42,16 @@ public final class StepGenerator {
         JsonObject textures = AssetGenerator.getTextures(manager, parent);
         if (textures == null) return;
 
+        boolean isTinted = AssetGenerator.checkTint(manager, parent);
+        String suffix = isTinted ? "_tinted" : "";
+
         JsonObject blockModel = new JsonObject();
-        blockModel.addProperty("parent", "clutternomore:block/templates/step");
+        blockModel.addProperty("parent", "clutternomore:block/templates/step" + suffix);
         blockModel.add("textures", textures);
         write("models/block/%s.json".formatted(shape.getPath()), blockModel);
-        blockModel.addProperty("parent", "clutternomore:block/templates/step_double");
+        blockModel.addProperty("parent", "clutternomore:block/templates/step_double" + suffix);
         write("models/block/%s_double.json".formatted(shape.getPath()), blockModel);
-        blockModel.addProperty("parent", "clutternomore:block/templates/step_top");
+        blockModel.addProperty("parent", "clutternomore:block/templates/step_top" + suffix);
         write("models/block/%s_top.json".formatted(shape.getPath()), blockModel);
 
         JsonObject variants = new JsonObject();

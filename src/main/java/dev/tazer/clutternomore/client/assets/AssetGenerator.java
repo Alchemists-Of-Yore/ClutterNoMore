@@ -5,7 +5,7 @@ import dev.tazer.clutternomore.ClutterNoMore;
 import dev.tazer.clutternomore.ClutterNoMoreClient;
 //? if <1.21.9 {
 /*import dev.tazer.clutternomore.common.data.CNMPackResources;
-*///?}
+ *///?}
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.Resource;
@@ -16,6 +16,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -151,9 +152,10 @@ public class AssetGenerator {
         return textures.get("top") == null ? null : textures;
     }
 
-    public static void generateItem(Identifier shape, ResourceManager manager) {
+    public static void generateItem(Identifier parent, Identifier shape, ResourceManager manager) {
         String modelString = shape.getPath();
         modelString = modelString.replace("waxed_", "");
+
         //? if >1.21.4 {
         Optional<Resource> existingItemState = manager.getResource(shape.withPrefix("items/").withSuffix(".json"));
         if (existingItemState.isPresent()) return;
@@ -161,7 +163,23 @@ public class AssetGenerator {
         JsonObject itemState = new JsonObject();
         JsonObject model = new JsonObject();
         model.addProperty("type", "minecraft:model");
-        model.addProperty("model", "clutternomore:block/"+modelString);
+        model.addProperty("model", "clutternomore:block/" + modelString);
+
+        // parent tints
+        if (parent != null) {
+            Optional<Resource> parentItemResource = manager.getResource(parent.withPrefix("items/").withSuffix(".json"));
+            if (parentItemResource.isPresent()) {
+                try {
+                    JsonObject parentJson = JsonParser.parseReader(parentItemResource.get().openAsReader()).getAsJsonObject();
+                    if (parentJson.has("model") && parentJson.getAsJsonObject("model").has("tints")) {
+                        model.add("tints", parentJson.getAsJsonObject("model").getAsJsonArray("tints"));
+                    }
+                } catch (Exception e) {
+                    ClutterNoMore.LOGGER.warn("Failed to extract item tints from parent {} for shape {}", parent, shape, e);
+                }
+            }
+        }
+
         itemState.add("model", model);
         write("items/%s.json".formatted(shape.getPath()), itemState);
         //?} else {
@@ -172,5 +190,59 @@ public class AssetGenerator {
         model.addProperty("parent", "clutternomore:block/"+modelString);
         write("models/item/%s.json".formatted(shape.getPath()), model);
         *///?}
+    }
+
+    public static boolean checkTint(ResourceManager manager, Identifier parent) {
+        try {
+            Optional<Resource> parentBlockState = manager.getResource(parent.withPrefix("blockstates/").withSuffix(".json"));
+            if (parentBlockState.isEmpty()) return false;
+
+            String model = null;
+            java.io.BufferedReader reader = parentBlockState.get().openAsReader();
+            String line = reader.readLine();
+            while (line != null) {
+                if (line.contains("\"model\":")) {
+                    int firstIndex = line.indexOf("\"", line.indexOf("model\":") + 7);
+                    int secondIndex = line.indexOf("\"", firstIndex + 1);
+                    model = line.substring(firstIndex + 1, secondIndex);
+                    break;
+                }
+                line = reader.readLine();
+            }
+            if (model == null) return false;
+
+            String[] modelParts = model.split(":");
+            Identifier modelId = modelParts.length == 1 ? ClutterNoMore.location("minecraft", modelParts[0]) : ClutterNoMore.location(modelParts[0], modelParts[1]);
+
+            return hasTintIndexRecursively(manager, modelId);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    private static boolean hasTintIndexRecursively(ResourceManager manager, Identifier modelId) throws IOException {
+        Optional<Resource> resource = manager.getResource(modelId.withPrefix("models/").withSuffix(".json"));
+        if (resource.isEmpty()) return false;
+        JsonObject modelObj = JsonParser.parseReader(resource.get().openAsReader()).getAsJsonObject();
+
+        if (modelObj.has("elements")) {
+            for (JsonElement elem : modelObj.getAsJsonArray("elements")) {
+                JsonObject faces = elem.getAsJsonObject().getAsJsonObject("faces");
+                if (faces != null) {
+                    for (Map.Entry<String, JsonElement> face : faces.entrySet()) {
+                        if (face.getValue().getAsJsonObject().has("tintindex")) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        if (modelObj.has("parent")) {
+            String parentStr = modelObj.get("parent").getAsString();
+            String[] parts = parentStr.split(":");
+            Identifier parentId = parts.length == 1 ? ClutterNoMore.location("minecraft", parts[0]) : ClutterNoMore.location(parts[0], parts[1]);
+            return hasTintIndexRecursively(manager, parentId);
+        }
+        return false;
     }
 }

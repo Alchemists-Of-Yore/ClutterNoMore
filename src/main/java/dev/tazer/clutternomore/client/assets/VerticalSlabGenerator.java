@@ -27,7 +27,7 @@ public final class VerticalSlabGenerator {
 
             try {
                 generateBlock(parent, shape, manager);
-                AssetGenerator.generateItem(shape, manager);
+                AssetGenerator.generateItem(parent, shape, manager);
             } catch (IOException e) {
                 ClutterNoMore.LOGGER.catching(e);
                 throw new RuntimeException(e);
@@ -42,11 +42,14 @@ public final class VerticalSlabGenerator {
         JsonObject textures = AssetGenerator.getTextures(manager, parent);
         if (textures == null) return;
 
+        boolean isTinted = AssetGenerator.checkTint(manager, parent);
+        String suffix = isTinted ? "_tinted" : "";
+
         JsonObject blockModel = new JsonObject();
-        blockModel.addProperty("parent", "clutternomore:block/templates/vertical_slab");
+        blockModel.addProperty("parent", "clutternomore:block/templates/vertical_slab" + suffix);
         blockModel.add("textures", textures);
         write("models/block/%s.json".formatted(shape.getPath()), blockModel);
-        blockModel.addProperty("parent", "clutternomore:block/templates/vertical_slab_double");
+        blockModel.addProperty("parent", "clutternomore:block/templates/vertical_slab_double" + suffix);
         write("models/block/%s_double.json".formatted(shape.getPath()), blockModel);
 
         JsonObject variants = new JsonObject();
