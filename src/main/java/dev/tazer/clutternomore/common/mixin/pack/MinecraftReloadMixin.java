@@ -1,6 +1,7 @@
 package dev.tazer.clutternomore.common.mixin.pack;
 
 import dev.tazer.clutternomore.client.assets.AssetGenerator;
+import dev.tazer.clutternomore.common.data.RuntimeTagGenerator;
 import net.minecraft.server.packs.PackResources;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.MultiPackResourceManager;
@@ -24,8 +25,11 @@ public class MinecraftReloadMixin {
 
     @Inject(method = "createReload", at = @At("HEAD"))
     private void cnm$populateRuntimePack(Executor backgroundExecutor, Executor gameExecutor, CompletableFuture<Unit> waitable, List<PackResources> packs, CallbackInfoReturnable<?> cir) {
-        if (this.type != PackType.CLIENT_RESOURCES) return;
-        ResourceManager temp = new MultiPackResourceManager(PackType.CLIENT_RESOURCES, packs);
-        AssetGenerator.generate(temp);
+        ResourceManager temp = new MultiPackResourceManager(this.type, packs);
+        if (this.type == PackType.CLIENT_RESOURCES) {
+            AssetGenerator.generate(temp);
+        } else if (this.type == PackType.SERVER_DATA) {
+            RuntimeTagGenerator.generate(temp);
+        }
     }
 }
