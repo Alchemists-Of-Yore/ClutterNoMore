@@ -1,18 +1,21 @@
-//? if <26.1 {
-/*package dev.tazer.clutternomore.common.mixin.client;
+package dev.tazer.clutternomore.common.mixin.client;
 
-import dev.tazer.clutternomore.common.shape_map.ShapeMap;
-import net.minecraft.client.color.item.ItemColors;
+//? if <26.1 {
+/*import dev.tazer.clutternomore.common.shape_map.ShapeMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+*///?}
+import org.spongepowered.asm.mixin.Mixin;
 
-@Mixin(ItemColors.class)
+
+@Mixin(targets = "net.minecraft.client.color.item.ItemColors")
 public class ItemColorsMixin {
+//? if <26.1 {
+/*
     @Inject(method = "getColor(Lnet/minecraft/world/item/ItemStack;I)I", at = @At("HEAD"), cancellable = true)
     private void cnm$getShapeItemColor(ItemStack itemStack, int tintIndex, CallbackInfoReturnable<Integer> cir) {
         Item item = itemStack.getItem();
@@ -28,12 +31,13 @@ public class ItemColorsMixin {
             if (tag != null) parentStack.setTag(tag.copy());
             *//*//?}
 
-            int color = ((ItemColors) (Object) this).getColor(parentStack, tintIndex);
+            int color = ((net.minecraft.client.color.item.ItemColors) (Object) this).getColor(parentStack, tintIndex);
 
             if (color != -1) {
                 cir.setReturnValue(color);
             }
         }
     }
-}*/
+    */
 //?}
+}

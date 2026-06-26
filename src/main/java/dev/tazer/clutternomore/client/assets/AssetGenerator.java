@@ -60,10 +60,11 @@ public class AssetGenerator {
             JsonObject object = new JsonObject();
             object.add("description", new JsonPrimitive("Generated resources for ClutterNoMore"));
             //? if <1.21.9 {
-            /*object.add("pack_format", new JsonPrimitive(CNMPackResources.resourcePackVersion));
+            /*JsonPrimitive packFormat = new JsonPrimitive(CNMPackResources.resourcePackVersion);
             *///?} else {
-            object.add("pack_format", new JsonPrimitive(15));
+            JsonPrimitive packFormat = new JsonPrimitive(15);
             //?}
+            object.add("pack_format", packFormat);
             object.add("min_format", new JsonPrimitive(minFormat));
             object.add("max_format", new JsonPrimitive(maxFormat));
             JsonArray supportedFormats = new JsonArray(2);

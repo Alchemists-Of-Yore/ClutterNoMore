@@ -16,6 +16,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  *///?} else {
 import net.minecraft.client.color.block.BlockTintSource;
 import net.minecraft.client.renderer.block.BlockAndTintGetter;
+
+import java.util.List;
 //?}
 
 @Mixin(BlockColors.class)
@@ -37,14 +39,14 @@ public class BlockColorsMixin {
         }
     }
     *///?} else {
-    @Inject(method = "getTintSource", at = @At("HEAD"), cancellable = true)
-    private void cnm$getShapeTintSource(BlockState state, int layer, CallbackInfoReturnable<BlockTintSource> cir) {
+    @Inject(method = "getTintSources", at = @At("HEAD"), cancellable = true)
+    private void cnm$getShapeTintSource(BlockState state, CallbackInfoReturnable<List<BlockTintSource>> cir) {
         Item item = state.getBlock().asItem();
         if (ShapeMap.isShape(item)) {
             Item parent = ShapeMap.getParent(item);
             if (parent instanceof BlockItem blockItem) {
                 BlockState parentState = blockItem.getBlock().defaultBlockState();
-                BlockTintSource source = ((BlockColors) (Object) this).getTintSource(parentState, layer);
+                List<BlockTintSource> source = ((BlockColors) (Object) this).getTintSources(parentState);
                 if (source != null) {
                     cir.setReturnValue(source);
                 }

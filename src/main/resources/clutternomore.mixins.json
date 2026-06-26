@@ -33,14 +33,12 @@
   ],
   "client": [
     "client.BlockColorsMixin",
-    //? if <26.1 {
-    "client.ItemColorsMixin",
-    //?}
     "client.CreativeInventoryScreenAccessor",
     "client.CreativeShapeIndicatorMixin",
     "client.CreativeSlotWrapperAccessor",
     "client.CreativeTooltipMixin",
     "client.HotbarMixin",
+    "client.ItemColorsMixin",
     "client.KeyboardHandlerMixin",
     "client.MouseHandlerMixin",
     "client.PickBlockMixin",
