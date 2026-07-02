@@ -42,14 +42,18 @@ public final class VerticalSlabGenerator {
         JsonObject textures = AssetGenerator.getTextures(manager, parent);
         if (textures == null) return;
 
+        boolean isThatch = textures.has("is_thatch");
+        if (isThatch) textures.remove("is_thatch");
+        String templateDir = isThatch ? "thatch/" : "";
+
         boolean isTinted = AssetGenerator.checkTint(manager, parent);
         String suffix = isTinted ? "_tinted" : "";
 
         JsonObject blockModel = new JsonObject();
-        blockModel.addProperty("parent", "clutternomore:block/templates/vertical_slab" + suffix);
+        blockModel.addProperty("parent", "clutternomore:block/templates/" + templateDir + "vertical_slab" + suffix);
         blockModel.add("textures", textures);
         write("models/block/%s.json".formatted(shape.getPath()), blockModel);
-        blockModel.addProperty("parent", "clutternomore:block/templates/vertical_slab_double" + suffix);
+        blockModel.addProperty("parent", "clutternomore:block/templates/" + templateDir + "vertical_slab_double" + suffix);
         write("models/block/%s_double.json".formatted(shape.getPath()), blockModel);
 
         JsonObject variants = new JsonObject();

@@ -134,6 +134,11 @@ public class AssetGenerator {
         JsonObject textures = JsonParser.parseReader(parentModel.get().openAsReader()).getAsJsonObject().getAsJsonObject("textures");
         if (textures == null) return null;
 
+        if (textures.has("thatch") && textures.has("extrudes")) {
+            textures.addProperty("is_thatch", true);
+            return textures;
+        }
+
         if (textures.get("top") == null) {
             if (textures.get("side") != null) {
                 textures.add("top", textures.get("side"));
