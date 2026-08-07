@@ -76,7 +76,13 @@ public class CNMPackResources extends AbstractPackResources {
 
     @Override
     public Set<String> getNamespaces(PackType packType) {
-        return Set.of(ClutterNoMore.MODID);
+        Map<Identifier, byte[]> resources = packType == PackType.CLIENT_RESOURCES ? clientResources : serverData;
+        Set<String> namespaces = new HashSet<>();
+        namespaces.add(ClutterNoMore.MODID);
+        for (Identifier location : resources.keySet()) {
+            namespaces.add(location.getNamespace());
+        }
+        return Set.copyOf(namespaces);
     }
 
     //? if >1.21.9 {
@@ -123,7 +129,7 @@ public class CNMPackResources extends AbstractPackResources {
     public void listResources(PackType packType, String namespace, String path, PackResources.ResourceOutput output) {
         Map<Identifier, byte[]> resources = packType == PackType.CLIENT_RESOURCES ? clientResources : serverData;
         for (Identifier location : resources.keySet()) {
-            if (location.getPath().startsWith(path)) {
+            if (location.getNamespace().equals(namespace) && location.getPath().startsWith(path)) {
                 byte[] resource = resources.get(location);
                 output.accept(location, () -> new ByteArrayInputStream(resource));
             }
