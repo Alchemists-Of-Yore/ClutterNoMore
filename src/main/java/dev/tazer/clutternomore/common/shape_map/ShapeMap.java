@@ -155,7 +155,7 @@ public class ShapeMap {
                 shapeList.add(member);
                 PARENT_BY_SHAPE.put(member, parent);
                 //? if >1.21.9 {
-                if (Platform.INSTANCE.isModLoaded("rrv")) RRVCompat.hide(member);
+                if (Platform.INSTANCE.isModLoaded("rrv") && Platform.INSTANCE.isClient()) RRVCompat.hide(member);
                 //?}
             }
             SHAPES_BY_PARENT.put(parent, shapeList);

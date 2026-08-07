@@ -24,8 +24,8 @@ public class IngredientMixin {
             cir.setReturnValue(true);
         }
         //?} else {
-        /*
-        if (Arrays.stream(self.getItems()).anyMatch(h -> ShapeMap.inSameShapeSet(h.getItem(), myItem))) {
+        
+        /*if (Arrays.stream(self.getItems()).anyMatch(h -> ShapeMap.inSameShapeSet(h.getItem(), myItem))) {
             cir.setReturnValue(true);
         }
         *///?}

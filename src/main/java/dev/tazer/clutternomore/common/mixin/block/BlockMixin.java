@@ -1,5 +1,6 @@
 package dev.tazer.clutternomore.common.mixin.block;
 
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import dev.tazer.clutternomore.common.CHooks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -12,27 +13,25 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
 
 @Mixin(Block.class)
 public abstract class BlockMixin {
-    @Inject(method = "getDrops(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/entity/BlockEntity;)Ljava/util/List;", at = @At("RETURN"), cancellable = true)
-    private static void cnm$getDrops(BlockState state, ServerLevel level, BlockPos pos, BlockEntity blockEntity, CallbackInfoReturnable<List<ItemStack>> cir) {
-        cir.setReturnValue(CHooks.getDrops(cir.getReturnValue(), state, level, pos, blockEntity, null, ItemStack.EMPTY));
+    @ModifyReturnValue(method = "getDrops(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/entity/BlockEntity;)Ljava/util/List;", at = @At("RETURN"))
+    private static List<ItemStack> cnm$getDrops(List<ItemStack> original, final BlockState state, final ServerLevel level, final BlockPos pos, final BlockEntity blockEntity) {
+        return CHooks.getDrops(original, state, level, pos, blockEntity, null, ItemStack.EMPTY);
     }
 
     //? if >26 {
-    @Inject(method = "getDrops(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/entity/BlockEntity;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/item/ItemInstance;)Ljava/util/List;", at = @At("RETURN"), cancellable = true)
-    private static void cnm$getDrops(BlockState state, ServerLevel level, BlockPos pos, BlockEntity blockEntity, Entity breaker, ItemInstance tool, CallbackInfoReturnable<List<ItemStack>> cir) {
-        cir.setReturnValue(CHooks.getDrops(cir.getReturnValue(), state, level, pos, blockEntity, breaker, tool));
+    @ModifyReturnValue(method = "getDrops(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/entity/BlockEntity;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/item/ItemInstance;)Ljava/util/List;", at = @At("RETURN"))
+    private static List<ItemStack> cnm$getDrops(List<ItemStack> original, BlockState state, ServerLevel level, BlockPos pos, BlockEntity blockEntity, Entity breaker, ItemInstance tool) {
+        return CHooks.getDrops(original, state, level, pos, blockEntity, breaker, tool);
     }
     //?} else {
-    /*@Inject(method = "getDrops(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/entity/BlockEntity;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/item/ItemStack;)Ljava/util/List;", at = @At("RETURN"), cancellable = true)
-    private static void cnm$getDrops(BlockState state, ServerLevel level, BlockPos pos, BlockEntity blockEntity, Entity entity, ItemStack tool, CallbackInfoReturnable<List<ItemStack>> cir) {
-        cir.setReturnValue(CHooks.getDrops(cir.getReturnValue(), state, level, pos, blockEntity, entity, tool));
+    /*@ModifyReturnValue(method = "getDrops(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/entity/BlockEntity;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/item/ItemStack;)Ljava/util/List;", at = @At("RETURN"))
+    private static List<ItemStack> cnm$getDrops(List<ItemStack> original, BlockState state, ServerLevel level, BlockPos pos, BlockEntity blockEntity, Entity entity, ItemStack tool) {
+        return CHooks.getDrops(original, state, level, pos, blockEntity, entity, tool);
     }
     *///?}
 }

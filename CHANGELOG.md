@@ -1,2 +1,4 @@
-- Vertical Slabs and Steps now inherit their tints from their parents (thanks @evanbones!).
-- Added manual compatibility for Would Aspen logs.
+- Add Thatch compat (thanks @evanbones!)
+- Fixed crash with RRV on multiplayer servers.
+- Fixed Wilder Wild hollowed stems not being detected.
+- Fixed compatibility issue with Enchancement caused by mixins not chaining.

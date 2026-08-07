@@ -235,7 +235,13 @@
       "shapes": [
         "would:stripped_aspen_wood_gazing"
       ]
-    }
+    },
+    "/(?<ns>[^:]+):stripped_(?<wood>.+)_log/": [
+      "wilderwild:stripped_hollowed_${wood}_log"
+    ],
+    "/(?<ns>[^:]+):stripped_(?<wood>.+)_stem/": [
+      "wilderwild:stripped_hollowed_${wood}_stem"
+    ]
   },
   "remove": {
     "/[^:]+:copycat.*/": ["/.*/"],

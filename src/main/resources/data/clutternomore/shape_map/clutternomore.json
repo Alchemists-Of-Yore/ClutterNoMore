@@ -12,10 +12,6 @@
       "${ns}:${wood}"
     ],
 
-    "/(?<ns>[^:]+):stripped_(?<wood>.+)_log/": [
-      "wilderwild:stripped_hollowed_${wood}_log"
-    ],
-
     "/minecraft:(?<stem>.+?)_planks/": {
       "shapes": [
         "/(?!minecraft:)[^:]+:${stem}_slab/",
@@ -128,10 +124,12 @@
     "/(?<ns>[^:]+):(?<wood>.+)_stem/": [
       "${ns}:${wood}_hyphae",
       "quark:hollow_${wood}_stem",
+      "wilderwild:hollowed_${wood}_stem",
       "everycomp:q/${ns}/hollow_${wood}_stem",
       "everycomp:q/${ns}/hollow_${wood}_log"
     ]
   },
+
   "remove": {
     "#clutternomore:shape_map_blacklist": ["/.*/"],
     "/.*/": [
