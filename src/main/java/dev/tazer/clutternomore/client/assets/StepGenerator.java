@@ -20,8 +20,7 @@ public final class StepGenerator {
 
     public static void generate(ResourceManager manager) {
         for (Identifier parent : STAIRS) {
-            String namespace = parent.getNamespace() + "/";
-            if (parent.getNamespace().equals("minecraft")) namespace = "";
+            String namespace = ClutterNoMore.shapeNamespace(parent);
 
             Identifier shape = ClutterNoMore.location(namespace + parent.getPath().replace("stairs", "step"));
 

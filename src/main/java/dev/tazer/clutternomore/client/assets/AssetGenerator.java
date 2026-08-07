@@ -15,6 +15,7 @@ import org.jetbrains.annotations.Nullable;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -30,9 +31,11 @@ public class AssetGenerator {
         if (keys == null) return;
 
         //lang
+        Set<String> translated = translatedKeys(manager);
         JsonObject lang = new JsonObject();
         keys.forEach((s)-> {
-            lang.addProperty("block.clutternomore." + s.replace("/", "."), langName(s));
+            String key = "block.clutternomore." + s.replace("/", ".");
+            if (!translated.contains(key)) lang.addProperty(key, langName(s));
         });
         boolean writeLang = true;
 
@@ -83,6 +86,21 @@ public class AssetGenerator {
             Path assets = pack.resolve("assets/clutternomore");
             writeFile(assets.resolve(fileName.substring(0, fileName.lastIndexOf("/"))), assets.resolve(fileName), contents.toString());
         }
+    }
+
+    private static Set<String> translatedKeys(ResourceManager manager) {
+        Set<String> translated = new HashSet<>();
+        String runtimePack = ClutterNoMore.MODID + "-runtime";
+        for (Resource resource : manager.getResourceStack(ClutterNoMore.location("lang/en_us.json"))) {
+            if (runtimePack.equals(resource.sourcePackId())) continue;
+            try {
+                JsonObject json = JsonParser.parseReader(resource.openAsReader()).getAsJsonObject();
+                translated.addAll(json.keySet());
+            } catch (Exception e) {
+                ClutterNoMore.LOGGER.warn("Failed to read existing translations from pack {}", resource.sourcePackId());
+            }
+        }
+        return translated;
     }
 
     public static String langName(String name) {

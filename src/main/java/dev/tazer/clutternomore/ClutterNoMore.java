@@ -71,6 +71,10 @@ public class ClutterNoMore {
     }
 
 
+    public static String shapeNamespace(Identifier parent) {
+        return parent.getNamespace().equals("minecraft") ? "" : parent.getNamespace() + "/";
+    }
+
     public static Identifier parse(String id) {
         //? if >1.21
         return Identifier.parse(id);
@@ -103,10 +107,7 @@ public class ClutterNoMore {
             for (Map.Entry<ResourceKey<Item>, Item> resourceKeyItemEntry : BuiltInRegistries.ITEM.entrySet()) {
                 if (resourceKeyItemEntry.getValue().asItem() instanceof BlockItem blockItem) {
                     Identifier blockId = resourceKeyItemEntry.getKey().identifier();
-                    String blockNamespace = blockId.getNamespace() + "/";
-                    if (blockId.getNamespace().equals("minecraft")) {
-                        blockNamespace = "";
-                    }
+                    String blockNamespace = shapeNamespace(blockId);
                     if (blockItem.getBlock() instanceof SlabBlock slabBlock && size(slabBlock.defaultBlockState()) == 2 && STARTUP_CONFIG.VERTICAL_SLABS.value()) {
                         String shortPath = "vertical_" + blockId.getPath();
                         String path = blockNamespace + shortPath;
@@ -130,8 +131,6 @@ public class ClutterNoMore {
                         }
 
                         slabs.add(blockId);
-
-//                        DataGenerator.addLootTable(blockId, shapeId);
 
                         SoundType soundType = ((BlockBehaviorAccessor) slabBlock).getSoundType();
                         if (woodenSoundTypes.contains(soundType)) {
@@ -166,8 +165,6 @@ public class ClutterNoMore {
 
 
                         stairs.add(blockId);
-
-//                        DataGenerator.addLootTable(blockId, shapeId);
 
                         SoundType soundType = ((BlockBehaviorAccessor) stairBlock).getSoundType();
                         if (woodenSoundTypes.contains(soundType)) {

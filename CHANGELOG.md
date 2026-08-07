@@ -2,3 +2,6 @@
 - Fixed crash with RRV on multiplayer servers.
 - Fixed Wilder Wild hollowed stems not being detected.
 - Fixed compatibility issue with Enchancement caused by mixins not chaining.
+- Fixed `/reload` breaking some functionality.
+- Fixed lang overrides not being respected in some cases.
+- Added some config options to revert the loot table and recipe changes by the mod.

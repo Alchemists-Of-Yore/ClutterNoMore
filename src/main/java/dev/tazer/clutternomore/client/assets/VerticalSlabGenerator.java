@@ -20,8 +20,7 @@ public final class VerticalSlabGenerator {
 
     public static void generate(ResourceManager manager) {
         for (Identifier parent : SLABS) {
-            String namespace = parent.getNamespace() + "/";
-            if (parent.getNamespace().equals("minecraft")) namespace = "";
+            String namespace = ClutterNoMore.shapeNamespace(parent);
 
             Identifier shape = ClutterNoMore.location(namespace + "vertical_" + parent.getPath());
 
