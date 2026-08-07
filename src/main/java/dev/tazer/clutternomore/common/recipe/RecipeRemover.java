@@ -27,14 +27,14 @@ import net.minecraft.world.item.crafting.display.SlotDisplayContext;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.item.ItemStack;
-*///?}
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.item.crafting.ShapelessRecipe;
 import net.minecraft.world.item.crafting.SingleItemRecipe;
+*///?}
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeManager;
 
 import java.util.*;
 
@@ -44,6 +44,7 @@ public class RecipeRemover {
     private record TagInfo(JsonArray expandedItems, Set<Item> shapes) {}
 
     public static void removeShapeRecipes(RecipeManager manager) {
+        if (!ClutterNoMore.STARTUP_CONFIG.RECIPE_FIXES.value()) return;
         if (ShapeMap.inverseView().isEmpty()) return;
 
         RecipeManagerAccessor accessor = (RecipeManagerAccessor) manager;
@@ -285,6 +286,7 @@ public class RecipeRemover {
     }
     //?} else {
     /*public static void removeShapeRecipes(RecipeManager manager, RegistryAccess registries) {
+        if (!ClutterNoMore.STARTUP_CONFIG.RECIPE_FIXES.value()) return;
         if (ShapeMap.inverseView().isEmpty()) return;
 
         boolean removed = false;

@@ -18,6 +18,12 @@ public class CNMConfig {
         @Comment("If steps should be added to all existing stairs")
         @SerializedName("steps")
         public final TrackedValue<Boolean> STEPS = this.value(true);
+        @Comment("If recipes should have their shapes replaced by the parent block")
+        @SerializedName("recipe_fixes")
+        public final TrackedValue<Boolean> RECIPE_FIXES = this.value(true);
+        @Comment("If shapes should inherit their parent block's loot table")
+        @SerializedName("inherit_loot_tables")
+        public final TrackedValue<Boolean> INHERIT_LOOT_TABLES = this.value(true);
         @Comment("If detailed warnings should be logged for development purposes")
         @SerializedName("detailed_logs")
         public final TrackedValue<Boolean> DETAILED_LOGS = this.value(false);
