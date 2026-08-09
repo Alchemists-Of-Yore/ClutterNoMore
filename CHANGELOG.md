@@ -5,3 +5,4 @@
 - Fixed `/reload` breaking some functionality.
 - Fixed lang overrides not being respected in some cases.
 - Added some config options to revert the loot table and recipe changes by the mod.
+- Fixed mapped doors dropping duplicate items when broken.
