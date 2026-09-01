@@ -1,3 +1,4 @@
+//? if forge && =1.20.1 {
 package dev.tazer.clutternomore.common.mixin.item;
 
 import dev.tazer.clutternomore.common.shape_map.ShapeMap;
@@ -17,3 +18,13 @@ public class ItemStackLinkedSetMixin {
         }
     }
 }
+//?} else {
+/*package dev.tazer.clutternomore.common.mixin.item;
+
+import net.minecraft.world.item.ItemStack;
+import org.spongepowered.asm.mixin.Mixin;
+
+@Mixin(ItemStack.class)
+public class ItemStackLinkedSetMixin {
+}
+*///?}
